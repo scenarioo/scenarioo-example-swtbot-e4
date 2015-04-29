@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="ASCII"?>
-<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_oixIwO3MEeSoSP8SpH-E-g" elementId="org.scenarioo.example.e4.orders.application">
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_vHh2QO3MEeSoSP8SpH-E-g" elementId="org.scenarioo.example.e4.orders.trimmedwindow.0"/>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_oixIwO3MEeSoSP8SpH-E-g" elementId="org.scenarioo.example.e4.orders.application">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_vHh2QO3MEeSoSP8SpH-E-g" elementId="org.scenarioo.example.e4.orders.trimmedwindow.0">
+    <children xsi:type="advanced:PerspectiveStack" xmi:id="_MHyeAO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.perspectivestack.0">
+      <children xsi:type="advanced:Perspective" xmi:id="_RyCEAO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.perspective.orders" label="Orders">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_bC058O5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partsashcontainer.0" horizontal="true">
+          <children xsi:type="basic:PartStack" xmi:id="_Ja0wYO58EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.0">
+            <children xsi:type="basic:Part" xmi:id="_sRHK4O5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.ordersoverview" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.OrdersOverviewPart" label="Orders Overview">
+              <menus xmi:id="_OXcQ0O57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.menu.0">
+                <tags>ViewMenu</tags>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_ovbRMO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.newOrder" label="New Order" command="_5VXwwO5wEeSxWb11zxVslg"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_s2fNMO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.removeOrder" label="Remove Order" command="_FU9IMO5xEeSxWb11zxVslg"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_3R-UoO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.editOrder" label="Edit Order" command="_SXdVMO5xEeSxWb11zxVslg"/>
+              </menus>
+              <menus xsi:type="menu:PopupMenu" xmi:id="_UajtAO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.popupmenu.0">
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_VYIvkO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.newOrder" label="New Order" command="_5VXwwO5wEeSxWb11zxVslg"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_ajs1gO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.removeOrder" label="Remove Order" command="_FU9IMO5xEeSxWb11zxVslg"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_gXjqgO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.editOrder" label="Edit Order" command="_SXdVMO5xEeSxWb11zxVslg"/>
+              </menus>
+            </children>
+          </children>
+          <children xsi:type="basic:PartStack" xmi:id="_8wfucO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.1">
+            <children xsi:type="basic:Part" xmi:id="_KevKoO5fEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.orderdetails" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.OrderDetailsPart" label="Order Details"/>
+            <children xsi:type="basic:Part" xmi:id="_LecUIO5fEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.itemdetails" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.ItemDetailsPart" label="Item Details"/>
+          </children>
+        </children>
+      </children>
+    </children>
+    <mainMenu xmi:id="_g4cyEO50EeSxWb11zxVslg" elementId="org.eclipse.ui.main.menu">
+      <children xsi:type="menu:Menu" xmi:id="_QYNdcO51EeSxWb11zxVslg" elementId="org.eclipse.ui.file.menu" label="File">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_YK0osO52EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.saveall" label="Save All" command="_sE6nUO5wEeSxWb11zxVslg"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_4Xb6IO52EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.menuseparator.0"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_66UGkO52EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.exit" label="Exit" command="_3ArKQO5wEeSxWb11zxVslg"/>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_WqRRYO51EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.menu.edit" label="Edit"/>
+    </mainMenu>
+    <trimBars xmi:id="_bCMXEO55EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.trimbar.top">
+      <children xsi:type="menu:ToolBar" xmi:id="_pFBYoO55EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.toolbar.0">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_AkEdAO56EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledtoolitem.saveAll" label="Save All" command="_sE6nUO5wEeSxWb11zxVslg"/>
+      </children>
+    </trimBars>
+  </children>
+  <handlers xmi:id="_oWTyIO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.saveall" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.SaveAllHandler" command="_sE6nUO5wEeSxWb11zxVslg"/>
+  <handlers xmi:id="_puqaQO5zEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.createorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.CreateOrderHandler" command="_5VXwwO5wEeSxWb11zxVslg"/>
+  <handlers xmi:id="_tQosMO5zEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.deleteorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.DeleteOrderHandler" command="_FU9IMO5xEeSxWb11zxVslg"/>
+  <handlers xmi:id="_Hj6LsO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.updateOrder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.UpdateOrderHandler" command="_SXdVMO5xEeSxWb11zxVslg"/>
+  <handlers xmi:id="_UHV3EO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.exit" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.ExitHandler" command="_3ArKQO5wEeSxWb11zxVslg"/>
+  <commands xmi:id="_sE6nUO5wEeSxWb11zxVslg" elementId="org.eclipse.ui.file.saveAll" commandName="Save All"/>
+  <commands xmi:id="_3ArKQO5wEeSxWb11zxVslg" elementId="org.eclipse.ui.file.exit" commandName="Exit"/>
+  <commands xmi:id="_5VXwwO5wEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.neworder" commandName="New Order"/>
+  <commands xmi:id="_FU9IMO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.removeorder" commandName="Remove Order"/>
+  <commands xmi:id="_SXdVMO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.editorder" commandName="Edit Order" description=""/>
   <addons xmi:id="_oixIwe3MEeSoSP8SpH-E-g" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_oixIwu3MEeSoSP8SpH-E-g" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_oixIw-3MEeSoSP8SpH-E-g" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

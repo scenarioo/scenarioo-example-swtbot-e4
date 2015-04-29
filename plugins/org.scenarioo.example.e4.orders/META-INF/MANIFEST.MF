@@ -4,3 +4,11 @@ Bundle-Name: Orders
 Bundle-SymbolicName: org.scenarioo.example.e4.orders;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.10.0",
+ org.eclipse.swt;bundle-version="3.103.2",
+ org.eclipse.e4.core.di;bundle-version="1.4.0",
+ org.eclipse.e4.ui.workbench;bundle-version="1.2.2",
+ org.eclipse.e4.core.di.extensions;bundle-version="0.12.0",
+ org.eclipse.e4.ui.di;bundle-version="1.0.0",
+ org.eclipse.e4.ui.services;bundle-version="1.1.0",
+ org.eclipse.jface;bundle-version="3.10.2"
