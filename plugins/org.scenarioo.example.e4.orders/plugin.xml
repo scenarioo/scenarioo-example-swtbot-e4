@@ -7,10 +7,10 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.e4.ui.workbench.swt.E4Application"
-            name="Scenarioo Eclipse RCP Example">
+            name="Scenarioo Eclipse RCP Example with SWT UI Toolkit">
          <property
                name="appName"
-               value="Scenarioo Eclipse RCP Example">
+               value="Scenarioo Eclipse RCP Example with SWT UI Toolkit">
          </property>
       </product>
    </extension>
