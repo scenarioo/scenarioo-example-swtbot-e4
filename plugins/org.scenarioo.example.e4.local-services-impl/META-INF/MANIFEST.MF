@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Local-services-impl
+Bundle-SymbolicName: org.scenarioo.example.e4.local-services-impl
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.scenarioo.example.e4.domain
