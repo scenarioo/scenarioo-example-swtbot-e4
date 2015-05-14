@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services.impl;
+package org.scenarioo.example.e4.services;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -35,7 +35,7 @@ import org.scenarioo.example.e4.domain.IdGenerator;
 
 public class Counter implements IdGenerator {
 
-	private static volatile Counter instance = new Counter();
+	private static volatile Counter INSTANCE = new Counter();
 
 	// private constructor
 	private Counter() {
@@ -43,7 +43,7 @@ public class Counter implements IdGenerator {
 	}
 
 	public static Counter getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	private final AtomicLong count;

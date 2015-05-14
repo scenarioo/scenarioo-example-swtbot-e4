@@ -29,17 +29,18 @@
 
 package org.scenarioo.example.e4.services;
 
-import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
+public class SimulateServiceCall {
 
-public interface OrderService {
-
-	Order createOrder(Order order);
-
-	Order getOrder(OrderId id);
-
-	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
+	private final static long TIME_OUT = 2000;
+	private static Logger LOGGER = LoggerFactory.getLogger(SimulateServiceCall.class);
+	public static void start() {
+		try {
+			Thread.sleep(TIME_OUT);
+		} catch (InterruptedException ex) {
+			LOGGER.error(null, ex);
+		}
+	}
 }

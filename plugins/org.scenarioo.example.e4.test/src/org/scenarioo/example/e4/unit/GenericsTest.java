@@ -27,19 +27,54 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.unit;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Test;
+import org.scenarioo.example.e4.domain.AbstractDomainEntity;
+import org.scenarioo.example.e4.domain.AbstractId;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
 
-public interface OrderService {
+public class GenericsTest {
 
-	Order createOrder(Order order);
+	@Test
+	public void wildcardScenarioo() {
 
-	Order getOrder(OrderId id);
+		List<AbstractDomainEntity<? extends AbstractId>> abstractIds = new ArrayList<AbstractDomainEntity<? extends AbstractId>>();
+		abstractIds.add(new Order());
+		// abstractIds.add(new Object()); // doesn't compile
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(new Order());
+		abstractIds.addAll(orders);
 
-	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
+		List<? super AbstractDomainEntity<OrderId>> consumerAbstractIds = abstractIds;
+		consumerAbstractIds.add(new Order()); // compiles
+		// consumerAbstractIds.add(new Object()); // doesn't compiles
+		// for (AbstractDomainEntity<? extends AbstractId> entity : consumerAbstractIds) {} // doesn't compile
+
+		List<? extends AbstractDomainEntity<? extends AbstractId>> producerAbstractIds = abstractIds;
+		// producerAbstractIds.add(new Order()); // doesn't compile
+		for (AbstractDomainEntity<? extends AbstractId> entity : producerAbstractIds) {
+			System.out.println(entity.toString());
+		}
+
+	}
+
+	// private class LocalIdGenerator implements IdGenerator {
+	//
+	// /**
+	// * @see org.scenarioo.example.e4.domain.IdGenerator#next()
+	// */
+	// @Override
+	// public Long next() {
+	// return new Long(getRandomId());
+	// }
+	//
+	// private long getRandomId() {
+	// return (long) (Math.random() * 1000000);
+	// }
+	// }
 }

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Config
+Bundle-SymbolicName: org.scenarioo.example.e4.logging.config
+Bundle-Version: 1.0.0.qualifier

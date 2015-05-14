@@ -27,19 +27,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.domain;
 
-import java.util.Set;
+public enum OrderState {
 
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
+	CREATED("Created"),
 
-public interface OrderService {
+	IN_WORK("In Work"),
 
-	Order createOrder(Order order);
+	DELIVERED("Finalized");
 
-	Order getOrder(OrderId id);
+	private String caption;
 
-	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
+	private OrderState(final String caption) {
+		this.caption = caption;
+	}
+
+	@Override
+	public String toString() {
+		return caption;
+	}
 }

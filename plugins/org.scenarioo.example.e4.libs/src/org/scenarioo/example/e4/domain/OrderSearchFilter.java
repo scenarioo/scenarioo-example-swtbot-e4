@@ -27,19 +27,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.domain;
 
-import java.util.Set;
+import java.util.Date;
 
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
+public class OrderSearchFilter {
 
-public interface OrderService {
+	private String orderNumber;
 
-	Order createOrder(Order order);
+	private OrderState state;
 
-	Order getOrder(OrderId id);
+	private Date creationDate;
 
-	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
+	private Date deliveryDate;
+
+	private ArticleId articleId;
+
 }

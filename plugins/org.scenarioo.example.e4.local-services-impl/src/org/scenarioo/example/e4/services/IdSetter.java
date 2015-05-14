@@ -29,17 +29,34 @@
 
 package org.scenarioo.example.e4.services;
 
-import java.util.Set;
+import org.scenarioo.example.e4.domain.IdGenerator;
 
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
+public class IdSetter implements IdGenerator {
 
-public interface OrderService {
+	private final static IdSetter INSTANCE = new IdSetter();
+	private Long next;
 
-	Order createOrder(Order order);
+	/**
+	 * @see org.scenarioo.example.e4.domain.IdGenerator#next()
+	 */
+	@Override
+	public Long next() {
+		return next;
+	}
 
-	Order getOrder(OrderId id);
+	/**
+	 * @return
+	 */
+	public static IdSetter getInstance() {
+		return INSTANCE;
+	}
 
-	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
+	/**
+	 * @param id
+	 * @return
+	 */
+	public void setNextId(final Long id) {
+		this.next = id;
+	}
+
 }

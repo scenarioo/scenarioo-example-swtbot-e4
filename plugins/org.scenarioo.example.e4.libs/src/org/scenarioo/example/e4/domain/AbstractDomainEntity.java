@@ -41,7 +41,7 @@ public abstract class AbstractDomainEntity<T extends AbstractId> {
 		this.abstractId = abstractId;
 	}
 
-	public T getIdWrapper() {
+	public T getId() {
 		if (abstractId == null) {
 			return null;
 		}

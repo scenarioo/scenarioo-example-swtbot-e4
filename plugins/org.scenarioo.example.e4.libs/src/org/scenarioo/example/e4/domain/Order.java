@@ -35,6 +35,128 @@ public class Order extends AbstractDomainEntity<OrderId> {
 
 	private String orderNumber;
 
+	/**
+	 * @return the orderNumber
+	 */
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	/**
+	 * @param orderNumber
+	 *            the orderNumber to set
+	 */
+	public void setOrderNumber(final String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	/**
+	 * @return the state
+	 */
+	public OrderState getState() {
+		return state;
+	}
+
+	/**
+	 * @param state
+	 *            the state to set
+	 */
+	public void setState(final OrderState state) {
+		this.state = state;
+	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(final Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @return the deliveryDate
+	 */
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	/**
+	 * @param deliveryDate
+	 *            the deliveryDate to set
+	 */
+	public void setDeliveryDate(final Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address
+	 *            the address to set
+	 */
+	public void setAddress(final String address) {
+		this.address = address;
+	}
+
+	/**
+	 * @return the zipCode
+	 */
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	/**
+	 * @param zipCode
+	 *            the zipCode to set
+	 */
+	public void setZipCode(final String zipCode) {
+		this.zipCode = zipCode;
+	}
+
+	/**
+	 * @return the city
+	 */
+	public String getCity() {
+		return city;
+	}
+
+	/**
+	 * @param city
+	 *            the city to set
+	 */
+	public void setCity(final String city) {
+		this.city = city;
+	}
+
+	private OrderState state;
+
 	private Date creationDate;
 
 	private Date deliveryDate;

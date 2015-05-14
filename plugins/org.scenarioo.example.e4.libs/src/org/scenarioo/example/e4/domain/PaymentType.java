@@ -27,19 +27,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.domain;
 
-import java.util.Set;
+public enum PaymentType {
 
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
+	CASH("Cash"),
 
-public interface OrderService {
+	CREDIT_CARD("Credit Card"),
 
-	Order createOrder(Order order);
+	BILL("Bill");
 
-	Order getOrder(OrderId id);
+	private String caption;
 
-	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
+	private PaymentType(final String caption) {
+		this.caption = caption;
+	}
+
+	@Override
+	public String toString() {
+		return caption;
+	}
 }
