@@ -30,11 +30,23 @@
 package org.scenarioo.example.e4.orders.handlers;
 
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.scenarioo.example.e4.orders.wizard.NewOrderWizard;
+import org.scenarioo.example.e4.services.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CreateOrderHandler {
 
+	private static Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+
 	@Execute
-	public void execute() {
-		System.out.println((this.getClass().getSimpleName() + " called"));
+	public void execute(final Shell shell, final OrderService inverterService) {
+
+		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(inverterService));
+		dialog.open();
+
+		LOGGER.info(this.getClass().getSimpleName() + " called");
 	}
 }

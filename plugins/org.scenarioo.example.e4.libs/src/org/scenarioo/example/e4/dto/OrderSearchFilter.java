@@ -27,20 +27,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.dto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
 
-public class SimulateServiceCall {
+import org.scenarioo.example.e4.domain.ArticleId;
+import org.scenarioo.example.e4.domain.OrderState;
 
-	private final static long TIME_OUT = 2000;
-	private static Logger LOGGER = LoggerFactory.getLogger(SimulateServiceCall.class);
-	public static void start() {
-		try {
-			Thread.sleep(TIME_OUT);
-		} catch (InterruptedException ex) {
-			LOGGER.error(null, ex);
-		}
-	}
+public class OrderSearchFilter {
+
+	private String orderNumber;
+
+	private OrderState state;
+
+	private Date creationDate;
+
+	private Date deliveryDate;
+
+	private ArticleId articleId;
+
 }

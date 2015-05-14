@@ -27,20 +27,42 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.domain;
+package org.scenarioo.example.e4.orders.wizard;
 
-import java.util.Date;
+import org.eclipse.jface.wizard.Wizard;
+import org.scenarioo.example.e4.dto.OrderWithPositions;
+import org.scenarioo.example.e4.services.OrderService;
 
-public class OrderSearchFilter {
+public class NewOrderWizard extends Wizard {
 
-	private String orderNumber;
+	private final OrderService inverterService;
+	protected OrderPage one;
+	protected PositionsPage two;
 
-	private OrderState state;
+	public NewOrderWizard(final OrderService inverterService) {
+		super();
+		this.inverterService = inverterService;
+		setNeedsProgressMonitor(true);
+	}
 
-	private Date creationDate;
+	@Override
+	public String getWindowTitle() {
+		return "Create New Order";
+	}
 
-	private Date deliveryDate;
+	@Override
+	public void addPages() {
+		one = new OrderPage();
+		two = new PositionsPage();
+		addPage(one);
+		addPage(two);
+	}
 
-	private ArticleId articleId;
+	@Override
+	public boolean performFinish() {
+		OrderWithPositions orderWithPos = new OrderWithPositions(one.getOrder(), two.getPositions());
+		inverterService.createOrder(orderWithPos);
+		return true;
+	}
 
 }

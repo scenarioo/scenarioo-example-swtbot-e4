@@ -33,13 +33,17 @@ import java.util.Set;
 
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
+import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.dto.OrderSearchFilter;
+import org.scenarioo.example.e4.dto.OrderWithPositions;
 
 public interface OrderService {
 
-	Order createOrder(Order order);
+	Order createOrder(OrderWithPositions order);
 
 	Order getOrder(OrderId id);
+
+	Set<Position> getPositions(OrderId id);
 
 	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
 }

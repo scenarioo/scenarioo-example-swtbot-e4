@@ -29,6 +29,9 @@
 
 package org.scenarioo.example.e4.domain;
 
+import org.scenarioo.example.e4.services.IdGenerator;
+
+
 
 public abstract class AbstractDomainEntity<T extends AbstractId> {
 
@@ -37,7 +40,7 @@ public abstract class AbstractDomainEntity<T extends AbstractId> {
 	public AbstractDomainEntity() {
 	}
 
-	public AbstractDomainEntity(final T abstractId) {
+	protected AbstractDomainEntity(final T abstractId) {
 		this.abstractId = abstractId;
 	}
 
@@ -83,6 +86,6 @@ public abstract class AbstractDomainEntity<T extends AbstractId> {
 
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " [id=" + (abstractId != null ? abstractId.getId() : "null") + "]";
+		return this.getClass().getSimpleName() + " [id=" + (abstractId != null ? abstractId.getId() : "null") + "]";
 	}
 }

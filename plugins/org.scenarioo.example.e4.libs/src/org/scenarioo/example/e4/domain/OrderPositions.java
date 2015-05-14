@@ -29,21 +29,42 @@
 
 package org.scenarioo.example.e4.domain;
 
-public enum OrderState {
+import java.util.Collections;
+import java.util.List;
 
-	NEW("New"),
+import org.scenarioo.example.e4.dto.OrderWithPositions;
 
-	IN_WORK("In Work"),
+public class OrderPositions extends AbstractDomainEntity<OrderId> {
 
-	DELIVERED("Delivered");
-
-	private String caption;
-
-	private OrderState(final String caption) {
-		this.caption = caption;
+	/**
+	 * @see org.scenarioo.example.e4.domain.AbstractDomainEntity#createInstance(java.lang.Long)
+	 */
+	@Override
+	protected OrderId createInstance(final Long id) {
+		throw new IllegalStateException(
+				"Don't create new Id for OrderPositions. Use the Id of the corresponding Order object!");
 	}
 
-	public String getCaption() {
-		return caption;
+	private final List<Position> positions;
+
+	public OrderPositions(final OrderWithPositions orderWithPos) {
+		super(orderWithPos.getOrder().getId());
+		this.positions = orderWithPos.getPositions();
 	}
+
+	/**
+	 * @return the positions
+	 */
+	public List<Position> getPositions() {
+		return Collections.unmodifiableList(positions);
+	}
+
+	public void addPosition(final Position pos) {
+		positions.add(pos);
+	}
+
+	public void removePosition(final Position pos) {
+		positions.add(pos);
+	}
+
 }

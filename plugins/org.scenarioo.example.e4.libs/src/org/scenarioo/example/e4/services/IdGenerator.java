@@ -27,23 +27,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.domain;
+package org.scenarioo.example.e4.services;
 
-public enum OrderState {
+public interface IdGenerator {
 
-	NEW("New"),
-
-	IN_WORK("In Work"),
-
-	DELIVERED("Delivered");
-
-	private String caption;
-
-	private OrderState(final String caption) {
-		this.caption = caption;
-	}
-
-	public String getCaption() {
-		return caption;
-	}
+	/**
+	 * 
+	 * @return next increment.
+	 */
+	Long next();
 }

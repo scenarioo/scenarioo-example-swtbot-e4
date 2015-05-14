@@ -5,5 +5,9 @@ Bundle-SymbolicName: org.scenarioo.example.e4.local-services-impl
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.scenarioo.example.e4.domain,
+ org.scenarioo.example.e4.dto,
  org.scenarioo.example.e4.services
-Require-Bundle: slf4j.api;bundle-version="1.6.6"
+Require-Bundle: slf4j.api;bundle-version="1.6.6",
+ org.eclipse.osgi.services;bundle-version="3.4.0"
+Service-Component: OSGI-INF/order-service.xml
+Bundle-ActivationPolicy: lazy

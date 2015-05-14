@@ -27,30 +27,65 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.orders.wizard;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Date;
 
-import org.scenarioo.example.e4.domain.IdGenerator;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.widgets.Composite;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.domain.OrderState;
+import org.scenarioo.example.e4.orders.panels.OrderDetailPanel;
 
-public class Counter implements IdGenerator {
+public class OrderPage extends WizardPage {
 
-	private static volatile Counter INSTANCE = new Counter();
+	private OrderDetailPanel orderDetailPanel;
 
-	// private constructor
-	private Counter() {
-		this.count = new AtomicLong(0);
+	public OrderPage() {
+		super("Order Page");
+		setTitle("Order Page");
+		setDescription("Enter the order details");
 	}
-
-	public static Counter getInstance() {
-		return INSTANCE;
-	}
-
-	private final AtomicLong count;
 
 	@Override
-	public Long next() {
-		return count.incrementAndGet();
+	public void createControl(final Composite parent) {
+
+		this.orderDetailPanel = new OrderDetailPanel(parent, initOrder());
+		this.orderDetailPanel.addOrderNumberKeyListener(
+				new KeyListener() {
+
+					@Override
+					public void keyPressed(final KeyEvent e) {
+					}
+
+					@Override
+					public void keyReleased(final KeyEvent e) {
+						if (orderDetailPanel.mandatoryFieldsNonEmpty()) {
+							setPageComplete(true);
+						} else {
+							setPageComplete(false);
+						}
+					}
+
+				});
+
+		// required to avoid an error in the system
+		setControl(orderDetailPanel.getControl());
+		setPageComplete(false);
+
+	}
+
+	private Order initOrder() {
+		Order order = new Order();
+		order.setState(OrderState.NEW);
+		order.setCreationDate(new Date());
+		return order;
+	}
+
+	public Order getOrder() {
+		return orderDetailPanel.getOrder();
 	}
 
 }

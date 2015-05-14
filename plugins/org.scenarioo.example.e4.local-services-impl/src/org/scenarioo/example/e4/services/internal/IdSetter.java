@@ -27,13 +27,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.domain;
+package org.scenarioo.example.e4.services.internal;
 
-public interface IdGenerator {
+import org.scenarioo.example.e4.services.IdGenerator;
+
+
+public class IdSetter implements IdGenerator {
+
+	private final static IdSetter INSTANCE = new IdSetter();
+	private Long next;
 
 	/**
-	 * 
-	 * @return next increment.
+	 * @see org.scenarioo.example.e4.services.IdGenerator#next()
 	 */
-	Long next();
+	@Override
+	public Long next() {
+		return next;
+	}
+
+	/**
+	 * @return
+	 */
+	public static IdSetter getInstance() {
+		return INSTANCE;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public void setNextId(final Long id) {
+		this.next = id;
+	}
+
 }

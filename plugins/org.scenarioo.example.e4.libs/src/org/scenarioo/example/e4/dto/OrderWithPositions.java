@@ -27,13 +27,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.domain;
+package org.scenarioo.example.e4.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class OrderWithPositions extends Order {
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.domain.Position;
 
-	private final List<Position> positions = new ArrayList<Position>();
+
+public class OrderWithPositions {
+
+	Order order;
+
+	List<Position> positions;
+
+	public OrderWithPositions(final Order order, final List<Position> positions) {
+		this.order = order;
+		this.positions = positions;
+	}
+	
+	/**
+	 * @return the order
+	 */
+	public Order getOrder() {
+		return order;
+	}
+
+	/**
+	 * @return the positions
+	 */
+	public List<Position> getPositions() {
+		return positions;
+	}
 
 }

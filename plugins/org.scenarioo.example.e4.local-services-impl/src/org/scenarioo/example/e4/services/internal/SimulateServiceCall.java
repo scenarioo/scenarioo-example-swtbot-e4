@@ -27,36 +27,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.services.internal;
 
-import org.scenarioo.example.e4.domain.IdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class IdSetter implements IdGenerator {
+public class SimulateServiceCall {
 
-	private final static IdSetter INSTANCE = new IdSetter();
-	private Long next;
-
-	/**
-	 * @see org.scenarioo.example.e4.domain.IdGenerator#next()
-	 */
-	@Override
-	public Long next() {
-		return next;
+	private final static long TIME_OUT = 2000;
+	private static Logger LOGGER = LoggerFactory.getLogger(SimulateServiceCall.class);
+	public static void start() {
+		try {
+			Thread.sleep(TIME_OUT);
+		} catch (InterruptedException ex) {
+			LOGGER.error(null, ex);
+		}
 	}
-
-	/**
-	 * @return
-	 */
-	public static IdSetter getInstance() {
-		return INSTANCE;
-	}
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	public void setNextId(final Long id) {
-		this.next = id;
-	}
-
 }

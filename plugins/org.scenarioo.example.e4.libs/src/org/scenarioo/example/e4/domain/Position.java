@@ -29,6 +29,7 @@
 
 package org.scenarioo.example.e4.domain;
 
+
 public class Position extends AbstractDomainEntity<PositionId> {
 
 	/**

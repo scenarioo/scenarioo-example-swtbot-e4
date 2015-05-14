@@ -27,23 +27,30 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.domain;
+package org.scenarioo.example.e4.services.internal;
 
-public enum OrderState {
+import java.util.concurrent.atomic.AtomicLong;
 
-	NEW("New"),
+import org.scenarioo.example.e4.services.IdGenerator;
 
-	IN_WORK("In Work"),
+public class Counter implements IdGenerator {
 
-	DELIVERED("Delivered");
+	private static volatile Counter INSTANCE = new Counter();
 
-	private String caption;
-
-	private OrderState(final String caption) {
-		this.caption = caption;
+	// private constructor
+	private Counter() {
+		this.count = new AtomicLong(0);
 	}
 
-	public String getCaption() {
-		return caption;
+	public static Counter getInstance() {
+		return INSTANCE;
 	}
+
+	private final AtomicLong count;
+
+	@Override
+	public Long next() {
+		return count.incrementAndGet();
+	}
+
 }

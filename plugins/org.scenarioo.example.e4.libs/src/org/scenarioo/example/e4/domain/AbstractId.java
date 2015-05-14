@@ -75,7 +75,7 @@ public abstract class AbstractId {
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " [id=" + getId() + "]";
+		return this.getClass().getSimpleName() + " [id=" + getId() + "]";
     }
 
 }

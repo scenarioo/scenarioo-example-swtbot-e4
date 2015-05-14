@@ -8,7 +8,7 @@
             <children xsi:type="basic:Part" xmi:id="_sRHK4O5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.ordersoverview" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.OrdersOverviewPart" label="Orders Overview">
               <menus xmi:id="_OXcQ0O57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.menu.0">
                 <tags>ViewMenu</tags>
-                <children xsi:type="menu:HandledMenuItem" xmi:id="_ovbRMO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.newOrder" label="New Order" command="_5VXwwO5wEeSxWb11zxVslg"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_ovbRMO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.newOrder" label="New Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/New-Folder-icon.png" command="_5VXwwO5wEeSxWb11zxVslg"/>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_s2fNMO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.removeOrder" label="Remove Order" command="_FU9IMO5xEeSxWb11zxVslg"/>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_3R-UoO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.editOrder" label="Edit Order" command="_SXdVMO5xEeSxWb11zxVslg"/>
               </menus>
@@ -36,7 +36,8 @@
     </mainMenu>
     <trimBars xmi:id="_bCMXEO55EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.trimbar.top">
       <children xsi:type="menu:ToolBar" xmi:id="_pFBYoO55EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.toolbar.0">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_AkEdAO56EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledtoolitem.saveAll" label="Save All" command="_sE6nUO5wEeSxWb11zxVslg"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_w75aQPoqEeSlBI4u39dczQ" elementId="org.scenarioo.example.e4.orders.handledtoolitem.newOrder" label="New Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/New-Folder-icon.png" command="_5VXwwO5wEeSxWb11zxVslg"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_AkEdAO56EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledtoolitem.saveAll" accessibilityPhrase="" label="Save All" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/save-all.png" command="_sE6nUO5wEeSxWb11zxVslg"/>
       </children>
     </trimBars>
   </children>

@@ -33,30 +33,46 @@ import java.util.Set;
 
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.OrderSearchFilter;
+import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.OrderState;
-import org.scenarioo.example.e4.services.Counter;
-import org.scenarioo.example.e4.services.IdSetter;
-import org.scenarioo.example.e4.services.IdStore;
+import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.dto.OrderSearchFilter;
+import org.scenarioo.example.e4.dto.OrderWithPositions;
 import org.scenarioo.example.e4.services.OrderService;
-import org.scenarioo.example.e4.services.SimulateServiceCall;
+import org.scenarioo.example.e4.services.internal.Counter;
+import org.scenarioo.example.e4.services.internal.IdSetter;
+import org.scenarioo.example.e4.services.internal.IdStore;
+import org.scenarioo.example.e4.services.internal.SimulateServiceCall;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OrderServiceImpl implements OrderService {
+
+	private static Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
 	private final IdSetter idSetter = IdSetter.getInstance();
 	private final Counter counter = Counter.getInstance();
 	private final IdStore<OrderId, Order> orderIdStore = IdStore.getInstance(Order.class);
+	private final IdStore<OrderId, OrderPositions> positionsIdStore = IdStore.getInstance(OrderPositions.class);
 
 	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#createOrder(org.scenarioo.example.e4.domain.Order)
 	 */
 	@Override
-	public Order createOrder(final Order order) {
+	public Order createOrder(final OrderWithPositions orderWithPos) {
 
 		SimulateServiceCall.start();
-
+		
+		// Store Order part
+		Order order = orderWithPos.getOrder();
 		order.generateAndSetId(counter);
 		orderIdStore.put(order);
+		
+		// Store positions part
+		OrderPositions pos = new OrderPositions(orderWithPos);
+		positionsIdStore.put(pos);
+
+		LOGGER.info(order + " with " + pos + " has been created");
 
 		return order;
 	}
@@ -91,10 +107,19 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * @see org.scenarioo.example.e4.services.OrderService#searchForOrders(org.scenarioo.example.e4.domain.OrderSearchFilter)
+	 * @see org.scenarioo.example.e4.services.OrderService#searchForOrders(org.scenarioo.example.e4.dto.OrderSearchFilter)
 	 */
 	@Override
 	public Set<Order> searchForOrders(final OrderSearchFilter orderSearchFilter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @see org.scenarioo.example.e4.services.OrderService#getPositions(org.scenarioo.example.e4.domain.OrderId)
+	 */
+	@Override
+	public Set<Position> getPositions(final OrderId id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

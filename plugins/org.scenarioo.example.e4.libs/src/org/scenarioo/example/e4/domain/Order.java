@@ -35,6 +35,20 @@ public class Order extends AbstractDomainEntity<OrderId> {
 
 	private String orderNumber;
 
+	private OrderState state;
+
+	private Date creationDate;
+
+	private Date deliveryDate;
+
+	private String recipientFullName;
+
+	private String recipientAddress;
+
+	private String recipientZipCode;
+
+	private String recipientCity;
+
 	/**
 	 * @return the orderNumber
 	 */
@@ -98,76 +112,62 @@ public class Order extends AbstractDomainEntity<OrderId> {
 	/**
 	 * @return the name
 	 */
-	public String getName() {
-		return name;
+	public String getRecipientFullName() {
+		return recipientFullName;
 	}
 
 	/**
 	 * @param name
 	 *            the name to set
 	 */
-	public void setName(final String name) {
-		this.name = name;
+	public void setRecipientFullName(final String recipientFullName) {
+		this.recipientFullName = recipientFullName;
 	}
 
 	/**
 	 * @return the address
 	 */
-	public String getAddress() {
-		return address;
+	public String getRecipientAddress() {
+		return recipientAddress;
 	}
 
 	/**
 	 * @param address
 	 *            the address to set
 	 */
-	public void setAddress(final String address) {
-		this.address = address;
+	public void setRecipientAddress(final String recipientAddress) {
+		this.recipientAddress = recipientAddress;
 	}
 
 	/**
 	 * @return the zipCode
 	 */
-	public String getZipCode() {
-		return zipCode;
+	public String getRecipientZipCode() {
+		return recipientZipCode;
 	}
 
 	/**
 	 * @param zipCode
 	 *            the zipCode to set
 	 */
-	public void setZipCode(final String zipCode) {
-		this.zipCode = zipCode;
+	public void setRecipientZipCode(final String recipientZipCode) {
+		this.recipientZipCode = recipientZipCode;
 	}
 
 	/**
 	 * @return the city
 	 */
-	public String getCity() {
-		return city;
+	public String getRecipientCity() {
+		return recipientCity;
 	}
 
 	/**
 	 * @param city
 	 *            the city to set
 	 */
-	public void setCity(final String city) {
-		this.city = city;
+	public void setRecipientCity(final String recipientCity) {
+		this.recipientCity = recipientCity;
 	}
-
-	private OrderState state;
-
-	private Date creationDate;
-
-	private Date deliveryDate;
-
-	private String name;
-
-	private String address;
-
-	private String zipCode;
-
-	private String city;
 
 	/**
 	 * @see org.scenarioo.example.e4.domain.AbstractDomainEntity#createInstance(java.lang.Long)
