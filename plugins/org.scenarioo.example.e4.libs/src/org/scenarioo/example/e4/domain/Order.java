@@ -50,6 +50,22 @@ public class Order extends AbstractDomainEntity<OrderId> {
 	private String recipientCity;
 
 	/**
+	 * Use this for Order which can be updated
+	 * 
+	 * @param order
+	 */
+	public Order(final Order order) {
+		super(order);
+		this.state = order.state;
+		this.creationDate = order.creationDate;
+	}
+
+	public Order() {
+		this.state = OrderState.NEW;
+		this.creationDate = new Date();
+	}
+
+	/**
 	 * @return the orderNumber
 	 */
 	public String getOrderNumber() {

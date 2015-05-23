@@ -29,10 +29,9 @@
 
 package org.scenarioo.example.e4.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.scenarioo.example.e4.dto.OrderWithPositions;
 
 public class OrderPositions extends AbstractDomainEntity<OrderId> {
 
@@ -47,9 +46,14 @@ public class OrderPositions extends AbstractDomainEntity<OrderId> {
 
 	private final List<Position> positions;
 
-	public OrderPositions(final OrderWithPositions orderWithPos) {
-		super(orderWithPos.getOrder().getId());
-		this.positions = orderWithPos.getPositions();
+	public OrderPositions() {
+		super();
+		this.positions = new ArrayList<Position>();
+	}
+
+	public OrderPositions(final OrderPositions orderPositions) {
+		super(orderPositions);
+		positions = new ArrayList<Position>();
 	}
 
 	/**
@@ -65,6 +69,13 @@ public class OrderPositions extends AbstractDomainEntity<OrderId> {
 
 	public void removePosition(final Position pos) {
 		positions.add(pos);
+	}
+
+	/**
+	 * @param id
+	 */
+	public void setOrderReference(final Order order) {
+		super.setId(order.getId());
 	}
 
 }

@@ -29,77 +29,48 @@
 
 package org.scenarioo.example.e4.orders.wizard;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.domain.OrderPositions;
+import org.scenarioo.example.e4.dto.OrderWithPositions;
+import org.scenarioo.example.e4.orders.panels.PositionsPanel;
 
 public class PositionsPage extends WizardPage {
 
-	private final List<Position> positions = new ArrayList<Position>();
+	private final OrderWithPositions orderWithPositions;
 
-	private Text text1;
-	private Composite container;
+	private PositionsPanel positionsPanel;
 
-	public PositionsPage() {
+	public PositionsPage(final OrderWithPositions orderWithPositions) {
 		super("Positions Page");
 		setTitle("Positions Page");
 		setDescription("Enter the order positions");
-		setControl(text1);
+		this.orderWithPositions = orderWithPositions;
 	}
 
 	@Override
 	public void createControl(final Composite parent) {
-		container = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		container.setLayout(layout);
-		layout.numColumns = 2;
-		Label label1 = new Label(container, SWT.NONE);
-		label1.setText("Say hello to Fred");
-
-		text1 = new Text(container, SWT.BORDER | SWT.SINGLE);
-		text1.setText("");
-		text1.addKeyListener(new KeyListener() {
+		this.positionsPanel = new PositionsPanel(parent, orderWithPositions);
+		this.positionsPanel.addArticleIdSelectionListener(new ISelectionChangedListener() {
 
 			@Override
-			public void keyPressed(final KeyEvent e) {
-				// TODO Auto-generated method stub
+			public void selectionChanged(final SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 			}
-
-			@Override
-			public void keyReleased(final KeyEvent e) {
-				if (!text1.getText().isEmpty()) {
-					setPageComplete(true);
-				}
-			}
-
 		});
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		text1.setLayoutData(gd);
-		Label labelCheck = new Label(container, SWT.NONE);
-		labelCheck.setText("This is a check");
-		Button check = new Button(container, SWT.CHECK);
-		check.setSelection(true);
-		// required to avoid an error in the system
-		setControl(container);
+		setControl(positionsPanel.getControl());
 		setPageComplete(false);
 	}
 
-	public String getText1() {
-		return text1.getText();
+	public OrderPositions getOrderPositionsForUpdate() {
+		return positionsPanel.getOrderPositionsForUpdate();
 	}
 
-	public List<Position> getPositions(){
-		return positions;
+	public void updateOrderInfo(final Order order) {
+		positionsPanel.updateOrderInfo(order);
 	}
 }

@@ -29,33 +29,47 @@
 
 package org.scenarioo.example.e4.orders.parts;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import java.io.File;
+import java.net.URL;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.services.EMenuService;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 public class OrdersOverviewPart {
 
-	@Inject
-	public OrdersOverviewPart(final Composite parent) {
-
-		// assuming that dependency injection works
-		// parent will never be null
-		System.out.println("Woh! Got a Composite via DI.");
-
-		// does it have a layout manager?
-		System.out.println("Layout: " + parent.getLayout().getClass());
-	}
+	private TreeViewer viewer;
+	private Image standardFolderImage;
+	private Image deletedFolderImage;
+	private Image loadedFolderImage;
 
 	@PostConstruct
 	public void createControls(final Composite parent, final EMenuService menuService) {
-		// more code...
-		TableViewer viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
+		this.standardFolderImage = createImage("icons/folder.png");
+		this.deletedFolderImage = createImage("icons/folder_silver.png");
+		this.loadedFolderImage = createImage("icons/folder_open.png");
 
+		// more code...
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.setContentProvider(new ViewContentProvider());
+		viewer.setLabelProvider(new ViewLabelProvider());
+		viewer.setInput(File.listRoots());
 		// more code
 
 		// register context menu on the table
@@ -66,9 +80,86 @@ public class OrdersOverviewPart {
 				+ " @PostConstruct method called.");
 	}
 
+	private Image createImage(final String path) {
+		Bundle bundle = FrameworkUtil.getBundle(ViewLabelProvider.class);
+		URL url = FileLocator.find(bundle, new Path("icons/folder.png"), null);
+		ImageDescriptor imageDcr = ImageDescriptor.createFromURL(url);
+		return imageDcr.createImage();
+	}
+
+	class ViewContentProvider implements ITreeContentProvider {
+		@Override
+		public void inputChanged(final Viewer v, final Object oldInput, final Object newInput) {
+		}
+
+		@Override
+		public void dispose() {
+		}
+
+		@Override
+		public Object[] getElements(final Object inputElement) {
+			return (File[]) inputElement;
+		}
+
+		@Override
+		public Object[] getChildren(final Object parentElement) {
+			File file = (File) parentElement;
+			return file.listFiles();
+		}
+
+		@Override
+		public Object getParent(final Object element) {
+			File file = (File) element;
+			return file.getParentFile();
+		}
+
+		@Override
+		public boolean hasChildren(final Object element) {
+			File file = (File) element;
+			if (file.isDirectory()) {
+				return true;
+			}
+			return false;
+		}
+
+	}
+
+	class ViewLabelProvider extends StyledCellLabelProvider {
+		@Override
+		public void update(final ViewerCell cell) {
+			Object element = cell.getElement();
+			StyledString text = new StyledString();
+			File file = (File) element;
+			if (file.isDirectory()) {
+				text.append(getFileName(file));
+				cell.setImage(standardFolderImage);
+				String[] files = file.list();
+				if (files != null) {
+					text.append(" (" + files.length + ") ",
+							StyledString.COUNTER_STYLER);
+				}
+			} else {
+				text.append(getFileName(file));
+			}
+			cell.setText(text.toString());
+			cell.setStyleRanges(text.getStyleRanges());
+			super.update(cell);
+
+		}
+
+		private String getFileName(final File file) {
+			String name = file.getName();
+			return name.isEmpty() ? file.getPath() : name;
+		}
+	}
+
 	@Focus
-	private void setFocus() {
-		System.out.println(this.getClass().getSimpleName()
-				+ " @Focus method called");
+	public void setFocus() {
+		viewer.getControl().setFocus();
+	}
+
+	@PreDestroy
+	public void dispose() {
+		standardFolderImage.dispose();
 	}
 }

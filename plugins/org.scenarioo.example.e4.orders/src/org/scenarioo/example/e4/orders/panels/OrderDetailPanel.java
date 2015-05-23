@@ -47,32 +47,27 @@ import org.scenarioo.example.e4.domain.OrderState;
 
 public class OrderDetailPanel {
 
+	// Data model
 	private final Order order;
 
+	// UI Widgets
 	private final Text orderNumberText;
-
+	private final Text creationDateText;
 	private final Combo stateCombo;
-
 	private final DateTime deliveryDateTime;
-
 	private final Text recipientFullNameText;
-
 	private final Text recipientAddressText;
-
 	private final Text recipientZipCodeText;
-
 	private final Text recipientCityText;
-
 	private final Composite container;
 
 	public OrderDetailPanel(final Composite parent, final Order order) {
 
 		this.order = order;
-		container = new Composite(parent, SWT.NONE);
+		this.container = new Composite(parent, SWT.NONE);
 
-		GridLayout layout = new GridLayout();
+		GridLayout layout = new GridLayout(2, false);
 		container.setLayout(layout);
-		layout.numColumns = 2;
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		// Order Number
@@ -82,10 +77,20 @@ public class OrderDetailPanel {
 		orderNumberText.setText(getTextOrEmpty(order.getOrderNumber()));
 		orderNumberText.setLayoutData(gd);
 
+		// Creation Date
+		Label creationDateLabel = new Label(container, SWT.NONE);
+		creationDateLabel.setText("Creation Date");
+		creationDateText = new Text(container, SWT.BORDER | SWT.SINGLE);
+		creationDateText.setEnabled(false);
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
+		creationDateText.setText(DATE_FORMAT.format(order.getCreationDate()));
+		creationDateText.setLayoutData(gd);
+
 		// Order State
 		Label orderStateLabel = new Label(container, SWT.NONE);
 		orderStateLabel.setText("Order State");
 		stateCombo = new Combo(container, SWT.BORDER | SWT.SINGLE);
+		stateCombo.setEnabled(false);
 		stateCombo.setItems(getOrderStateItems());
 		stateCombo.select(getSelectedIndex(order.getState()));
 		stateCombo.setLayoutData(gd);
@@ -139,11 +144,15 @@ public class OrderDetailPanel {
 		return container;
 	}
 
-	public Order getOrder() {
+	public Order getOrderForUpdate() {
+		Order order = new Order(this.order);
 		order.setOrderNumber(orderNumberText.getText());
-		order.setCreationDate(new Date());
 		order.setDeliveryDate(getDeliveryDate());
-		return this.order;
+		order.setRecipientFullName(recipientFullNameText.getText());
+		order.setRecipientAddress(recipientFullNameText.getText());
+		order.setRecipientZipCode(recipientZipCodeText.getText());
+		order.setRecipientCity(recipientCityText.getText());
+		return order;
 	}
 
 	private String getTextOrEmpty(final String text) {
@@ -164,7 +173,6 @@ public class OrderDetailPanel {
 		instance.set(Calendar.DAY_OF_MONTH, deliveryDateTime.getDay());
 		instance.set(Calendar.MONTH, deliveryDateTime.getMonth());
 		instance.set(Calendar.YEAR, deliveryDateTime.getYear());
-		String dateString = new SimpleDateFormat("dd/MM/yyyy").format(instance.getTime());
 		return instance.getTime();
 	}
 

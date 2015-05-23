@@ -33,12 +33,59 @@ package org.scenarioo.example.e4.domain;
 
 public class Article extends AbstractDomainEntity<ArticleId> {
 
+	private String articleNumber;
+	private String description;
+	private Unit unit;
+
 	/**
 	 * @see org.scenarioo.example.e4.domain.AbstractDomainEntity#createInstance(java.lang.Long)
 	 */
 	@Override
 	protected ArticleId createInstance(final Long id) {
 		return new ArticleId(id);
+	}
+
+	/**
+	 * @return the articleNumber
+	 */
+	public String getArticleNumber() {
+		return articleNumber;
+	}
+
+	/**
+	 * @param articleNumber the articleNumber to set
+	 */
+	public void setArticleNumber(final String articleNumber) {
+		this.articleNumber = articleNumber;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(final String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the unit
+	 */
+	public Unit getUnit() {
+		return unit;
+	}
+
+	/**
+	 * @param unit
+	 *            the unit to set
+	 */
+	public void setUnit(final Unit unit) {
+		this.unit = unit;
 	}
 
 }

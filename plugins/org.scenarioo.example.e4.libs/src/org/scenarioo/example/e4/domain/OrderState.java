@@ -35,7 +35,9 @@ public enum OrderState {
 
 	IN_WORK("In Work"),
 
-	DELIVERED("Delivered");
+	FINALISED("Finalised"),
+
+	DELETED("Deleted");
 
 	private String caption;
 

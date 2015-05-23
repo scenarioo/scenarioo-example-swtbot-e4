@@ -69,7 +69,8 @@ public class OrderServiceImpl implements OrderService {
 		orderIdStore.put(order);
 		
 		// Store positions part
-		OrderPositions pos = new OrderPositions(orderWithPos);
+		OrderPositions pos = orderWithPos.getOrderPositions();
+		pos.setOrderReference(order);
 		positionsIdStore.put(pos);
 
 		LOGGER.info(order + " with " + pos + " has been created");
@@ -90,8 +91,8 @@ public class OrderServiceImpl implements OrderService {
 			setNextGeneratedId(id);
 			order = new Order();
 			order.generateAndSetId(idSetter);
-			order.setOrderNumber("(Not Found)");
-			order.setState(OrderState.DELIVERED);
+			order.setOrderNumber("(Deleted)");
+			order.setState(OrderState.DELETED);
 			orderIdStore.put(order);
 			return order;
 		}

@@ -29,9 +29,18 @@
 
 package org.scenarioo.example.e4.orders.handlers;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.scenarioo.example.e4.orders.wizard.NewOrderWizard;
 import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
@@ -45,8 +54,16 @@ public class CreateOrderHandler {
 	public void execute(final Shell shell, final OrderService inverterService) {
 
 		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(inverterService));
+		Window.setDefaultImage(getImage());
 		dialog.open();
 
 		LOGGER.info(this.getClass().getSimpleName() + " called");
 	}
+
+	private Image getImage() {
+		Bundle bundle = FrameworkUtil.getBundle(NewOrderWizard.class);
+		URL url = FileLocator.find(bundle, new Path("icons/folder.png"), null);
+		return ImageDescriptor.createFromURL(url).createImage();
+	}
+
 }

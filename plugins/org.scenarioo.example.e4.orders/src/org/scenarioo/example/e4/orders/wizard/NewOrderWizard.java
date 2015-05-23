@@ -29,11 +29,14 @@
 
 package org.scenarioo.example.e4.orders.wizard;
 
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.scenarioo.example.e4.dto.OrderWithPositions;
 import org.scenarioo.example.e4.services.OrderService;
 
-public class NewOrderWizard extends Wizard {
+public class NewOrderWizard extends Wizard implements IPageChangedListener {
 
 	private final OrderService inverterService;
 	protected OrderPage one;
@@ -52,17 +55,32 @@ public class NewOrderWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		one = new OrderPage();
-		two = new PositionsPage();
+		OrderWithPositions orderWithPositions = new OrderWithPositions();
+		one = new OrderPage(orderWithPositions.getOrder());
+		two = new PositionsPage(orderWithPositions);
 		addPage(one);
 		addPage(two);
+
+		WizardDialog dialog = (WizardDialog) getContainer();
+		dialog.addPageChangedListener(this);
 	}
 
 	@Override
 	public boolean performFinish() {
-		OrderWithPositions orderWithPos = new OrderWithPositions(one.getOrder(), two.getPositions());
+		OrderWithPositions orderWithPos = new OrderWithPositions(one.getOrderForUpdate(),
+				two.getOrderPositionsForUpdate());
 		inverterService.createOrder(orderWithPos);
 		return true;
+	}
+
+	/**
+	 * @see org.eclipse.jface.dialogs.IPageChangedListener#pageChanged(org.eclipse.jface.dialogs.PageChangedEvent)
+	 */
+	@Override
+	public void pageChanged(final PageChangedEvent event) {
+		if (two.equals(event.getSelectedPage())) {
+			two.updateOrderInfo(one.getOrderForUpdate());
+		}
 	}
 
 }

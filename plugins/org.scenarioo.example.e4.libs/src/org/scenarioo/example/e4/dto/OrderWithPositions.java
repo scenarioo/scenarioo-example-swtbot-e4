@@ -29,21 +29,24 @@
 
 package org.scenarioo.example.e4.dto;
 
-import java.util.List;
-
 import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.domain.OrderPositions;
 
 
 public class OrderWithPositions {
 
-	Order order;
+	private final Order order;
 
-	List<Position> positions;
+	private final OrderPositions orderPositions;
 
-	public OrderWithPositions(final Order order, final List<Position> positions) {
+	public OrderWithPositions() {
+		this.order = new Order();
+		this.orderPositions = new OrderPositions();
+	}
+
+	public OrderWithPositions(final Order order, final OrderPositions orderPositions) {
 		this.order = order;
-		this.positions = positions;
+		this.orderPositions = orderPositions;
 	}
 	
 	/**
@@ -56,8 +59,8 @@ public class OrderWithPositions {
 	/**
 	 * @return the positions
 	 */
-	public List<Position> getPositions() {
-		return positions;
+	public OrderPositions getOrderPositions() {
+		return orderPositions;
 	}
 
 }

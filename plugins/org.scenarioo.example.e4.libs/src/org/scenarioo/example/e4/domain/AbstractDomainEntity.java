@@ -31,17 +31,18 @@ package org.scenarioo.example.e4.domain;
 
 import org.scenarioo.example.e4.services.IdGenerator;
 
-
-
 public abstract class AbstractDomainEntity<T extends AbstractId> {
 
 	private T abstractId;
 
+	private Integer version;
+
 	public AbstractDomainEntity() {
 	}
 
-	protected AbstractDomainEntity(final T abstractId) {
-		this.abstractId = abstractId;
+	protected AbstractDomainEntity(final AbstractDomainEntity<T> oldEntity) {
+		this.abstractId = oldEntity.abstractId;
+		this.version = oldEntity.version;
 	}
 
 	public T getId() {
@@ -49,6 +50,10 @@ public abstract class AbstractDomainEntity<T extends AbstractId> {
 			return null;
 		}
 		return abstractId;
+	}
+
+	protected void setId(final T abstractId) {
+		this.abstractId = abstractId;
 	}
 
 	public void generateAndSetId(final IdGenerator counter) {
@@ -87,5 +92,19 @@ public abstract class AbstractDomainEntity<T extends AbstractId> {
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName() + " [id=" + (abstractId != null ? abstractId.getId() : "null") + "]";
+	}
+
+	/**
+	 * @return the optimisticLock
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+
+	/**
+	 * @param optimisticLock the optimisticLock to set
+	 */
+	public void setVersion(final Integer version) {
+		this.version = version;
 	}
 }

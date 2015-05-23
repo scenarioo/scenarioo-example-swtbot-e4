@@ -27,56 +27,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders.wizard;
+package org.scenarioo.example.e4.services;
 
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.widgets.Composite;
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.orders.panels.OrderDetailPanel;
+import java.util.List;
 
-public class OrderPage extends WizardPage {
+import org.scenarioo.example.e4.domain.Article;
 
-	private final Order order;
+public interface ArticleService {
 
-	private OrderDetailPanel orderDetailPanel;
+	Article createArticle(Article article);
 
-	public OrderPage(final Order order) {
-		super("Order Page");
-		setTitle("Order Page");
-		setDescription("Enter the order details");
-		this.order = order;
-	}
-
-	@Override
-	public void createControl(final Composite parent) {
-		this.orderDetailPanel = new OrderDetailPanel(parent, order);
-		this.orderDetailPanel.addOrderNumberKeyListener(
-				new KeyListener() {
-
-					@Override
-					public void keyPressed(final KeyEvent e) {
-					}
-
-					@Override
-					public void keyReleased(final KeyEvent e) {
-						if (orderDetailPanel.mandatoryFieldsNonEmpty()) {
-							setPageComplete(true);
-						} else {
-							setPageComplete(false);
-						}
-					}
-
-				});
-
-		// required to avoid an error in the system
-		setControl(orderDetailPanel.getControl());
-		setPageComplete(false);
-	}
-
-	public Order getOrderForUpdate() {
-		return orderDetailPanel.getOrderForUpdate();
-	}
-
+	List<Article> getAllArticle();
 }

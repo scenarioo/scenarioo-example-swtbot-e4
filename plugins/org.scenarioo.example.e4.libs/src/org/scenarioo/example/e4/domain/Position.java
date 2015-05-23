@@ -39,4 +39,38 @@ public class Position extends AbstractDomainEntity<PositionId> {
 	protected PositionId createInstance(final Long id) {
 		return new PositionId(id);
 	}
+
+	private ArticleId articleId;
+
+	/**
+	 * @return the articleId
+	 */
+	public ArticleId getArticleId() {
+		return articleId;
+	}
+
+	/**
+	 * @param articleId the articleId to set
+	 */
+	public void setArticleId(final ArticleId articleId) {
+		this.articleId = articleId;
+	}
+
+	private Long amount;
+
+	/**
+	 * @return the amount
+	 */
+	public Long getAmount() {
+		return amount;
+	}
+
+	/**
+	 * @param amount
+	 *            the amount to set
+	 */
+	public void setAmount(final Long amount) {
+		this.amount = amount;
+	}
+
 }
