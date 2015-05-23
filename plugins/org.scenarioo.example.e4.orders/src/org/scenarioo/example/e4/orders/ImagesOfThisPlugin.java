@@ -27,30 +27,36 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders.handlers;
+package org.scenarioo.example.e4.orders;
 
-import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
-import org.scenarioo.example.e4.orders.wizard.NewOrderWizard;
-import org.scenarioo.example.e4.services.OrderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.net.URL;
 
-public class CreateOrderHandler {
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
-	private static Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+public enum ImagesOfThisPlugin {
 
-	@Execute
-	public void execute(final Shell shell, final OrderService inverterService) {
+	ORDER("folder.png"),
+	ORDER_NEW("folder_add.png"),
+	ORDER_NOT_FOUND("folder_silver.png"),
+	ORDER_OPEN("folder_open.png"),
+	ORDER_CLOSE("folder_close.png"),
+	ADD_BUTTON("button_add.png"),
+	DELETE_BUTTON("button_delete.png");
 
-		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(inverterService));
-		Window.setDefaultImage(ImagesOfThisPlugin.ORDER.getImage());
-		dialog.open();
+	private ImageDescriptor imageDescriptor;
 
-		LOGGER.info(this.getClass().getSimpleName() + " called");
+	private ImagesOfThisPlugin(final String fileName) {
+		Bundle bundle = FrameworkUtil.getBundle(ImagesOfThisPlugin.class);
+		URL url = FileLocator.find(bundle, new Path("icons/" + fileName), null);
+		imageDescriptor = ImageDescriptor.createFromURL(url);
 	}
 
+	public Image getImage() {
+		return imageDescriptor.createImage();
+	}
 }

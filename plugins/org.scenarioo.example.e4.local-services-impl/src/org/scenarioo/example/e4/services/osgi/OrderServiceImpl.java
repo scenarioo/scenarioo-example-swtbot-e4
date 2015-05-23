@@ -91,8 +91,8 @@ public class OrderServiceImpl implements OrderService {
 			setNextGeneratedId(id);
 			order = new Order();
 			order.generateAndSetId(idSetter);
-			order.setOrderNumber("(Deleted)");
-			order.setState(OrderState.DELETED);
+			order.setOrderNumber("(Not Found)");
+			order.setState(OrderState.NOT_FOUND);
 			orderIdStore.put(order);
 			return order;
 		}

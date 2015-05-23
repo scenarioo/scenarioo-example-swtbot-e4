@@ -27,30 +27,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders.handlers;
+package org.scenarioo.example.e4.domain;
 
-import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
-import org.scenarioo.example.e4.orders.wizard.NewOrderWizard;
-import org.scenarioo.example.e4.services.OrderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public enum PositionState {
 
-public class CreateOrderHandler {
+	NEW("New"),
+	RESERVED("Reserved"),
+	COMMISSIONING("commissioning"),
+	SENT("Sent"),
+	FINALISED("Finalised");
 
-	private static Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+	private String caption;
 
-	@Execute
-	public void execute(final Shell shell, final OrderService inverterService) {
-
-		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(inverterService));
-		Window.setDefaultImage(ImagesOfThisPlugin.ORDER.getImage());
-		dialog.open();
-
-		LOGGER.info(this.getClass().getSimpleName() + " called");
+	private PositionState(final String caption) {
+		this.caption = caption;
 	}
 
+	public String getCaption() {
+		return caption;
+	}
 }

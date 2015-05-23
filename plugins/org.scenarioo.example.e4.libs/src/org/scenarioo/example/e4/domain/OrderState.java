@@ -32,12 +32,9 @@ package org.scenarioo.example.e4.domain;
 public enum OrderState {
 
 	NEW("New"),
-
 	IN_WORK("In Work"),
-
 	FINALISED("Finalised"),
-
-	DELETED("Deleted");
+	NOT_FOUND("Not Found");
 
 	private String caption;
 

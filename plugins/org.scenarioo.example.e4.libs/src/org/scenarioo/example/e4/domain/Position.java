@@ -29,7 +29,6 @@
 
 package org.scenarioo.example.e4.domain;
 
-
 public class Position extends AbstractDomainEntity<PositionId> {
 
 	/**
@@ -50,13 +49,16 @@ public class Position extends AbstractDomainEntity<PositionId> {
 	}
 
 	/**
-	 * @param articleId the articleId to set
+	 * @param articleId
+	 *            the articleId to set
 	 */
 	public void setArticleId(final ArticleId articleId) {
 		this.articleId = articleId;
 	}
 
 	private Long amount;
+
+	private PositionState state;
 
 	/**
 	 * @return the amount
@@ -71,6 +73,21 @@ public class Position extends AbstractDomainEntity<PositionId> {
 	 */
 	public void setAmount(final Long amount) {
 		this.amount = amount;
+	}
+
+	/**
+	 * @return the state
+	 */
+	public PositionState getState() {
+		return state;
+	}
+
+	/**
+	 * @param state
+	 *            the state to set
+	 */
+	public void setState(final PositionState state) {
+		this.state = state;
 	}
 
 }

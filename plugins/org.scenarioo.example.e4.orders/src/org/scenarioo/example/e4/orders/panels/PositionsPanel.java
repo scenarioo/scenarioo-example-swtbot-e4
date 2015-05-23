@@ -35,8 +35,11 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -46,6 +49,7 @@ import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.dto.OrderWithPositions;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
+import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
 
 public class PositionsPanel {
 
@@ -62,7 +66,7 @@ public class PositionsPanel {
 		this.container = new Composite(parent, SWT.NONE);
 
 		// Order header Information
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(4, true);
 		container.setLayout(layout);
 
 		// Order Number
@@ -70,10 +74,64 @@ public class PositionsPanel {
 		orderNumberLabel.setText("Order Number");
 		orderNumberText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		orderNumberText.setEnabled(false);
-		orderNumberText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.horizontalSpan = 3;
+		orderNumberText.setLayoutData(gridData);
+
 		updateOrderInfo(orderWithPositions.getOrder());
 		
 		createViewer(container);
+
+		// Add Position Line
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
+		Button createButton = new Button(container, SWT.PUSH);
+		createButton.setImage(ImagesOfThisPlugin.ADD_BUTTON.getImage());
+		createButton.setToolTipText("Add Position");
+		GridData buttonGridData = new GridData();
+		buttonGridData.horizontalAlignment = GridData.END;
+		createButton.setLayoutData(buttonGridData);
+		createButton.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		Label createPositionLabel = new Label(container, SWT.NONE);
+		createPositionLabel.setText("Add Position");
+
+		// Remove Position Button
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
+		Button deleteButton = new Button(container, SWT.PUSH);
+		deleteButton.setImage(ImagesOfThisPlugin.DELETE_BUTTON.getImage());
+		deleteButton.setToolTipText("Remove Position");
+		deleteButton.setLayoutData(buttonGridData);
+		deleteButton.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		Label removePositionLabel = new Label(container, SWT.NONE);
+		removePositionLabel.setText("Remove position");
+
 	}
 
 	public void updateOrderInfo(final Order order) {
@@ -99,7 +157,7 @@ public class PositionsPanel {
 		// define layout for the viewer
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 2;
+		gridData.horizontalSpan = 4;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
