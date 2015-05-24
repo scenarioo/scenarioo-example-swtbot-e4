@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 public class OrderPositions extends AbstractDomainEntity<OrderId> {
 
 	/**
@@ -72,10 +74,14 @@ public class OrderPositions extends AbstractDomainEntity<OrderId> {
 	}
 
 	/**
-	 * @param id
+	 * @param Order
 	 */
 	public void setOrderReference(final Order order) {
 		super.setId(order.getId());
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
+	}
 }

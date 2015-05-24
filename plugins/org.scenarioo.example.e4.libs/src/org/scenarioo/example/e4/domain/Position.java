@@ -29,6 +29,8 @@
 
 package org.scenarioo.example.e4.domain;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 public class Position extends AbstractDomainEntity<PositionId> {
 
 	/**
@@ -95,4 +97,8 @@ public class Position extends AbstractDomainEntity<PositionId> {
 		this.state = state;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
+	}
 }
