@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
 import org.scenarioo.example.e4.domain.Article;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
-import org.scenarioo.example.e4.dto.OrderPositionsForViewDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsViewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
 import org.scenarioo.example.e4.services.ArticleService;
@@ -69,7 +69,7 @@ public class PositionsPanel {
 	private final ArticleService articleService;
 
 	public PositionsPanel(final Composite parent, final ArticleService articleService,
-			final OrderPositionsForViewDTO orderPositionsForViewDTO) {
+			final OrderPositionsViewDTO orderPositionsForViewDTO) {
 		this.articleService = articleService;
 		this.orderPositions = orderPositionsForViewDTO.getOrderPositions();
 		this.container = new Composite(parent, SWT.NONE);

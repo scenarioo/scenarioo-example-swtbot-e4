@@ -40,19 +40,19 @@ import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.Position;
 
-public class OrderPositionsForViewDTO {
+public class OrderPositionsViewDTO {
 
 	private final Order order;
 	private final OrderPositions orderPositions;
 	private final Map<ArticleId, Article> articleInfoFromPositions;
 
-	public OrderPositionsForViewDTO() {
+	public OrderPositionsViewDTO() {
 		this.order = new Order();
 		this.orderPositions = new OrderPositions();
 		this.articleInfoFromPositions = new HashMap<ArticleId, Article>();
 	}
 
-	public OrderPositionsForViewDTO(final Order order, final OrderPositions orderPositions,
+	public OrderPositionsViewDTO(final Order order, final OrderPositions orderPositions,
 			final Map<ArticleId, Article> articleInfoFromPositions) {
 		this.order = order;
 		this.orderPositions = orderPositions;
