@@ -130,8 +130,21 @@ public class PositionsPanel {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				// TODO Auto-generated method stub
-
+				Table table = viewer.getTable();
+				int[] selectedRows = table.getSelectionIndices();
+				List<PositionWithArticleInfo> inputData = getInputData();
+				// reverse iteration over selection Array
+				for (int i = selectedRows.length - 1; i >= 0; i--) {
+					// remove the deleted data
+					inputData.remove(selectedRows[i]);
+				}
+				// renew the posNr of the remaining data
+				int i = 1;
+				for (PositionWithArticleInfo posWithArticleInfo : inputData) {
+					posWithArticleInfo.setPosNr(i);
+					i++;
+				}
+				viewer.setInput(inputData);
 			}
 
 			@Override

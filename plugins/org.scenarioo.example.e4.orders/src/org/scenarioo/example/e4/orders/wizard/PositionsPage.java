@@ -66,7 +66,7 @@ public class PositionsPage extends WizardPage {
 			}
 		});
 		setControl(positionsPanel.getControl());
-		setPageComplete(false);
+		setPageComplete(true);
 	}
 
 	public OrderPositions getOrderPositionsForUpdate() {
