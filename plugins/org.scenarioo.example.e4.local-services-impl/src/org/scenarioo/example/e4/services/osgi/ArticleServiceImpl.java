@@ -29,9 +29,12 @@
 
 package org.scenarioo.example.e4.services.osgi;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.scenarioo.example.e4.domain.Article;
+import org.scenarioo.example.e4.domain.ArticleId;
+import org.scenarioo.example.e4.dto.ArticleSearchFilterDTO;
 import org.scenarioo.example.e4.services.ArticleService;
 
 public class ArticleServiceImpl implements ArticleService {
@@ -46,10 +49,19 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	/**
-	 * @see org.scenarioo.example.e4.services.ArticleService#getAllArticle()
+	 * @see org.scenarioo.example.e4.services.ArticleService#getArticle(org.scenarioo.example.e4.domain.ArticleId[])
 	 */
 	@Override
-	public List<Article> getAllArticle() {
+	public Map<ArticleId, Article> getArticle(final ArticleId... articleIds) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @see org.scenarioo.example.e4.services.ArticleService#getArticle(org.scenarioo.example.e4.dto.ArticleSearchFilterDTO)
+	 */
+	@Override
+	public Set<Article> getArticle(final ArticleSearchFilterDTO articleSearchFilterDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}

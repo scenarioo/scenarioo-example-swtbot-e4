@@ -36,25 +36,28 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
-import org.scenarioo.example.e4.dto.OrderWithPositions;
+import org.scenarioo.example.e4.dto.OrderPositionsForViewDTO;
 import org.scenarioo.example.e4.orders.panels.PositionsPanel;
+import org.scenarioo.example.e4.services.ArticleService;
 
 public class PositionsPage extends WizardPage {
 
-	private final OrderWithPositions orderWithPositions;
-
+	private final ArticleService articleService;
+	private final OrderPositionsForViewDTO orderPositionsForViewDTO;
 	private PositionsPanel positionsPanel;
 
-	public PositionsPage(final OrderWithPositions orderWithPositions) {
+	public PositionsPage(final ArticleService articleService,
+			final OrderPositionsForViewDTO orderPositionsForViewDTO) {
 		super("Positions Page");
 		setTitle("Positions Page");
 		setDescription("Enter the order positions");
-		this.orderWithPositions = orderWithPositions;
+		this.articleService = articleService;
+		this.orderPositionsForViewDTO = orderPositionsForViewDTO;
 	}
 
 	@Override
 	public void createControl(final Composite parent) {
-		this.positionsPanel = new PositionsPanel(parent, orderWithPositions);
+		this.positionsPanel = new PositionsPanel(parent, articleService, orderPositionsForViewDTO);
 		this.positionsPanel.addArticleIdSelectionListener(new ISelectionChangedListener() {
 
 			@Override

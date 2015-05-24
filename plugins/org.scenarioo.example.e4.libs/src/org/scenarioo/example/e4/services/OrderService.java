@@ -35,11 +35,11 @@ import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
 import org.scenarioo.example.e4.domain.Position;
 import org.scenarioo.example.e4.dto.OrderSearchFilter;
-import org.scenarioo.example.e4.dto.OrderWithPositions;
+import org.scenarioo.example.e4.dto.CreateOrderDTO;
 
 public interface OrderService {
 
-	Order createOrder(OrderWithPositions order);
+	Order createOrder(CreateOrderDTO order);
 
 	Order getOrder(OrderId id);
 

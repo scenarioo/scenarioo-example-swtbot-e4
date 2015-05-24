@@ -27,72 +27,97 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.domain;
+package org.scenarioo.example.e4.dto;
 
-public class Position extends AbstractDomainEntity<PositionId> {
+public class ArticleSearchFilterDTO {
 
-	/**
-	 * @see org.scenarioo.example.e4.domain.AbstractDomainEntity#createInstance(java.lang.Long)
-	 */
-	@Override
-	protected PositionId createInstance(final Long id) {
-		return new PositionId(id);
-	}
+	private static Integer DEFAULT_PAGE_COUNT = 20;
+	private static Integer DEFAULT_PAGE_START = 0;
 
-	private ArticleId articleId;
+	private Integer count;
+	private Integer start;
+	private String articleNumber;
+	private String description;
+	private String unit;
 
-	private Long amount;
-
-	private PositionState state;
-
-	public Position() {
-		this.state = PositionState.NEW;
-		this.amount = new Long(1);
+	public ArticleSearchFilterDTO() {
+		this.setCount(DEFAULT_PAGE_COUNT);
+		this.setStart(DEFAULT_PAGE_START);
 	}
 
 	/**
-	 * @return the articleId
+	 * @return the count
 	 */
-	public ArticleId getArticleId() {
-		return articleId;
+	public Integer getCount() {
+		return count;
 	}
 
 	/**
-	 * @param articleId
-	 *            the articleId to set
+	 * @param count
+	 *            the count to set
 	 */
-	public void setArticleId(final ArticleId articleId) {
-		this.articleId = articleId;
+	public void setCount(final Integer count) {
+		this.count = count;
 	}
 
 	/**
-	 * @return the amount
+	 * @return the start
 	 */
-	public Long getAmount() {
-		return amount;
+	public Integer getStart() {
+		return start;
 	}
 
 	/**
-	 * @param amount
-	 *            the amount to set
+	 * @param start
+	 *            the start to set
 	 */
-	public void setAmount(final Long amount) {
-		this.amount = amount;
+	public void setStart(final Integer start) {
+		this.start = start;
 	}
 
 	/**
-	 * @return the state
+	 * @return the articleNumber
 	 */
-	public PositionState getState() {
-		return state;
+	public String getArticleNumber() {
+		return articleNumber;
 	}
 
 	/**
-	 * @param state
-	 *            the state to set
+	 * @param articleNumber
+	 *            the articleNumber to set
 	 */
-	public void setState(final PositionState state) {
-		this.state = state;
+	public void setArticleNumber(final String articleNumber) {
+		this.articleNumber = articleNumber;
+	}
+
+	/**
+	 * @return the unit
+	 */
+	public String getUnit() {
+		return unit;
+	}
+
+	/**
+	 * @param unit
+	 *            the unit to set
+	 */
+	public void setUnit(final String unit) {
+		this.unit = unit;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description
+	 *            the description to set
+	 */
+	public void setDescription(final String description) {
+		this.description = description;
 	}
 
 }

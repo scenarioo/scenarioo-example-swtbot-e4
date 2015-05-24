@@ -29,6 +29,8 @@
 
 package org.scenarioo.example.e4.orders.panels;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -45,11 +47,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.scenarioo.example.e4.domain.Article;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
-import org.scenarioo.example.e4.dto.OrderWithPositions;
+import org.scenarioo.example.e4.dto.OrderPositionsForViewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
+import org.scenarioo.example.e4.services.ArticleService;
 
 public class PositionsPanel {
 
@@ -61,8 +65,13 @@ public class PositionsPanel {
 	private TableViewer viewer;
 	private final Composite container;
 
-	public PositionsPanel(final Composite parent, final OrderWithPositions orderWithPositions) {
-		this.orderPositions = orderWithPositions.getOrderPositions();
+	// For ArticleSelection is Service required
+	private final ArticleService articleService;
+
+	public PositionsPanel(final Composite parent, final ArticleService articleService,
+			final OrderPositionsForViewDTO orderPositionsForViewDTO) {
+		this.articleService = articleService;
+		this.orderPositions = orderPositionsForViewDTO.getOrderPositions();
 		this.container = new Composite(parent, SWT.NONE);
 
 		// Order header Information
@@ -78,9 +87,9 @@ public class PositionsPanel {
 		gridData.horizontalSpan = 3;
 		orderNumberText.setLayoutData(gridData);
 
-		updateOrderInfo(orderWithPositions.getOrder());
-		
-		createViewer(container);
+		updateOrderInfo(orderPositionsForViewDTO.getOrder());
+
+		createTableViewer(container, orderPositionsForViewDTO.getPositionsWithArticleInfo());
 
 		// Add Position Line
 		new Label(container, SWT.NONE);
@@ -95,8 +104,10 @@ public class PositionsPanel {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				// TODO Auto-generated method stub
-
+				List<PositionWithArticleInfo> inputData = getInputData();
+				Integer porNr = inputData.size() + 1;
+				inputData.add(new PositionWithArticleInfo(porNr));
+				viewer.setInput(inputData);
 			}
 
 			@Override
@@ -131,14 +142,18 @@ public class PositionsPanel {
 		});
 		Label removePositionLabel = new Label(container, SWT.NONE);
 		removePositionLabel.setText("Remove position");
+	}
 
+	@SuppressWarnings("unchecked")
+	private List<PositionWithArticleInfo> getInputData() {
+		return (List<PositionWithArticleInfo>) viewer.getInput();
 	}
 
 	public void updateOrderInfo(final Order order) {
 		this.orderNumberText.setText(getTextOrEmpty(order.getOrderNumber()));
 	}
 
-	private void createViewer(final Composite parent) {
+	private void createTableViewer(final Composite parent, final List<PositionWithArticleInfo> input) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, viewer);
@@ -149,7 +164,7 @@ public class PositionsPanel {
 		viewer.setContentProvider(new ArrayContentProvider());
 		// get the content for the viewer, setInput will call getElements in the
 		// contentProvider
-		viewer.setInput(orderPositions.getPositions());
+		viewer.setInput(input);
 		// make the selection available to other views
 		// getSite().setSelectionProvider(viewer);
 		// set the sorter for the table
@@ -170,8 +185,8 @@ public class PositionsPanel {
 
 	// create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Nr.", "Article Number", "Description", "Amount", "Unit" };
-		int[] bounds = { 100, 100, 100, 100, 100 };
+		String[] titles = { "Nr.", "State", "Article Number", "Description", "Amount", "Unit" };
+		int[] bounds = { 100, 100, 100, 100, 100, 100 };
 
 		// first column is for PositionNr
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
@@ -183,28 +198,40 @@ public class PositionsPanel {
 			}
 		});
 
-		// second column is for the ArticleNr
+		// second column is for the Position State
 		col = createTableViewerColumn(titles[1], bounds[1], 1);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(final Object element) {
 				PositionWithArticleInfo posWithArtInfo = (PositionWithArticleInfo) element;
-				return posWithArtInfo.getArticle().getArticleNumber();
+				return posWithArtInfo.getPositon().getState().getCaption();
 			}
 		});
 
-		// now the Article Description
+		// now the ArticleNr
 		col = createTableViewerColumn(titles[2], bounds[2], 2);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(final Object element) {
 				PositionWithArticleInfo posWithArtInfo = (PositionWithArticleInfo) element;
-				return posWithArtInfo.getArticle().getDescription();
+				Article article = posWithArtInfo.getArticle();
+				return article == null ? "" : article.getArticleNumber();
+			}
+		});
+
+		// now the Article Description
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(final Object element) {
+				PositionWithArticleInfo posWithArtInfo = (PositionWithArticleInfo) element;
+				Article article = posWithArtInfo.getArticle();
+				return article == null ? "" : article.getDescription();
 			}
 		});
 
 		// now the Position Amount
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col = createTableViewerColumn(titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(final Object element) {
@@ -214,12 +241,13 @@ public class PositionsPanel {
 		});
 
 		// now the Unit
-		col = createTableViewerColumn(titles[4], bounds[4], 4);
+		col = createTableViewerColumn(titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(final Object element) {
 				PositionWithArticleInfo posWithArtInfo = (PositionWithArticleInfo) element;
-				return posWithArtInfo.getArticle().getUnit().toString();
+				Article article = posWithArtInfo.getArticle();
+				return article == null ? "" : article.getUnit().getCaption();
 			}
 		});
 
@@ -256,8 +284,12 @@ public class PositionsPanel {
 
 	public OrderPositions getOrderPositionsForUpdate() {
 		OrderPositions orderPositions = new OrderPositions(this.orderPositions);
-		// get All the Positions from Table
 
+		// add All the data from Table
+		List<PositionWithArticleInfo> inputData = getInputData();
+		for (PositionWithArticleInfo pos : inputData) {
+			orderPositions.addPosition(pos.getPositon());
+		}
 		return orderPositions;
 	}
 }

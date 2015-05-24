@@ -27,31 +27,40 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders.handlers;
+package org.scenarioo.example.e4.dto;
 
-import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
-import org.scenarioo.example.e4.orders.wizard.NewOrderWizard;
-import org.scenarioo.example.e4.services.ArticleService;
-import org.scenarioo.example.e4.services.OrderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.domain.OrderPositions;
 
-public class CreateOrderHandler {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+public class CreateOrderDTO {
 
-	@Execute
-	public void execute(final Shell shell, final OrderService orderService, final ArticleService articleSerice) {
+	private final Order order;
 
-		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(orderService, articleSerice));
-		Window.setDefaultImage(ImagesOfThisPlugin.ORDER.getImage());
-		dialog.open();
+	private final OrderPositions orderPositions;
 
-		LOGGER.info(this.getClass().getSimpleName() + " called");
+	public CreateOrderDTO() {
+		this.order = new Order();
+		this.orderPositions = new OrderPositions();
+	}
+
+	public CreateOrderDTO(final Order order, final OrderPositions orderPositions) {
+		this.order = order;
+		this.orderPositions = orderPositions;
+	}
+	
+	/**
+	 * @return the order
+	 */
+	public Order getOrder() {
+		return order;
+	}
+
+	/**
+	 * @return the positions
+	 */
+	public OrderPositions getOrderPositions() {
+		return orderPositions;
 	}
 
 }

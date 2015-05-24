@@ -35,15 +35,18 @@ import org.scenarioo.example.e4.domain.Position;
 public class PositionWithArticleInfo {
 
 	private final Integer posNr;
-
 	private final Position positon;
+	private Article article;
 
-	private final Article article;
-
-	private PositionWithArticleInfo(final Integer posNr, final Position positon, final Article article) {
+	public PositionWithArticleInfo(final Integer posNr, final Position positon, final Article article) {
 		this.posNr = posNr;
 		this.positon = positon;
 		this.article = article;
+	}
+
+	public PositionWithArticleInfo(final Integer posNr) {
+		this.posNr = posNr;
+		this.positon = new Position();
 	}
 
 	/**
@@ -51,6 +54,10 @@ public class PositionWithArticleInfo {
 	 */
 	public Article getArticle() {
 		return article;
+	}
+
+	public void setArticle(final Article article) {
+		this.article = article;
 	}
 
 	/**

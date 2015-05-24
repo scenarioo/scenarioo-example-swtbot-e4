@@ -33,18 +33,22 @@ import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.scenarioo.example.e4.dto.OrderWithPositions;
+import org.scenarioo.example.e4.dto.CreateOrderDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsForViewDTO;
+import org.scenarioo.example.e4.services.ArticleService;
 import org.scenarioo.example.e4.services.OrderService;
 
 public class NewOrderWizard extends Wizard implements IPageChangedListener {
 
-	private final OrderService inverterService;
+	private final ArticleService articleService;
+	private final OrderService orderService;
 	protected OrderPage one;
 	protected PositionsPage two;
 
-	public NewOrderWizard(final OrderService inverterService) {
+	public NewOrderWizard(final OrderService orderService, final ArticleService articleService) {
 		super();
-		this.inverterService = inverterService;
+		this.orderService = orderService;
+		this.articleService = articleService;
 		setNeedsProgressMonitor(true);
 	}
 
@@ -55,9 +59,9 @@ public class NewOrderWizard extends Wizard implements IPageChangedListener {
 
 	@Override
 	public void addPages() {
-		OrderWithPositions orderWithPositions = new OrderWithPositions();
-		one = new OrderPage(orderWithPositions.getOrder());
-		two = new PositionsPage(orderWithPositions);
+		OrderPositionsForViewDTO orderPositionsForViewDTO = new OrderPositionsForViewDTO();
+		one = new OrderPage(orderPositionsForViewDTO.getOrder());
+		two = new PositionsPage(articleService, orderPositionsForViewDTO);
 		addPage(one);
 		addPage(two);
 
@@ -67,9 +71,9 @@ public class NewOrderWizard extends Wizard implements IPageChangedListener {
 
 	@Override
 	public boolean performFinish() {
-		OrderWithPositions orderWithPos = new OrderWithPositions(one.getOrderForUpdate(),
+		CreateOrderDTO orderWithPos = new CreateOrderDTO(one.getOrderForUpdate(),
 				two.getOrderPositionsForUpdate());
-		inverterService.createOrder(orderWithPos);
+		orderService.createOrder(orderWithPos);
 		return true;
 	}
 

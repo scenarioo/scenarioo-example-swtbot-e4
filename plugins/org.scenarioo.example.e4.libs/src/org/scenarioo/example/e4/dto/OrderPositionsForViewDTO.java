@@ -29,26 +29,36 @@
 
 package org.scenarioo.example.e4.dto;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.scenarioo.example.e4.domain.Article;
+import org.scenarioo.example.e4.domain.ArticleId;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
+import org.scenarioo.example.e4.domain.Position;
 
-
-public class OrderWithPositions {
+public class OrderPositionsForViewDTO {
 
 	private final Order order;
-
 	private final OrderPositions orderPositions;
+	private final Map<ArticleId, Article> articleInfoFromPositions;
 
-	public OrderWithPositions() {
+	public OrderPositionsForViewDTO() {
 		this.order = new Order();
 		this.orderPositions = new OrderPositions();
+		this.articleInfoFromPositions = new HashMap<ArticleId, Article>();
 	}
 
-	public OrderWithPositions(final Order order, final OrderPositions orderPositions) {
+	public OrderPositionsForViewDTO(final Order order, final OrderPositions orderPositions,
+			final Map<ArticleId, Article> articleInfoFromPositions) {
 		this.order = order;
 		this.orderPositions = orderPositions;
+		this.articleInfoFromPositions = articleInfoFromPositions;
 	}
-	
+
 	/**
 	 * @return the order
 	 */
@@ -63,4 +73,14 @@ public class OrderWithPositions {
 		return orderPositions;
 	}
 
+	public List<PositionWithArticleInfo> getPositionsWithArticleInfo() {
+		List<PositionWithArticleInfo> posWithArticleInfos = new ArrayList<PositionWithArticleInfo>();
+		int nr = 0;
+		for (Position pos : orderPositions.getPositions()) {
+			Article article = articleInfoFromPositions.get(pos.getArticleId());
+			PositionWithArticleInfo posWithArticleInfo = new PositionWithArticleInfo(nr, pos, article);
+			posWithArticleInfos.add(posWithArticleInfo);
+		}
+		return posWithArticleInfos;
+	}
 }

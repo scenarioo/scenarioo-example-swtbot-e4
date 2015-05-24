@@ -37,7 +37,7 @@ import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.OrderState;
 import org.scenarioo.example.e4.domain.Position;
 import org.scenarioo.example.e4.dto.OrderSearchFilter;
-import org.scenarioo.example.e4.dto.OrderWithPositions;
+import org.scenarioo.example.e4.dto.CreateOrderDTO;
 import org.scenarioo.example.e4.services.OrderService;
 import org.scenarioo.example.e4.services.internal.Counter;
 import org.scenarioo.example.e4.services.internal.IdSetter;
@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @see org.scenarioo.example.e4.services.OrderService#createOrder(org.scenarioo.example.e4.domain.Order)
 	 */
 	@Override
-	public Order createOrder(final OrderWithPositions orderWithPos) {
+	public Order createOrder(final CreateOrderDTO orderWithPos) {
 
 		SimulateServiceCall.start();
 		

@@ -29,13 +29,18 @@
 
 package org.scenarioo.example.e4.services;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.scenarioo.example.e4.domain.Article;
+import org.scenarioo.example.e4.domain.ArticleId;
+import org.scenarioo.example.e4.dto.ArticleSearchFilterDTO;
 
 public interface ArticleService {
 
 	Article createArticle(Article article);
 
-	List<Article> getAllArticle();
+	Map<ArticleId, Article> getArticle(ArticleId... articleIds);
+
+	Set<Article> getArticle(ArticleSearchFilterDTO articleSearchFilterDTO);
 }
