@@ -42,14 +42,21 @@ public class Position extends AbstractDomainEntity<PositionId> {
 	}
 
 	private ArticleId articleId;
-
 	private Long amount;
-
 	private PositionState state;
 
 	public Position() {
 		this.state = PositionState.NEW;
 		this.amount = new Long(1);
+	}
+
+	/**
+	 * @param position
+	 */
+	public Position(final Position position) {
+		super(position);
+		this.state = position.state;
+		this.amount = position.amount;
 	}
 
 	/**

@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders.panels;
+package org.scenarioo.example.e4.orders;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Text;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderState;
 
-public class OrderDetailPanel {
+public class OrderDetailView {
 
 	// Data model
 	private final Order order;
@@ -61,7 +61,7 @@ public class OrderDetailPanel {
 	private final Text recipientCityText;
 	private final Composite container;
 
-	public OrderDetailPanel(final Composite parent, final Order order) {
+	public OrderDetailView(final Composite parent, final Order order) {
 
 		this.order = order;
 		this.container = new Composite(parent, SWT.NONE);

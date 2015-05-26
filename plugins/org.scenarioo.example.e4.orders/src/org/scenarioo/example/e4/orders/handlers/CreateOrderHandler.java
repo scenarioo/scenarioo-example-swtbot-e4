@@ -47,11 +47,11 @@ public class CreateOrderHandler {
 	@Execute
 	public void execute(final Shell shell, final OrderService orderService, final ArticleService articleSerice) {
 
+		LOGGER.info(this.getClass().getSimpleName() + " called");
+
 		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(orderService, articleSerice));
 		Window.setDefaultImage(ImagesOfThisPlugin.ORDER.getImage());
 		dialog.open();
-
-		LOGGER.info(this.getClass().getSimpleName() + " called");
 	}
 
 }

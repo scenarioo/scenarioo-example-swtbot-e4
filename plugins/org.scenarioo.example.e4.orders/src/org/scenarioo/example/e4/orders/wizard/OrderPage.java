@@ -30,17 +30,17 @@
 package org.scenarioo.example.e4.orders.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.orders.panels.OrderDetailPanel;
+import org.scenarioo.example.e4.orders.OrderDetailView;
 
 public class OrderPage extends WizardPage {
 
 	private final Order order;
 
-	private OrderDetailPanel orderDetailPanel;
+	private OrderDetailView orderDetailPanel;
 
 	public OrderPage(final Order order) {
 		super("Order Page");
@@ -51,13 +51,9 @@ public class OrderPage extends WizardPage {
 
 	@Override
 	public void createControl(final Composite parent) {
-		this.orderDetailPanel = new OrderDetailPanel(parent, order);
+		this.orderDetailPanel = new OrderDetailView(parent, order);
 		this.orderDetailPanel.addOrderNumberKeyListener(
-				new KeyListener() {
-
-					@Override
-					public void keyPressed(final KeyEvent e) {
-					}
+				new KeyAdapter() {
 
 					@Override
 					public void keyReleased(final KeyEvent e) {

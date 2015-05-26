@@ -62,6 +62,16 @@ public class Article extends AbstractDomainEntity<ArticleId> {
 	/**
 	 * @return the description
 	 */
+	public String getShortDescription() {
+		if (description != null && description.length() > 10) {
+			return description.substring(0, 6) + "..";
+		}
+		return description;
+	}
+
+	/**
+	 * @return the description
+	 */
 	public String getDescription() {
 		return description;
 	}

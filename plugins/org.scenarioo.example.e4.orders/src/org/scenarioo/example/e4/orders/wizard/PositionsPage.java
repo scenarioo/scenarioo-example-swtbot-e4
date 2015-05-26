@@ -29,22 +29,24 @@
 
 package org.scenarioo.example.e4.orders.wizard;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
+import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.dto.OrderPositionsViewDTO;
-import org.scenarioo.example.e4.orders.panels.PositionsPanel;
+import org.scenarioo.example.e4.orders.positions.OrderPositionsView;
 import org.scenarioo.example.e4.services.ArticleService;
 
 public class PositionsPage extends WizardPage {
 
 	private final ArticleService articleService;
 	private final OrderPositionsViewDTO orderPositionsForViewDTO;
-	private PositionsPanel positionsPanel;
+	private OrderPositionsView positionsPanel;
 
 	public PositionsPage(final ArticleService articleService,
 			final OrderPositionsViewDTO orderPositionsForViewDTO) {
@@ -53,20 +55,29 @@ public class PositionsPage extends WizardPage {
 		setDescription("Enter the order positions");
 		this.articleService = articleService;
 		this.orderPositionsForViewDTO = orderPositionsForViewDTO;
+		setPageComplete(false);
 	}
 
 	@Override
 	public void createControl(final Composite parent) {
-		this.positionsPanel = new PositionsPanel(parent, articleService, orderPositionsForViewDTO);
-		this.positionsPanel.addArticleIdSelectionListener(new ISelectionChangedListener() {
-
+		this.positionsPanel = new OrderPositionsView(parent, articleService, orderPositionsForViewDTO);
+		this.positionsPanel.addArticleIdSelectionListener(new ArticleIdSelectionListener());
+		this.positionsPanel.addSelectionListenerOnAddRemovePositionButton(new SelectionAdapter() {
 			@Override
-			public void selectionChanged(final SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			public void widgetSelected(final SelectionEvent e) {
+				validateInput();
 			}
 		});
 		setControl(positionsPanel.getControl());
-		setPageComplete(true);
+		validateInput();
+	}
+
+	private void validateInput() {
+		if (positionsPanel.isInputCorrect()) {
+			setPageComplete(true);
+		} else {
+			setPageComplete(false);
+		}
 	}
 
 	public OrderPositions getOrderPositionsForUpdate() {
@@ -75,5 +86,33 @@ public class PositionsPage extends WizardPage {
 
 	public void updateOrderInfo(final Order order) {
 		positionsPanel.updateOrderInfo(order);
+	}
+
+	private class ArticleIdSelectionListener extends ColumnViewerEditorActivationListener {
+
+		@Override
+		public void beforeEditorActivated(final ColumnViewerEditorActivationEvent event) {
+			// Do Nothing
+			// System.out.println("beforeEditorActivated");
+		}
+
+		@Override
+		public void afterEditorActivated(final ColumnViewerEditorActivationEvent event) {
+			// Do Nothing
+			// System.out.println("afterEditorActivated");
+
+		}
+
+		@Override
+		public void beforeEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
+			// Do Nothing
+			// System.out.println("beforeEditorDeactivated");
+		}
+
+		@Override
+		public void afterEditorDeactivated(final ColumnViewerEditorDeactivationEvent event) {
+			// System.out.println("afterEditorDeactivated");
+			validateInput();
+		}
 	}
 }

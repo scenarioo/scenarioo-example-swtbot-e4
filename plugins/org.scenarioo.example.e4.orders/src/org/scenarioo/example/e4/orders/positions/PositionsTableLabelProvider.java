@@ -27,58 +27,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.dto;
+package org.scenarioo.example.e4.orders.positions;
 
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 import org.scenarioo.example.e4.domain.Article;
-import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 
-public class PositionWithArticleInfo {
-
-	private Integer posNr;
-	private final Position positon;
-	private Article article; // Immutable in Context of OrderPosition
-
-	public PositionWithArticleInfo(final Integer posNr, final Position position, final Article article) {
-		this.posNr = posNr;
-		this.positon = new Position(position);
-		this.article = article;
+public final class PositionsTableLabelProvider extends LabelProvider implements ITableLabelProvider {
+	@Override
+	public Image getColumnImage(final Object element, final int columnIndex) {
+		return null;
 	}
 
-	public PositionWithArticleInfo(final Integer posNr) {
-		this.posNr = posNr;
-		this.positon = new Position();
+	@Override
+	public String getColumnText(final Object element, final int columnIndex) {
+		PositionWithArticleInfo posWithArtInfo = (PositionWithArticleInfo) element;
+		Article article = posWithArtInfo.getArticle();
+		switch (columnIndex) {
+		case 0:
+			return posWithArtInfo.getPosNr().toString();
+		case 1:
+			return posWithArtInfo.getPositon().getState().getCaption();
+		case 2:
+			return article == null ? "" : article.getArticleNumber();
+		case 3:
+			return article == null ? "" : article.getDescription();
+		case 4:
+			return posWithArtInfo.getPositon().getAmount().toString();
+		case 5:
+			return article == null ? "" : article.getUnit().getCaption();
+		default:
+			return "";
+		}
 	}
-
-	/**
-	 * @return the article
-	 */
-	public Article getArticle() {
-		return article;
-	}
-
-	public void setArticle(final Article article) {
-		this.article = article;
-	}
-
-	/**
-	 * 
-	 */
-	public void setPosNr(final Integer posNr) {
-		this.posNr = posNr;
-	}
-
-	/**
-	 * @return the positon
-	 */
-	public Position getPositon() {
-		return positon;
-	}
-
-	/**
-	 * @return the posNr
-	 */
-	public Integer getPosNr() {
-		return posNr;
-	}
-
 }
