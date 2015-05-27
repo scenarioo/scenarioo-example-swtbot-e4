@@ -41,7 +41,6 @@ import org.scenarioo.example.e4.services.ArticleService;
 import org.scenarioo.example.e4.services.internal.Counter;
 import org.scenarioo.example.e4.services.internal.SimulateServiceCall;
 import org.scenarioo.example.e4.services.internal.idstores.ArticleIdStore;
-import org.scenarioo.example.e4.services.internal.idstores.IdStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,7 @@ public class ArticleServiceImpl implements ArticleService {
 	private static Logger LOGGER = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
 	private final Counter counter = Counter.getInstance();
-	private final ArticleIdStore articleIdStore = (ArticleIdStore) IdStore.getInstance(Article.class);
+	private final ArticleIdStore articleIdStore = ArticleIdStore.getInstance();
 
 	public ArticleServiceImpl() {
 		articleIdStore.put(createDarthVaderArticle());

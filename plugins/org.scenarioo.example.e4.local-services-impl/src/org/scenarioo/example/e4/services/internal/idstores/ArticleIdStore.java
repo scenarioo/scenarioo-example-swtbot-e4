@@ -54,4 +54,7 @@ public class ArticleIdStore extends IdStore<ArticleId, Article> {
 		return articlesMap;
 	}
 
+	public static ArticleIdStore getInstance() {
+		return (ArticleIdStore) IdStore.getInstance(Article.class);
+	}
 }

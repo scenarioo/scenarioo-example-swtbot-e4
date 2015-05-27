@@ -267,5 +267,6 @@ public class OrdersOverviewPart {
 		this.orderImage.dispose();
 		this.orderNotFoundImage.dispose();
 		this.orderLoadedImage.dispose();
+		this.orderPositionImage.dispose();
 	}
 }

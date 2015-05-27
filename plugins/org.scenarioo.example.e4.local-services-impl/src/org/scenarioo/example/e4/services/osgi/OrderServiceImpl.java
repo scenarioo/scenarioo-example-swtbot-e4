@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
 	private final Counter counter = Counter.getInstance();
 	private final IdStore<OrderId, Order> orderIdStore = IdStore.getInstance(Order.class);
 	private final IdStore<OrderId, OrderPositions> positionsIdStore = IdStore.getInstance(OrderPositions.class);
-	private final ArticleIdStore articleIdStore = (ArticleIdStore) IdStore.getInstance(Article.class);
+	private final ArticleIdStore articleIdStore = ArticleIdStore.getInstance();
 
 	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#createOrder(org.scenarioo.example.e4.domain.Order)
