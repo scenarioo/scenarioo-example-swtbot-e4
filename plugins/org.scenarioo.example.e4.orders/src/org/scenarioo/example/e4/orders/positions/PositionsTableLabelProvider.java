@@ -49,13 +49,13 @@ public final class PositionsTableLabelProvider extends LabelProvider implements 
 		case 0:
 			return posWithArtInfo.getPosNr().toString();
 		case 1:
-			return posWithArtInfo.getPositon().getState().getCaption();
+			return posWithArtInfo.getPosition().getState().getCaption();
 		case 2:
 			return article == null ? "" : article.getArticleNumber();
 		case 3:
 			return article == null ? "" : article.getDescription();
 		case 4:
-			return posWithArtInfo.getPositon().getAmount().toString();
+			return posWithArtInfo.getPosition().getAmount().toString();
 		case 5:
 			return article == null ? "" : article.getUnit().getCaption();
 		default:

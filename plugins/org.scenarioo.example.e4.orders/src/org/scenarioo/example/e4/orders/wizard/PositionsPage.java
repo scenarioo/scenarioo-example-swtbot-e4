@@ -38,18 +38,18 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
-import org.scenarioo.example.e4.dto.OrderPositionsViewDTO;
-import org.scenarioo.example.e4.orders.positions.OrderPositionsView;
+import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
+import org.scenarioo.example.e4.orders.positions.OrderPositionsTableview;
 import org.scenarioo.example.e4.services.ArticleService;
 
 public class PositionsPage extends WizardPage {
 
 	private final ArticleService articleService;
-	private final OrderPositionsViewDTO orderPositionsForViewDTO;
-	private OrderPositionsView positionsPanel;
+	private final OrderPositionsTableviewDTO orderPositionsForViewDTO;
+	private OrderPositionsTableview positionsPanel;
 
 	public PositionsPage(final ArticleService articleService,
-			final OrderPositionsViewDTO orderPositionsForViewDTO) {
+			final OrderPositionsTableviewDTO orderPositionsForViewDTO) {
 		super("Positions Page");
 		setTitle("Positions Page");
 		setDescription("Enter the order positions");
@@ -60,7 +60,7 @@ public class PositionsPage extends WizardPage {
 
 	@Override
 	public void createControl(final Composite parent) {
-		this.positionsPanel = new OrderPositionsView(parent, articleService, orderPositionsForViewDTO);
+		this.positionsPanel = new OrderPositionsTableview(parent, articleService, orderPositionsForViewDTO);
 		this.positionsPanel.addArticleIdSelectionListener(new ArticleIdSelectionListener());
 		this.positionsPanel.addSelectionListenerOnAddRemovePositionButton(new SelectionAdapter() {
 			@Override

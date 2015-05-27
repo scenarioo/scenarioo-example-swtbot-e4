@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 
 public class ArticleEditingSupport extends EditingSupport {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(ArticleEditingSupport.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ArticleEditingSupport.class);
 	private static final String DISPLAYABLE_SEPARATOR = "-";
 
 	private final Map<ArticleId, Integer> indexForArticleId = new HashMap<ArticleId, Integer>();
@@ -123,7 +123,7 @@ public class ArticleEditingSupport extends EditingSupport {
 		posWithArticleInfo.setArticle(articleForIndex.get(value));
 		viewer.update(element, null);
 		LOGGER.info("New ArticleId=" + posWithArticleInfo.getArticle().getId() + " (oldArticleId=" + oldArticleId
-				+ ") has been set for OrderPosition:" + posWithArticleInfo.getPositon());
+				+ ") has been set for OrderPosition:" + posWithArticleInfo.getPosition());
 	}
 
 	private class ArticleNrSort implements Comparator<Article> {

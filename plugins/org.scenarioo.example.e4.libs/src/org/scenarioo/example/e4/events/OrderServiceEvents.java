@@ -27,59 +27,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.dto;
+package org.scenarioo.example.e4.events;
 
-import org.scenarioo.example.e4.domain.Article;
-import org.scenarioo.example.e4.domain.Position;
+public class OrderServiceEvents {
 
-public class PositionWithArticleInfo {
-
-	private Integer posNr;
-	private final Position position;
-	private Article article; // Immutable in Context of OrderPosition
-
-	public PositionWithArticleInfo(final Integer posNr, final Position position, final Article article) {
-		this.posNr = posNr;
-		this.position = new Position(position);
-		this.article = article;
-	}
-
-	public PositionWithArticleInfo(final Integer posNr) {
-		this.posNr = posNr;
-		this.position = new Position();
-	}
-
-	/**
-	 * @return the article
-	 */
-	public Article getArticle() {
-		return article;
-	}
-
-	public void setArticle(final Article article) {
-		this.article = article;
-		this.position.setArticleId(article.getId());
-	}
-
-	/**
-	 * 
-	 */
-	public void setPosNr(final Integer posNr) {
-		this.posNr = posNr;
-	}
-
-	/**
-	 * @return the positon
-	 */
-	public Position getPosition() {
-		return position;
-	}
-
-	/**
-	 * @return the posNr
-	 */
-	public Integer getPosNr() {
-		return posNr;
-	}
+	public static final String TOPIC_ORDERS_CREATE = "TOPIC_ORDERS/CREATE";
+	public static final String TOPIC_ORDERS_UPDATE = "TOPIC_ORDERS/UPDATE";
+	public static final String TOPIC_ORDERS_DELETED = "TOPIC_ORDERS/DELETED";
+	public static final String TOPIC_POSITION_CREATE = "TOPIC_POSITIONS/CREATE";
+	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITIONS/UPDATE";
+	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITIONS/DELETED";
 
 }

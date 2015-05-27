@@ -4,4 +4,5 @@
    <service>
       <provide interface="org.scenarioo.example.e4.services.OrderService"/>
    </service>
+   <reference bind="registerEventAdmin" cardinality="1..1" interface="org.osgi.service.event.EventAdmin" name="EventAdmin" policy="dynamic" unbind="unregisterEventAdmin"/>
 </scr:component>

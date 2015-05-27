@@ -29,57 +29,31 @@
 
 package org.scenarioo.example.e4.dto;
 
+import java.util.Map;
+
 import org.scenarioo.example.e4.domain.Article;
-import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.domain.ArticleId;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.domain.OrderPositions;
 
-public class PositionWithArticleInfo {
+public class OrderPositionsTableviewDTO extends OrderPositionsTreeviewDTO {
 
-	private Integer posNr;
-	private final Position position;
-	private Article article; // Immutable in Context of OrderPosition
+	private final Order order;
 
-	public PositionWithArticleInfo(final Integer posNr, final Position position, final Article article) {
-		this.posNr = posNr;
-		this.position = new Position(position);
-		this.article = article;
+	public OrderPositionsTableviewDTO() {
+		this.order = new Order();
 	}
 
-	public PositionWithArticleInfo(final Integer posNr) {
-		this.posNr = posNr;
-		this.position = new Position();
-	}
-
-	/**
-	 * @return the article
-	 */
-	public Article getArticle() {
-		return article;
-	}
-
-	public void setArticle(final Article article) {
-		this.article = article;
-		this.position.setArticleId(article.getId());
+	public OrderPositionsTableviewDTO(final Order order, final OrderPositions orderPositions,
+			final Map<ArticleId, Article> articleInfoFromPositions) {
+		super(orderPositions, articleInfoFromPositions);
+		this.order = order;
 	}
 
 	/**
-	 * 
+	 * @return the order
 	 */
-	public void setPosNr(final Integer posNr) {
-		this.posNr = posNr;
+	public Order getOrder() {
+		return order;
 	}
-
-	/**
-	 * @return the positon
-	 */
-	public Position getPosition() {
-		return position;
-	}
-
-	/**
-	 * @return the posNr
-	 */
-	public Integer getPosNr() {
-		return posNr;
-	}
-
 }

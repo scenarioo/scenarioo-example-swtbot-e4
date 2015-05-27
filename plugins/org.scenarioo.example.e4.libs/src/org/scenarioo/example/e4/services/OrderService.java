@@ -33,9 +33,10 @@ import java.util.Set;
 
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
-import org.scenarioo.example.e4.domain.Position;
-import org.scenarioo.example.e4.dto.OrderSearchFilter;
 import org.scenarioo.example.e4.dto.CreateOrderDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
+import org.scenarioo.example.e4.dto.OrderSearchFilter;
 
 public interface OrderService {
 
@@ -43,7 +44,9 @@ public interface OrderService {
 
 	Order getOrder(OrderId id);
 
-	Set<Position> getPositions(OrderId id);
+	OrderPositionsTableviewDTO getOrderPositionsTableviewDTO(OrderId id);
+
+	OrderPositionsTreeviewDTO getOrderPositionsTreeviewDTO(OrderId id);
 
 	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
 }

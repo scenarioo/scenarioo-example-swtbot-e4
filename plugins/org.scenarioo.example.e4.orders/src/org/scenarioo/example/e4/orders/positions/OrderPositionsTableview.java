@@ -47,12 +47,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
-import org.scenarioo.example.e4.dto.OrderPositionsViewDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
 import org.scenarioo.example.e4.services.ArticleService;
 
-public class OrderPositionsView {
+public class OrderPositionsTableview {
 
 	// Data model
 	private final OrderPositions orderPositions;
@@ -66,8 +66,8 @@ public class OrderPositionsView {
 	private final TableViewer viewer;
 	private final Composite container;
 
-	public OrderPositionsView(final Composite parent, final ArticleService articleService,
-			final OrderPositionsViewDTO orderPositionsForViewDTO) {
+	public OrderPositionsTableview(final Composite parent, final ArticleService articleService,
+			final OrderPositionsTableviewDTO orderPositionsForViewDTO) {
 		this.orderPositions = orderPositionsForViewDTO.getOrderPositions();
 		this.container = new Composite(parent, SWT.NONE);
 
@@ -229,7 +229,7 @@ public class OrderPositionsView {
 		// add All the data from Table
 		List<PositionWithArticleInfo> inputData = getInputData();
 		for (PositionWithArticleInfo pos : inputData) {
-			orderPositions.addPosition(pos.getPositon());
+			orderPositions.addPosition(pos.getPosition());
 		}
 		return orderPositions;
 	}

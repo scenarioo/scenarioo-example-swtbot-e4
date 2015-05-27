@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 public class AmountEditingSupport extends EditingSupport {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(AmountEditingSupport.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AmountEditingSupport.class);
 
 	private final TableViewer tableViewer;
 	private final CellEditor editor;
@@ -97,16 +97,16 @@ public class AmountEditingSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(final Object element) {
-		return ((PositionWithArticleInfo) element).getPositon().getAmount().toString();
+		return ((PositionWithArticleInfo) element).getPosition().getAmount().toString();
 	}
 
 	@Override
 	protected void setValue(final Object element, final Object userInputValue) {
 		PositionWithArticleInfo posWithArticleInfo = (PositionWithArticleInfo) element;
-		Long oldAmount = posWithArticleInfo.getPositon().getAmount();
-		((PositionWithArticleInfo) element).getPositon().setAmount(Long.valueOf(userInputValue.toString()));
+		Long oldAmount = posWithArticleInfo.getPosition().getAmount();
+		((PositionWithArticleInfo) element).getPosition().setAmount(Long.valueOf(userInputValue.toString()));
 		tableViewer.update(element, null);
 		LOGGER.info("New Amount=" + userInputValue + " (oldAmount=" + oldAmount
-				+ ") has been set for OrderPosition:" + posWithArticleInfo.getPositon());
+				+ ") has been set for OrderPosition:" + posWithArticleInfo.getPosition());
 	}
 }

@@ -27,59 +27,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.dto;
+package org.scenarioo.example.e4.services.internal.idstores;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.scenarioo.example.e4.domain.Article;
+import org.scenarioo.example.e4.domain.ArticleId;
+import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.Position;
 
-public class PositionWithArticleInfo {
+public class ArticleIdStore extends IdStore<ArticleId, Article> {
 
-	private Integer posNr;
-	private final Position position;
-	private Article article; // Immutable in Context of OrderPosition
-
-	public PositionWithArticleInfo(final Integer posNr, final Position position, final Article article) {
-		this.posNr = posNr;
-		this.position = new Position(position);
-		this.article = article;
+	protected ArticleIdStore() {
 	}
 
-	public PositionWithArticleInfo(final Integer posNr) {
-		this.posNr = posNr;
-		this.position = new Position();
-	}
+	public Map<ArticleId, Article> getArticles(
+			final OrderPositions positions) {
 
-	/**
-	 * @return the article
-	 */
-	public Article getArticle() {
-		return article;
-	}
+		Map<ArticleId, Article> articlesMap = new HashMap<ArticleId, Article>();
+		for (Position pos : positions.getPositions()) {
+			Article article = super.get(pos.getArticleId());
+			articlesMap.put(article.getId(), article);
+		}
 
-	public void setArticle(final Article article) {
-		this.article = article;
-		this.position.setArticleId(article.getId());
-	}
-
-	/**
-	 * 
-	 */
-	public void setPosNr(final Integer posNr) {
-		this.posNr = posNr;
-	}
-
-	/**
-	 * @return the positon
-	 */
-	public Position getPosition() {
-		return position;
-	}
-
-	/**
-	 * @return the posNr
-	 */
-	public Integer getPosNr() {
-		return posNr;
+		return articlesMap;
 	}
 
 }

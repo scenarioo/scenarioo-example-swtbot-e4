@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.scenarioo.example.e4.domain,
  org.scenarioo.example.e4.dto,
+ org.scenarioo.example.e4.events,
  org.scenarioo.example.e4.services
 Bundle-ClassPath: lib/commons-lang3-3.4.jar,
  .

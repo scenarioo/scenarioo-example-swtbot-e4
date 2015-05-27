@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 public class CreateOrderHandler {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
 
 	@Execute
 	public void execute(final Shell shell, final OrderService orderService, final ArticleService articleSerice) {

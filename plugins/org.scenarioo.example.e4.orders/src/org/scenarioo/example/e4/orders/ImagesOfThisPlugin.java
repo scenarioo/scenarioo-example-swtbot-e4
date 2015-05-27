@@ -43,8 +43,13 @@ public enum ImagesOfThisPlugin {
 	ORDER("folder.png"),
 	ORDER_NEW("folder_add.png"),
 	ORDER_NOT_FOUND("folder_silver.png"),
-	ORDER_OPEN("folder_open.png"),
+	ORDER_SEARCH("folder_explorer.png"),
+	ORDER_LOADED("folder_open.png"),
 	ORDER_CLOSE("folder_close.png"),
+	ORDER_POSITION("document.png"),
+	ORDER_POSITION_ADD("document_add.png"),
+	ORDER_POSITION_COPY("document_copy.png"),
+	ORDER_POSITION_REMOVE("document_remove.png"),
 	ADD_BUTTON("button_add.png"),
 	DELETE_BUTTON("button_delete.png");
 

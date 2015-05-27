@@ -34,7 +34,7 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.scenarioo.example.e4.dto.CreateOrderDTO;
-import org.scenarioo.example.e4.dto.OrderPositionsViewDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
 import org.scenarioo.example.e4.services.ArticleService;
 import org.scenarioo.example.e4.services.OrderService;
 
@@ -59,7 +59,7 @@ public class NewOrderWizard extends Wizard implements IPageChangedListener {
 
 	@Override
 	public void addPages() {
-		OrderPositionsViewDTO orderPositionsForViewDTO = new OrderPositionsViewDTO();
+		OrderPositionsTableviewDTO orderPositionsForViewDTO = new OrderPositionsTableviewDTO();
 		one = new OrderPage(orderPositionsForViewDTO.getOrder());
 		two = new PositionsPage(articleService, orderPositionsForViewDTO);
 		addPage(one);

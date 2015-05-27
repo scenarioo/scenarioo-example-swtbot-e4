@@ -39,8 +39,9 @@ import org.scenarioo.example.e4.domain.Unit;
 import org.scenarioo.example.e4.dto.ArticleSearchFilterDTO;
 import org.scenarioo.example.e4.services.ArticleService;
 import org.scenarioo.example.e4.services.internal.Counter;
-import org.scenarioo.example.e4.services.internal.IdStore;
 import org.scenarioo.example.e4.services.internal.SimulateServiceCall;
+import org.scenarioo.example.e4.services.internal.idstores.ArticleIdStore;
+import org.scenarioo.example.e4.services.internal.idstores.IdStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class ArticleServiceImpl implements ArticleService {
 	private static Logger LOGGER = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
 	private final Counter counter = Counter.getInstance();
-	private final IdStore<ArticleId, Article> articleIdStore = IdStore.getInstance(Article.class);
+	private final ArticleIdStore articleIdStore = (ArticleIdStore) IdStore.getInstance(Article.class);
 
 	public ArticleServiceImpl() {
 		articleIdStore.put(createDarthVaderArticle());
@@ -74,8 +75,10 @@ public class ArticleServiceImpl implements ArticleService {
 	 */
 	@Override
 	public Map<ArticleId, Article> getArticle(final ArticleId... articleIds) {
-		// TODO Auto-generated method stub
-		return null;
+
+		SimulateServiceCall.start();
+
+		return articleIdStore.get(articleIds);
 	}
 
 	/**

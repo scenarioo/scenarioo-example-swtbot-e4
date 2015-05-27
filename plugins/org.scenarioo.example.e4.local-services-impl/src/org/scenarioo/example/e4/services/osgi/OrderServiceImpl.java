@@ -29,20 +29,32 @@
 
 package org.scenarioo.example.e4.services.osgi;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
+import org.osgi.service.event.EventConstants;
+import org.scenarioo.example.e4.domain.Article;
+import org.scenarioo.example.e4.domain.ArticleId;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.OrderState;
-import org.scenarioo.example.e4.domain.Position;
-import org.scenarioo.example.e4.dto.OrderSearchFilter;
 import org.scenarioo.example.e4.dto.CreateOrderDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
+import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
+import org.scenarioo.example.e4.dto.OrderSearchFilter;
+import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.services.OrderService;
 import org.scenarioo.example.e4.services.internal.Counter;
 import org.scenarioo.example.e4.services.internal.IdSetter;
-import org.scenarioo.example.e4.services.internal.IdStore;
 import org.scenarioo.example.e4.services.internal.SimulateServiceCall;
+import org.scenarioo.example.e4.services.internal.idstores.ArticleIdStore;
+import org.scenarioo.example.e4.services.internal.idstores.IdStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
 	private final Counter counter = Counter.getInstance();
 	private final IdStore<OrderId, Order> orderIdStore = IdStore.getInstance(Order.class);
 	private final IdStore<OrderId, OrderPositions> positionsIdStore = IdStore.getInstance(OrderPositions.class);
+	private final ArticleIdStore articleIdStore = (ArticleIdStore) IdStore.getInstance(Article.class);
 
 	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#createOrder(org.scenarioo.example.e4.domain.Order)
@@ -62,18 +75,19 @@ public class OrderServiceImpl implements OrderService {
 	public Order createOrder(final CreateOrderDTO orderWithPos) {
 
 		SimulateServiceCall.start();
-		
+
 		// Store Order part
 		Order order = orderWithPos.getOrder();
 		order.generateAndSetId(counter);
 		orderIdStore.put(order);
-		
+
 		// Store positions part
 		OrderPositions pos = orderWithPos.getOrderPositions();
 		pos.setOrderReference(order);
 		positionsIdStore.put(pos);
 
 		LOGGER.info(order + " with " + pos + " has been created");
+		postEvent(OrderServiceEvents.TOPIC_ORDERS_CREATE, order);
 
 		return order;
 	}
@@ -120,9 +134,48 @@ public class OrderServiceImpl implements OrderService {
 	 * @see org.scenarioo.example.e4.services.OrderService#getPositions(org.scenarioo.example.e4.domain.OrderId)
 	 */
 	@Override
-	public Set<Position> getPositions(final OrderId id) {
-		// TODO Auto-generated method stub
-		return null;
+	public OrderPositionsTableviewDTO getOrderPositionsTableviewDTO(final OrderId id) {
+
+		SimulateServiceCall.start();
+
+		Order order = orderIdStore.get(id);
+		OrderPositions orderPositions = positionsIdStore.get(id);
+		Map<ArticleId, Article> articlesMap = articleIdStore.getArticles(orderPositions);
+
+		LOGGER.info("getOrderPositionsTableviewDTO(" + id + ") : " + orderPositions);
+		return new OrderPositionsTableviewDTO(order, orderPositions, articlesMap);
 	}
 
+	@Override
+	public OrderPositionsTreeviewDTO getOrderPositionsTreeviewDTO(final OrderId id) {
+
+		SimulateServiceCall.start();
+
+		OrderPositions orderPositions = positionsIdStore.get(id);
+		Map<ArticleId, Article> articlesMap = articleIdStore.getArticles(orderPositions);
+
+		LOGGER.info("getOrderPositionsTreeviewDTO(" + id + ") : " + orderPositions);
+		return new OrderPositionsTreeviewDTO(orderPositions, articlesMap);
+	}
+
+	/**
+	 * We use eventAdmin due IEventBroker is not available in OSGI Context.
+	 */
+	private EventAdmin eventAdmin;
+
+	private void postEvent(final String topic, final Object data) {
+		Dictionary<String, Object> map = new Hashtable<String, Object>(2);
+		map.put(EventConstants.EVENT_TOPIC, topic);
+		map.put(IEventBroker.DATA, data);
+		Event event = new Event(topic, map);
+		eventAdmin.postEvent(event);
+	}
+
+	void registerEventAdmin(final EventAdmin admin) {
+		this.eventAdmin = admin;
+	}
+
+	void unregisterEventAdmin(final EventAdmin admin) {
+		this.eventAdmin = null;
+	}
 }

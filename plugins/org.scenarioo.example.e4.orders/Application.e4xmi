@@ -36,7 +36,7 @@
     </mainMenu>
     <trimBars xmi:id="_bCMXEO55EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.trimbar.top">
       <children xsi:type="menu:ToolBar" xmi:id="_pFBYoO55EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.toolbar.0">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_w75aQPoqEeSlBI4u39dczQ" elementId="org.scenarioo.example.e4.orders.handledtoolitem.newOrder" label="New Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/New-Folder-icon.png" command="_5VXwwO5wEeSxWb11zxVslg"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_w75aQPoqEeSlBI4u39dczQ" elementId="org.scenarioo.example.e4.orders.handledtoolitem.newOrder" label="New Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/folder_add.png" command="_5VXwwO5wEeSxWb11zxVslg"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_AkEdAO56EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledtoolitem.saveAll" accessibilityPhrase="" label="Save All" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/save-all.png" command="_sE6nUO5wEeSxWb11zxVslg"/>
       </children>
     </trimBars>

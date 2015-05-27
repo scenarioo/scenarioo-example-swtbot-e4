@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services.internal;
+package org.scenarioo.example.e4.services.internal.idstores;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +35,7 @@ import java.util.Map;
 
 import org.scenarioo.example.e4.domain.AbstractDomainEntity;
 import org.scenarioo.example.e4.domain.AbstractId;
+import org.scenarioo.example.e4.domain.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ public class IdStore<S extends AbstractId, T extends AbstractDomainEntity<S>> {
 
 	private final Map<S, T> map = new HashMap<S, T>();
 
-	private IdStore() {
+	protected IdStore() {
 
 	}
 
@@ -57,6 +58,16 @@ public class IdStore<S extends AbstractId, T extends AbstractDomainEntity<S>> {
 
 	public T get(final S id) {
 		return map.get(id);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<S, T> get(final S... ids) {
+
+		Map<S, T> entities = new HashMap<S, T>();
+		for (S id : ids) {
+			entities.put(id, map.get(id));
+		}
+		return entities;
 	}
 
 	public Collection<T> values() {
@@ -88,5 +99,9 @@ public class IdStore<S extends AbstractId, T extends AbstractDomainEntity<S>> {
 
 		private static Map<Class<? extends AbstractDomainEntity<? extends AbstractId>>, IdStore<? extends AbstractId, ? extends AbstractDomainEntity<? extends AbstractId>>> INSTANCE =
 				new HashMap<Class<? extends AbstractDomainEntity<? extends AbstractId>>, IdStore<? extends AbstractId, ? extends AbstractDomainEntity<? extends AbstractId>>>();
+
+		static {
+			INSTANCE.put(Article.class, new ArticleIdStore());
+		}
 	}
 }
