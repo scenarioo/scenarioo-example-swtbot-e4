@@ -45,4 +45,37 @@ public enum OrderState {
 	public String getCaption() {
 		return caption;
 	}
+
+	public static String[] getItems() {
+		String[] items = new String[OrderState.values().length];
+		int i = 0;
+		for (OrderState state : OrderState.values()) {
+			items[i] = state.caption;
+			i++;
+		}
+		return items;
+	}
+
+	public static int getSelectedIndex(final OrderState orderState) {
+		int i = 0;
+		for (OrderState state : OrderState.values()) {
+			if (state.equals(orderState)) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+
+	public static OrderState getSelectedState(final Integer index) {
+		int i = 0;
+		for (OrderState state : OrderState.values()) {
+			if (index.equals(i)) {
+				return state;
+			}
+			i++;
+		}
+		return null;
+	}
+
 }

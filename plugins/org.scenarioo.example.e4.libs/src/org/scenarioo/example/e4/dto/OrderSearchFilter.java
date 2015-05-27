@@ -37,13 +37,84 @@ import org.scenarioo.example.e4.domain.OrderState;
 public class OrderSearchFilter {
 
 	private String orderNumber;
-
 	private OrderState state;
-
 	private Date creationDate;
-
 	private Date deliveryDate;
-
 	private ArticleId articleId;
+
+	/**
+	 * @return the orderNumber
+	 */
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	/**
+	 * @param orderNumber
+	 *            the orderNumber to set
+	 */
+	public void setOrderNumber(final String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	/**
+	 * @return the deliveryDate
+	 */
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	/**
+	 * @param deliveryDate
+	 *            the deliveryDate to set
+	 */
+	public void setDeliveryDate(final Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+
+	/**
+	 * @return the articleId
+	 */
+	public ArticleId getArticleId() {
+		return articleId;
+	}
+
+	/**
+	 * @param articleId
+	 *            the articleId to set
+	 */
+	public void setArticleId(final ArticleId articleId) {
+		this.articleId = articleId;
+	}
+
+	/**
+	 * @return the state
+	 */
+	public OrderState getState() {
+		return state;
+	}
+
+	/**
+	 * @param state
+	 *            the state to set
+	 */
+	public void setState(final OrderState state) {
+		this.state = state;
+	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(final Date creationDate) {
+		this.creationDate = creationDate;
+	}
 
 }

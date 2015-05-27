@@ -91,8 +91,8 @@ public class OrderDetailView {
 		orderStateLabel.setText("Order State");
 		stateCombo = new Combo(container, SWT.BORDER | SWT.SINGLE);
 		stateCombo.setEnabled(false);
-		stateCombo.setItems(getOrderStateItems());
-		stateCombo.select(getSelectedIndex(order.getState()));
+		stateCombo.setItems(OrderState.getItems());
+		stateCombo.select(OrderState.getSelectedIndex(order.getState()));
 		stateCombo.setLayoutData(gd);
 
 		// Delivery Date
@@ -175,26 +175,4 @@ public class OrderDetailView {
 		instance.set(Calendar.YEAR, deliveryDateTime.getYear());
 		return instance.getTime();
 	}
-
-	private String[] getOrderStateItems() {
-		String[] items = new String[OrderState.values().length];
-		int i = 0;
-		for (OrderState state : OrderState.values()) {
-			items[i] = state.getCaption();
-			i++;
-		}
-		return items;
-	}
-
-	private int getSelectedIndex(final OrderState orderState) {
-		int i = 0;
-		for (OrderState state : OrderState.values()) {
-			if (state.equals(orderState)) {
-				break;
-			}
-			i++;
-		}
-		return i;
-	}
-
 }

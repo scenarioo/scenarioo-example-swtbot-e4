@@ -27,16 +27,46 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.events;
+package org.scenarioo.example.e4.orders;
 
-public class OrderServiceEvents {
+import java.net.URL;
 
-	public static final String TOPIC_ORDER_TREE_ADD = "TOPIC_ORDER_TREE/ADD";
-	public static final String TOPIC_ORDERS_CREATE = "TOPIC_ORDERS/CREATE";
-	public static final String TOPIC_ORDERS_UPDATE = "TOPIC_ORDERS/UPDATE";
-	public static final String TOPIC_ORDERS_DELETED = "TOPIC_ORDERS/DELETED";
-	public static final String TOPIC_POSITION_CREATE = "TOPIC_POSITIONS/CREATE";
-	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITIONS/UPDATE";
-	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITIONS/DELETED";
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
+public enum OrderPluginImages {
+
+	ORDER("folder.png"),
+	ORDER_NEW("folder_add.png"),
+	ORDER_NOT_FOUND("folder_silver.png"),
+	ORDER_SEARCH("folder_explorer.png"),
+	ORDER_LOADED("folder_open.png"),
+	ORDER_CLOSE("folder_close.png"),
+	ORDER_POSITION("document.png"),
+	ORDER_POSITION_ADD("document_add.png"),
+	ORDER_POSITION_COPY("document_copy.png"),
+	ORDER_POSITION_REMOVE("document_remove.png"),
+	CHECKBOX_CHECKED("checkbox_checked.png"),
+	CHECKBOX_UNCHECKED("checkbox_unchecked.png"),
+	ADD_BUTTON("button_add.png"),
+	DELETE_BUTTON("button_delete.png"),
+	SEARCH_24("search_24.png"),
+	ADD_BUTTON_24("button_add_24.png"),
+	DELETE_BUTTON_24("button_delete_24.png");
+
+	private ImageDescriptor imageDescriptor;
+
+	private OrderPluginImages(final String fileName) {
+		Bundle bundle = FrameworkUtil.getBundle(OrderPluginImages.class);
+		URL url = FileLocator.find(bundle, new Path("icons/" + fileName), null);
+		imageDescriptor = ImageDescriptor.createFromURL(url);
+	}
+
+	public Image getImage() {
+		return imageDescriptor.createImage();
+	}
 }

@@ -27,16 +27,38 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.events;
+package org.scenarioo.example.e4.orders.search;
 
-public class OrderServiceEvents {
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.TableColumn;
 
-	public static final String TOPIC_ORDER_TREE_ADD = "TOPIC_ORDER_TREE/ADD";
-	public static final String TOPIC_ORDERS_CREATE = "TOPIC_ORDERS/CREATE";
-	public static final String TOPIC_ORDERS_UPDATE = "TOPIC_ORDERS/UPDATE";
-	public static final String TOPIC_ORDERS_DELETED = "TOPIC_ORDERS/DELETED";
-	public static final String TOPIC_POSITION_CREATE = "TOPIC_POSITIONS/CREATE";
-	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITIONS/UPDATE";
-	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITIONS/DELETED";
+public class OrderSearchTableHelper {
+
+	private static final String[] TITLES = { "Order Number", "Creation Date", "Order State", "Delivery Date",
+			"Recipient Full Name", "import" };
+	private static final int[] BOUNDS = { 100, 100, 100, 100, 100, 100 };
+
+	private OrderSearchTableHelper() {
+
+	}
+
+	public static void initializeColumns(final TableViewer tableViewer) {
+		for (int i = 0; i < TITLES.length; i++) {
+			createTableViewerColumn(tableViewer, i);
+		}
+	}
+
+	private static TableViewerColumn createTableViewerColumn(final TableViewer tableViewer, final int colNumber) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer,
+				SWT.NONE);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(TITLES[colNumber]);
+		column.setWidth(BOUNDS[colNumber]);
+		column.setResizable(true);
+		column.setMoveable(true);
+		return viewerColumn;
+	}
 
 }

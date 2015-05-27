@@ -29,29 +29,56 @@
 
 package org.scenarioo.example.e4.orders.handlers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.service.event.Event;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.orders.OrderPluginImages;
-import org.scenarioo.example.e4.orders.createorder.NewOrderWizard;
+import org.scenarioo.example.e4.orders.search.OrdersSearchDialog;
 import org.scenarioo.example.e4.services.ArticleService;
 import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateOrderHandler {
+public class SearchOrderHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchOrderHandler.class);
+
+	@Inject
+	private IEventBroker eventBroker;
 
 	@Execute
-	public void execute(final Shell shell, final OrderService orderService, final ArticleService articleSerice) {
+	public void execute(final Shell shell, final ArticleService articleService, final OrderService orderService) {
 
 		LOGGER.info(this.getClass().getSimpleName() + " called");
 
-		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(orderService, articleSerice));
-		Window.setDefaultImage(OrderPluginImages.ORDER.getImage());
-		dialog.open();
+		OrdersSearchDialog dialog = new OrdersSearchDialog(shell, articleService, orderService);
+		Window.setDefaultImage(OrderPluginImages.ORDER_SEARCH.getImage());
+		dialog.create();
+		if (dialog.open() == Window.OK) {
+			List<Order> ordersToOpen = new ArrayList<Order>();
+			for (Order orderToOpen : ordersToOpen) {
+				postEvent(orderToOpen);
+			}
+		}
+
+	}
+
+	private void postEvent(final Order data) {
+		Map<String, Order> map = new HashMap<String, Order>(1);
+		map.put(IEventBroker.DATA, data);
+		eventBroker.post(OrderServiceEvents.TOPIC_ORDER_TREE_ADD,
+				new Event(OrderServiceEvents.TOPIC_ORDER_TREE_ADD, map));
 	}
 
 }

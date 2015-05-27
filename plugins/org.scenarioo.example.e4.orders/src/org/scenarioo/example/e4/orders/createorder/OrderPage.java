@@ -27,16 +27,52 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.events;
+package org.scenarioo.example.e4.orders.createorder;
 
-public class OrderServiceEvents {
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.orders.OrderDetailView;
 
-	public static final String TOPIC_ORDER_TREE_ADD = "TOPIC_ORDER_TREE/ADD";
-	public static final String TOPIC_ORDERS_CREATE = "TOPIC_ORDERS/CREATE";
-	public static final String TOPIC_ORDERS_UPDATE = "TOPIC_ORDERS/UPDATE";
-	public static final String TOPIC_ORDERS_DELETED = "TOPIC_ORDERS/DELETED";
-	public static final String TOPIC_POSITION_CREATE = "TOPIC_POSITIONS/CREATE";
-	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITIONS/UPDATE";
-	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITIONS/DELETED";
+public class OrderPage extends WizardPage {
+
+	private final Order order;
+
+	private OrderDetailView orderDetailPanel;
+
+	public OrderPage(final Order order) {
+		super("Order Page");
+		setTitle("Order Page");
+		setDescription("Enter the order details");
+		this.order = order;
+	}
+
+	@Override
+	public void createControl(final Composite parent) {
+		this.orderDetailPanel = new OrderDetailView(parent, order);
+		this.orderDetailPanel.addOrderNumberKeyListener(
+				new KeyAdapter() {
+
+					@Override
+					public void keyReleased(final KeyEvent e) {
+						if (orderDetailPanel.mandatoryFieldsNonEmpty()) {
+							setPageComplete(true);
+						} else {
+							setPageComplete(false);
+						}
+					}
+
+				});
+
+		// required to avoid an error in the system
+		setControl(orderDetailPanel.getControl());
+		setPageComplete(false);
+	}
+
+	public Order getOrderForUpdate() {
+		return orderDetailPanel.getOrderForUpdate();
+	}
 
 }

@@ -27,41 +27,54 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders;
+package org.scenarioo.example.e4.orders.search;
 
-import java.net.URL;
+import java.text.SimpleDateFormat;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.orders.OrderPluginImages;
 
-public enum ImagesOfThisPlugin {
+public final class OrderSearchResultTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-	ORDER("folder.png"),
-	ORDER_NEW("folder_add.png"),
-	ORDER_NOT_FOUND("folder_silver.png"),
-	ORDER_SEARCH("folder_explorer.png"),
-	ORDER_LOADED("folder_open.png"),
-	ORDER_CLOSE("folder_close.png"),
-	ORDER_POSITION("document.png"),
-	ORDER_POSITION_ADD("document_add.png"),
-	ORDER_POSITION_COPY("document_copy.png"),
-	ORDER_POSITION_REMOVE("document_remove.png"),
-	ADD_BUTTON("button_add.png"),
-	DELETE_BUTTON("button_delete.png");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 
-	private ImageDescriptor imageDescriptor;
-
-	private ImagesOfThisPlugin(final String fileName) {
-		Bundle bundle = FrameworkUtil.getBundle(ImagesOfThisPlugin.class);
-		URL url = FileLocator.find(bundle, new Path("icons/" + fileName), null);
-		imageDescriptor = ImageDescriptor.createFromURL(url);
+	@Override
+	public Image getColumnImage(final Object element, final int columnIndex) {
+		TableResult tableResult = (TableResult) element;
+		switch (columnIndex) {
+		case 5:
+			if (tableResult.isImport()) {
+				return OrderPluginImages.CHECKBOX_CHECKED.getImage();
+			} else {
+				return OrderPluginImages.CHECKBOX_UNCHECKED.getImage();
+			}
+		default:
+			return null;
+		}
 	}
 
-	public Image getImage() {
-		return imageDescriptor.createImage();
+	@Override
+	public String getColumnText(final Object element, final int columnIndex) {
+		TableResult tableResult = (TableResult) element;
+		Order order = tableResult.getOrder();
+		switch (columnIndex) {
+		case 0:
+			return order.getOrderNumber();
+		case 1:
+			return DATE_FORMAT.format(order.getCreationDate());
+		case 2:
+			return order.getState().getCaption();
+		case 3:
+			return DATE_FORMAT.format(order.getDeliveryDate());
+		case 4:
+			return order.getRecipientFullName();
+		case 5:
+			return null;
+		default:
+			return "";
+		}
 	}
 }

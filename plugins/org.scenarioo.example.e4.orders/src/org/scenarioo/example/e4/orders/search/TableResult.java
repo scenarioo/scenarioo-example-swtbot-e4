@@ -27,52 +27,74 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders.wizard;
+package org.scenarioo.example.e4.orders.search;
 
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
 import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.orders.OrderDetailView;
 
-public class OrderPage extends WizardPage {
+public class TableResult {
 
 	private final Order order;
+	private boolean importOrder;
 
-	private OrderDetailView orderDetailPanel;
-
-	public OrderPage(final Order order) {
-		super("Order Page");
-		setTitle("Order Page");
-		setDescription("Enter the order details");
+	public TableResult(final Order order) {
 		this.order = order;
 	}
 
-	@Override
-	public void createControl(final Composite parent) {
-		this.orderDetailPanel = new OrderDetailView(parent, order);
-		this.orderDetailPanel.addOrderNumberKeyListener(
-				new KeyAdapter() {
-
-					@Override
-					public void keyReleased(final KeyEvent e) {
-						if (orderDetailPanel.mandatoryFieldsNonEmpty()) {
-							setPageComplete(true);
-						} else {
-							setPageComplete(false);
-						}
-					}
-
-				});
-
-		// required to avoid an error in the system
-		setControl(orderDetailPanel.getControl());
-		setPageComplete(false);
+	/**
+	 * @return the order
+	 */
+	public Order getOrder() {
+		return order;
 	}
 
-	public Order getOrderForUpdate() {
-		return orderDetailPanel.getOrderForUpdate();
+	/**
+	 * @return the checkBox
+	 */
+	public boolean isImport() {
+		return importOrder;
+	}
+
+	/**
+	 * @param checkBox the checkBox to set
+	 */
+	public void setImport(final boolean importOrder) {
+		this.importOrder = importOrder;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((order == null) ? 0 : order.hashCode());
+		return result;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		TableResult other = (TableResult) obj;
+		if (order == null) {
+			if (other.order != null) {
+				return false;
+			}
+		} else if (!order.equals(other.order)) {
+			return false;
+		}
+		return true;
 	}
 
 }

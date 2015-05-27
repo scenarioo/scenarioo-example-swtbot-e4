@@ -63,7 +63,7 @@ import org.scenarioo.example.e4.domain.PositionId;
 import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
-import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
+import org.scenarioo.example.e4.orders.OrderPluginImages;
 import org.scenarioo.example.e4.orders.handlers.CreateOrderHandler;
 import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
@@ -97,19 +97,22 @@ public class OrdersOverviewPart {
 
 	@Inject
 	@Optional
-	public void addOrder(@UIEventTopic(OrderServiceEvents.TOPIC_ORDERS_CREATE) final Order newOrder) {
+	public void addOrder(@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_ADD) final Order newOrder) {
 		List<Order> orders = getOrders();
-		orders.add(newOrder);
+		// prevent from duplicates!
+		if (!orders.contains(newOrder)) {
+			orders.add(newOrder);
+		}
 		viewer.setInput(orders);
 		LOGGER.info("new " + newOrder + " added to orderOverview.");
 	}
 
 	@PostConstruct
 	public void createControls(final Composite parent, final EMenuService menuService) {
-		this.orderImage = ImagesOfThisPlugin.ORDER.getImage();
-		this.orderNotFoundImage = ImagesOfThisPlugin.ORDER_NOT_FOUND.getImage();
-		this.orderLoadedImage = ImagesOfThisPlugin.ORDER_LOADED.getImage();
-		this.orderPositionImage = ImagesOfThisPlugin.ORDER_POSITION.getImage();
+		this.orderImage = OrderPluginImages.ORDER.getImage();
+		this.orderNotFoundImage = OrderPluginImages.ORDER_NOT_FOUND.getImage();
+		this.orderLoadedImage = OrderPluginImages.ORDER_LOADED.getImage();
+		this.orderPositionImage = OrderPluginImages.ORDER_POSITION.getImage();
 
 		// more code...
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);

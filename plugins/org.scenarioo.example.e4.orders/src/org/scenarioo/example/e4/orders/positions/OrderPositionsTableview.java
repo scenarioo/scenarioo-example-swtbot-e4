@@ -49,7 +49,7 @@ import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
-import org.scenarioo.example.e4.orders.ImagesOfThisPlugin;
+import org.scenarioo.example.e4.orders.OrderPluginImages;
 import org.scenarioo.example.e4.services.ArticleService;
 
 public class OrderPositionsTableview {
@@ -95,7 +95,7 @@ public class OrderPositionsTableview {
 		this.inputCorrectMsgLabel.setLayoutData(errorMsgGridData);
 		new Label(container, SWT.NONE);
 		addPositionButton = new Button(container, SWT.PUSH);
-		addPositionButton.setImage(ImagesOfThisPlugin.ADD_BUTTON.getImage());
+		addPositionButton.setImage(OrderPluginImages.ADD_BUTTON_24.getImage());
 		addPositionButton.setToolTipText("Add Position");
 		GridData buttonGridData = new GridData();
 		buttonGridData.horizontalAlignment = GridData.END;
@@ -118,7 +118,7 @@ public class OrderPositionsTableview {
 		posAmountErrorMsg.setLayoutData(errorMsgGridData);
 		new Label(container, SWT.NONE);
 		this.removePositionButton = new Button(container, SWT.PUSH);
-		this.removePositionButton.setImage(ImagesOfThisPlugin.DELETE_BUTTON.getImage());
+		this.removePositionButton.setImage(OrderPluginImages.DELETE_BUTTON_24.getImage());
 		this.removePositionButton.setToolTipText("Remove Position");
 		this.removePositionButton.setLayoutData(buttonGridData);
 		this.removePositionButton.addSelectionListener(new SelectionAdapter() {
