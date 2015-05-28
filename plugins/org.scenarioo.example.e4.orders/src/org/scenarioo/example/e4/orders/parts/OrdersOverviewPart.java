@@ -43,8 +43,12 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.services.EMenuService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
@@ -64,18 +68,21 @@ import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.orders.OrderPluginImages;
-import org.scenarioo.example.e4.orders.handlers.CreateOrderHandler;
+import org.scenarioo.example.e4.orders.handlers.OrderCreateHandler;
 import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OrdersOverviewPart {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderCreateHandler.class);
 
 	// Services
 	@Inject
 	private OrderService orderService;
+
+	@Inject
+	private ESelectionService selectionService;
 
 	// UI Widgets
 	private TreeViewer viewer;
@@ -97,14 +104,27 @@ public class OrdersOverviewPart {
 
 	@Inject
 	@Optional
-	public void subscribeToOrderTreeTopic(@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_ADD) final Order newOrder) {
+	public void subscribeToOrderTreeAddTopic(@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_ADD) final Order newOrder) {
 		List<Order> orders = getOrders();
 		// prevent from duplicates!
 		if (!orders.contains(newOrder)) {
 			orders.add(newOrder);
+			viewer.setInput(orders);
+			LOGGER.info("new " + newOrder + " added to orderOverview.");
 		}
-		viewer.setInput(orders);
-		LOGGER.info("new " + newOrder + " added to orderOverview.");
+	}
+
+	@Inject
+	@Optional
+	public void subscribeToOrderTreeRemoveTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_REMOVE) final Order removableOrder) {
+		List<Order> orders = getOrders();
+		// prevent from duplicates!
+		if (orders.contains(removableOrder)) {
+			orders.remove(removableOrder);
+			viewer.setInput(orders);
+			LOGGER.info("order " + removableOrder + " has been removed from orderOverview.");
+		}
 	}
 
 	@PostConstruct
@@ -120,6 +140,7 @@ public class OrdersOverviewPart {
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setInput(new ArrayList<Order>());
+		viewer.addSelectionChangedListener(new TreeSelectionListener());
 		viewer.addTreeListener(new ITreeViewerListener() {
 
 			@Override
@@ -148,7 +169,8 @@ public class OrdersOverviewPart {
 
 		// register context menu on the tree
 		menuService.registerContextMenu(viewer.getControl(),
-				"org.scenarioo.example.e4.orders.treeview.order");
+				"org.scenarioo.example.e4.orders.popupmenu.ordersoverview.order");
+
 		LOGGER.info(this.getClass().getSimpleName() + " @PostConstruct method called.");
 	}
 
@@ -160,7 +182,7 @@ public class OrdersOverviewPart {
 		return cachedPositions.get(order.getId()) != null;
 	}
 
-	class ViewContentProvider implements ITreeContentProvider {
+	private class ViewContentProvider implements ITreeContentProvider {
 
 		@Override
 		public void inputChanged(final Viewer v, final Object oldInput, final Object newInput) {
@@ -218,7 +240,7 @@ public class OrdersOverviewPart {
 		}
 	}
 
-	class ViewLabelProvider extends StyledCellLabelProvider {
+	private class ViewLabelProvider extends StyledCellLabelProvider {
 		@Override
 		public void update(final ViewerCell cell) {
 			Object element = cell.getElement();
@@ -258,6 +280,14 @@ public class OrdersOverviewPart {
 		ViewerRow viewerRow = cell.getViewerRow();
 		TreeItem item = (TreeItem) viewerRow.getItem();
 		return item.getExpanded();
+	}
+
+	private class TreeSelectionListener implements ISelectionChangedListener {
+		@Override
+		public void selectionChanged(final SelectionChangedEvent event) {
+			Object first = ((IStructuredSelection) event.getSelection()).getFirstElement();
+			selectionService.setSelection(first);
+		}
 	}
 
 	@Focus

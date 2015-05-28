@@ -27,17 +27,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.events;
+package org.scenarioo.example.e4.orders.handlers;
 
-public class OrderServiceEvents {
+import javax.inject.Named;
 
-	public static final String TOPIC_ORDER_TREE_ADD = "TOPIC_ORDER_TREE/ADD";
-	public static final String TOPIC_ORDER_TREE_REMOVE = "TOPIC_ORDER_TREE/REMOVE";
-	public static final String TOPIC_ORDERS_CREATE = "TOPIC_ORDERS/CREATE";
-	public static final String TOPIC_ORDERS_UPDATE = "TOPIC_ORDERS/UPDATE";
-	public static final String TOPIC_ORDERS_DELETED = "TOPIC_ORDERS/DELETED";
-	public static final String TOPIC_POSITION_CREATE = "TOPIC_POSITIONS/CREATE";
-	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITIONS/UPDATE";
-	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITIONS/DELETED";
+import org.eclipse.e4.core.di.annotations.CanExecute;
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.scenarioo.example.e4.domain.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class OrderDeleteHandler {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderDeleteHandler.class);
+
+	private Order activeOrder;
+
+	@Execute
+	public void execute() {
+		LOGGER.info(this.getClass().getSimpleName() + " called. Active Order is: " + activeOrder);
+	}
+
+	@CanExecute
+	public boolean canExecute(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final Order activeOrder) {
+		this.activeOrder = activeOrder;
+		return activeOrder != null;
+	}
 
 }

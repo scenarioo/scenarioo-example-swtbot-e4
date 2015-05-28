@@ -14,5 +14,26 @@
          </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.scenarioo.example.e4.orders.orderselection">
+		<with variable="org.eclipse.ui.selection">
+    		<iterate ifEmpty="false" operator="or">
+      			<instanceof value="org.scenarioo.example.e4.domain.Order">
+      			</instanceof>
+			</iterate>
+		</with>
+	  </definition>
+      <definition
+            id="org.scenarioo.example.e4.orders.positionselection">
+		<with variable="org.eclipse.ui.selection">
+    		<iterate ifEmpty="false" operator="or">
+      			<instanceof value="org.scenarioo.example.e4.domain.Position">
+      			</instanceof>
+			</iterate>
+		</with>
+	  </definition>
+   </extension>
 
 </plugin>

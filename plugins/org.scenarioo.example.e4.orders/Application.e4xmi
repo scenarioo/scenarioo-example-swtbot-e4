@@ -9,11 +9,20 @@
               <menus xmi:id="_OXcQ0O57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.menu.0">
                 <tags>ViewMenu</tags>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_ovbRMO57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.newOrder" label="New Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/folder_add.png" command="_5VXwwO5wEeSxWb11zxVslg"/>
+                <children xsi:type="menu:MenuSeparator" xmi:id="_z0NOYAVSEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.menuseparator.1"/>
+                <children xsi:type="menu:Menu" xmi:id="_8qOz4AVSEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.menu.group" label="Group By">
+                  <children xsi:type="menu:HandledMenuItem" xmi:id="_BxJDUAVTEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handledmenuitem.deliveryDate" label="Delivery Date"/>
+                  <children xsi:type="menu:HandledMenuItem" xmi:id="_Icnc0AVTEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handledmenuitem.orderState" label="Order State"/>
+                </children>
               </menus>
-              <menus xsi:type="menu:PopupMenu" xmi:id="_UajtAO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.popupmenu.0">
-                <children xsi:type="menu:HandledMenuItem" xmi:id="_VYIvkO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.newOrder" label="New Order" command="_5VXwwO5wEeSxWb11zxVslg"/>
-                <children xsi:type="menu:HandledMenuItem" xmi:id="_ajs1gO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.removeOrder" label="Remove Order" command="_FU9IMO5xEeSxWb11zxVslg"/>
-                <children xsi:type="menu:HandledMenuItem" xmi:id="_gXjqgO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.editOrder" label="Edit Order" command="_SXdVMO5xEeSxWb11zxVslg"/>
+              <menus xsi:type="menu:PopupMenu" xmi:id="_UajtAO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.popupmenu.ordersoverview.order">
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_gXjqgO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.editOrder" label="Edit Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/folder.png" command="_SXdVMO5xEeSxWb11zxVslg"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_ajs1gO5_EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handledmenuitem.removeOrder" label="Remove Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/folder_close.png" command="_FU9IMO5xEeSxWb11zxVslg"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_WTyykAVUEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handledmenuitem.deleteOrder" label="Delete Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/button_delete.png" command="_9ThH0AVaEeW1pr70JV_QNA"/>
+                <children xsi:type="menu:MenuSeparator" xmi:id="_qi_FMAVTEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.menuseparator.2"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_CWU-kAVUEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handledmenuitem.addPosition" label="Add Position" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/document_add.png" command="_lA_xYAVVEeW1pr70JV_QNA"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_s4N3MAVTEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handledmenuitem.editPosition" label="Edit Position" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/document.png" command="_EwzVkAVXEeW1pr70JV_QNA"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_OHgGkAVUEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handledmenuitem.deletePosition" label="Delete Position" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/button_delete.png" command="_17EF0AVVEeW1pr70JV_QNA"/>
               </menus>
               <toolbar xmi:id="_wkWJkAR1EeWj4oLD9ah1qA" elementId="org.scenarioo.example.e4.orders.toolbar.1">
                 <children xsi:type="menu:HandledToolItem" xmi:id="_0kovMAR1EeWj4oLD9ah1qA" elementId="org.scenarioo.example.e4.orders.handledtoolitem.openOrder" label="Open Order" iconURI="platform:/plugin/org.scenarioo.example.e4.orders/icons/folder_explorer.png" command="_Mj22gAR4EeWj4oLD9ah1qA"/>
@@ -43,17 +52,37 @@
     </trimBars>
   </children>
   <handlers xmi:id="_oWTyIO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.saveall" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.SaveAllHandler" command="_sE6nUO5wEeSxWb11zxVslg"/>
-  <handlers xmi:id="_puqaQO5zEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.createorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.CreateOrderHandler" command="_5VXwwO5wEeSxWb11zxVslg"/>
-  <handlers xmi:id="_tQosMO5zEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.deleteorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.DeleteOrderHandler" command="_FU9IMO5xEeSxWb11zxVslg"/>
-  <handlers xmi:id="_Hj6LsO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.updateOrder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.UpdateOrderHandler" command="_SXdVMO5xEeSxWb11zxVslg"/>
+  <handlers xmi:id="_puqaQO5zEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.createorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderCreateHandler" command="_5VXwwO5wEeSxWb11zxVslg"/>
+  <handlers xmi:id="_tQosMO5zEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.removeorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderRemoveHandler" command="_FU9IMO5xEeSxWb11zxVslg"/>
+  <handlers xmi:id="_ME1h4AVtEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handler.deleteorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderDeleteHandler" command="_9ThH0AVaEeW1pr70JV_QNA"/>
+  <handlers xmi:id="_Hj6LsO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.updateOrder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderEditHandler" command="_SXdVMO5xEeSxWb11zxVslg"/>
   <handlers xmi:id="_UHV3EO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.exit" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.ExitHandler" command="_3ArKQO5wEeSxWb11zxVslg"/>
-  <handlers xmi:id="_5vuK0ASzEeWj4oLD9ah1qA" elementId="org.scenarioo.example.e4.orders.handler.searchorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.SearchOrderHandler" command="_Mj22gAR4EeWj4oLD9ah1qA"/>
+  <handlers xmi:id="_5vuK0ASzEeWj4oLD9ah1qA" elementId="org.scenarioo.example.e4.orders.handler.searchorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderSearchHandler" command="_Mj22gAR4EeWj4oLD9ah1qA"/>
+  <handlers xmi:id="_p5MtEAVuEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handler.addposition" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.PositionAddHandler" command="_lA_xYAVVEeW1pr70JV_QNA"/>
   <commands xmi:id="_sE6nUO5wEeSxWb11zxVslg" elementId="org.eclipse.ui.file.saveAll" commandName="Save All"/>
   <commands xmi:id="_3ArKQO5wEeSxWb11zxVslg" elementId="org.eclipse.ui.file.exit" commandName="Exit"/>
-  <commands xmi:id="_5VXwwO5wEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.neworder" commandName="New Order"/>
-  <commands xmi:id="_FU9IMO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.removeorder" commandName="Remove Order"/>
-  <commands xmi:id="_SXdVMO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.editorder" commandName="Edit Order" description=""/>
+  <commands xmi:id="_5VXwwO5wEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.createorder" commandName="Create Order"/>
+  <commands xmi:id="_SXdVMO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.editorder" commandName="Edit Order" description="">
+    <parameters xmi:id="_DVmNwAVVEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.orderforeditorder" name="Seleted Order" optional="false"/>
+  </commands>
+  <commands xmi:id="_FU9IMO5xEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.removeorder" commandName="Remove Order">
+    <parameters xmi:id="_dWMB0AVVEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.1" name="Selected Order" optional="false"/>
+  </commands>
+  <commands xmi:id="_9ThH0AVaEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.command.deleteOrder" commandName="Delete Order">
+    <parameters xmi:id="_CK8w0AVbEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.orderfordeleteorder" name="Selected Order" optional="false"/>
+  </commands>
   <commands xmi:id="_Mj22gAR4EeWj4oLD9ah1qA" elementId="org.scenarioo.example.e4.orders.command.searchorder" commandName="Search Order"/>
+  <commands xmi:id="_lA_xYAVVEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.command.addPosition" commandName="Add Position">
+    <parameters xmi:id="_qtmu4AVVEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.2" name="Selected Order" optional="false"/>
+  </commands>
+  <commands xmi:id="_17EF0AVVEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.command.deletePosition" commandName="Delete Position">
+    <parameters xmi:id="_4QhhUAVVEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.3" name="Selected Position" optional="false"/>
+    <parameters xmi:id="_J9oxYAVYEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.4" name="Selected Order" optional="false"/>
+  </commands>
+  <commands xmi:id="_EwzVkAVXEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.command.editPosition" commandName="Edit Position">
+    <parameters xmi:id="_HquJAAVXEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.5" name="Selected Position" optional="false"/>
+    <parameters xmi:id="_MESU0AVYEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.commandparameter.6" name="Selected Order" optional="false"/>
+  </commands>
   <addons xmi:id="_oixIwe3MEeSoSP8SpH-E-g" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_oixIwu3MEeSoSP8SpH-E-g" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_oixIw-3MEeSoSP8SpH-E-g" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

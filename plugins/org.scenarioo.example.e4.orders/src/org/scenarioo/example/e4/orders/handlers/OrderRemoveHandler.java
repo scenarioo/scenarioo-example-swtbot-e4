@@ -29,12 +29,35 @@
 
 package org.scenarioo.example.e4.orders.handlers;
 
-import org.eclipse.e4.core.di.annotations.Execute;
+import javax.inject.Named;
 
-public class DeleteOrderHandler {
+import org.eclipse.e4.core.di.annotations.CanExecute;
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.events.OrderServiceEvents;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class OrderRemoveHandler {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderRemoveHandler.class);
+
+	private Order activeOrder;
 
 	@Execute
-	public void execute() {
-		System.out.println((this.getClass().getSimpleName() + " called"));
+	public void execute(final IEventBroker eventBroker) {
+		LOGGER.info(this.getClass().getSimpleName() + " called. Active Order is: " + activeOrder);
+
+		eventBroker.post(OrderServiceEvents.TOPIC_ORDER_TREE_REMOVE, activeOrder);
 	}
+
+	@CanExecute
+	public boolean canExecute(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final Order activeOrder) {
+		this.activeOrder = activeOrder;
+		return activeOrder != null;
+	}
+
 }

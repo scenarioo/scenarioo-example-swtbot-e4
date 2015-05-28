@@ -27,17 +27,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.events;
+package org.scenarioo.example.e4.orders.handlers;
 
-public class OrderServiceEvents {
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.scenarioo.example.e4.orders.OrderPluginImages;
+import org.scenarioo.example.e4.orders.createorder.NewOrderWizard;
+import org.scenarioo.example.e4.services.ArticleService;
+import org.scenarioo.example.e4.services.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	public static final String TOPIC_ORDER_TREE_ADD = "TOPIC_ORDER_TREE/ADD";
-	public static final String TOPIC_ORDER_TREE_REMOVE = "TOPIC_ORDER_TREE/REMOVE";
-	public static final String TOPIC_ORDERS_CREATE = "TOPIC_ORDERS/CREATE";
-	public static final String TOPIC_ORDERS_UPDATE = "TOPIC_ORDERS/UPDATE";
-	public static final String TOPIC_ORDERS_DELETED = "TOPIC_ORDERS/DELETED";
-	public static final String TOPIC_POSITION_CREATE = "TOPIC_POSITIONS/CREATE";
-	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITIONS/UPDATE";
-	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITIONS/DELETED";
+public class OrderCreateHandler {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderCreateHandler.class);
+
+	@Execute
+	public void execute(final Shell shell, final OrderService orderService, final ArticleService articleSerice) {
+
+		LOGGER.info(this.getClass().getSimpleName() + " called");
+
+		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(orderService, articleSerice));
+		Window.setDefaultImage(OrderPluginImages.ORDER.getImage());
+		dialog.open();
+	}
 
 }

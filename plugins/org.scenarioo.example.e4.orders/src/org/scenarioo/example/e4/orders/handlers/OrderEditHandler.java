@@ -29,29 +29,30 @@
 
 package org.scenarioo.example.e4.orders.handlers;
 
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.scenarioo.example.e4.orders.OrderPluginImages;
-import org.scenarioo.example.e4.orders.createorder.NewOrderWizard;
-import org.scenarioo.example.e4.services.ArticleService;
-import org.scenarioo.example.e4.services.OrderService;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.scenarioo.example.e4.domain.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateOrderHandler {
+public class OrderEditHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrderHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderEditHandler.class);
+
+	private Order activeOrder;
 
 	@Execute
-	public void execute(final Shell shell, final OrderService orderService, final ArticleService articleSerice) {
-
-		LOGGER.info(this.getClass().getSimpleName() + " called");
-
-		WizardDialog dialog = new WizardDialog(shell, new NewOrderWizard(orderService, articleSerice));
-		Window.setDefaultImage(OrderPluginImages.ORDER.getImage());
-		dialog.open();
+	public void execute() {
+		LOGGER.info(this.getClass().getSimpleName() + " called. Active Order is: " + activeOrder);
 	}
 
+	@CanExecute
+	public boolean canExecute(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final Order activeOrder) {
+		this.activeOrder = activeOrder;
+		return activeOrder != null;
+	}
 }
