@@ -30,10 +30,12 @@
 package org.scenarioo.example.e4.services.osgi;
 
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
@@ -44,6 +46,7 @@ import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.OrderState;
+import org.scenarioo.example.e4.domain.Position;
 import org.scenarioo.example.e4.dto.CreateOrderDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
@@ -53,6 +56,7 @@ import org.scenarioo.example.e4.services.OrderService;
 import org.scenarioo.example.e4.services.internal.Counter;
 import org.scenarioo.example.e4.services.internal.IdSetter;
 import org.scenarioo.example.e4.services.internal.SimulateServiceCall;
+import org.scenarioo.example.e4.services.internal.dummydata.OrdersBuilder;
 import org.scenarioo.example.e4.services.internal.idstores.ArticleIdStore;
 import org.scenarioo.example.e4.services.internal.idstores.IdStore;
 import org.slf4j.Logger;
@@ -68,6 +72,16 @@ public class OrderServiceImpl implements OrderService {
 	private final IdStore<OrderId, OrderPositions> positionsIdStore = IdStore.getInstance(OrderPositions.class);
 	private final ArticleIdStore articleIdStore = ArticleIdStore.getInstance();
 
+	public OrderServiceImpl() {
+		OrdersBuilder builder = OrdersBuilder.getInstance();
+		builder.createOrder("Order 1");
+		builder.createOrder("Order 2");
+		builder.createOrder("Order 3");
+		builder.createOrder("Order 4");
+		builder.createOrder("Order 5");
+		builder.createOrder("Order 6");
+	}
+
 	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#createOrder(org.scenarioo.example.e4.domain.Order)
 	 */
@@ -79,15 +93,15 @@ public class OrderServiceImpl implements OrderService {
 		// Store Order part
 		Order order = orderWithPos.getOrder();
 		order.generateAndSetId(counter);
-		orderIdStore.put(order);
+		orderIdStore.add(order);
 
 		// Store positions part
 		OrderPositions pos = orderWithPos.getOrderPositions();
 		pos.setOrderReference(order);
-		positionsIdStore.put(pos);
+		positionsIdStore.add(pos);
 
 		LOGGER.info(order + " with " + pos + " has been created");
-		postEvent(OrderServiceEvents.TOPIC_ORDERS_CREATE, order);
+		postEvent(OrderServiceEvents.TOPIC_ORDER_TREE_ADD, order);
 
 		return order;
 	}
@@ -107,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
 			order.generateAndSetId(idSetter);
 			order.setOrderNumber("(Not Found)");
 			order.setState(OrderState.NOT_FOUND);
-			orderIdStore.put(order);
+			orderIdStore.add(order);
 			return order;
 		}
 
@@ -126,8 +140,47 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public Set<Order> searchForOrders(final OrderSearchFilter orderSearchFilter) {
-		// TODO Auto-generated method stub
-		return null;
+
+		SimulateServiceCall.start();
+
+		Set<Order> result = new HashSet<Order>();
+
+		for (Order order : orderIdStore.values()) {
+
+			if (StringUtils.isNotBlank(orderSearchFilter.getOrderNumber())
+					&& order.getOrderNumber().contains(orderSearchFilter.getOrderNumber())) {
+				result.add(order);
+			}
+
+			if (orderSearchFilter.getState() != null
+					&& orderSearchFilter.getOrderNumber().equals(order)) {
+				result.add(order);
+			}
+
+			if (orderHasOnePositionThatMatchArticleId(order, orderSearchFilter)) {
+				result.add(order);
+			}
+
+		}
+
+		return result;
+	}
+
+	private boolean orderHasOnePositionThatMatchArticleId(final Order order, final OrderSearchFilter orderSearchFilter) {
+
+		ArticleId articleId = orderSearchFilter.getArticleId();
+		if (articleId == null) {
+			return false;
+		}
+
+		OrderPositions orderPositions = positionsIdStore.get(order.getId());
+
+		for (Position pos : orderPositions.getPositions()) {
+			if (pos.getArticleId().equals(articleId)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

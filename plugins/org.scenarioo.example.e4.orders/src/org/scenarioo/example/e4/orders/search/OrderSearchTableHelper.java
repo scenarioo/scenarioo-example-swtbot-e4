@@ -29,6 +29,7 @@
 
 package org.scenarioo.example.e4.orders.search;
 
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -45,8 +46,15 @@ public class OrderSearchTableHelper {
 	}
 
 	public static void initializeColumns(final TableViewer tableViewer) {
+
+		EditingSupport[] editing_support = { null, null, null, null, null, new ImportEditingSupport(tableViewer) };
+
 		for (int i = 0; i < TITLES.length; i++) {
-			createTableViewerColumn(tableViewer, i);
+			TableViewerColumn col = createTableViewerColumn(tableViewer, i);
+			EditingSupport editingSupport = editing_support[i];
+			if (editingSupport != null) {
+				col.setEditingSupport(editingSupport);
+			}
 		}
 	}
 

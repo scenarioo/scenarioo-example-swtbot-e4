@@ -97,7 +97,7 @@ public class OrdersOverviewPart {
 
 	@Inject
 	@Optional
-	public void addOrder(@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_ADD) final Order newOrder) {
+	public void subscribeToOrderTreeTopic(@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_ADD) final Order newOrder) {
 		List<Order> orders = getOrders();
 		// prevent from duplicates!
 		if (!orders.contains(newOrder)) {

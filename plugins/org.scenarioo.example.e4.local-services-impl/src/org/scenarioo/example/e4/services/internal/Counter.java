@@ -49,7 +49,7 @@ public class Counter implements IdGenerator {
 	private final AtomicLong count;
 
 	@Override
-	public Long next() {
+	public synchronized Long next() {
 		return count.incrementAndGet();
 	}
 

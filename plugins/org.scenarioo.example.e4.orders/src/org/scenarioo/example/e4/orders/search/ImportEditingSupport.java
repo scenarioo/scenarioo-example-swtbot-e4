@@ -29,50 +29,44 @@
 
 package org.scenarioo.example.e4.orders.search;
 
-import java.text.SimpleDateFormat;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.CheckboxCellEditor;
+import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.orders.OrderPluginImages;
+public class ImportEditingSupport extends EditingSupport {
 
-public final class OrderSearchResultTableLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private final TableViewer viewer;
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
-
-	@Override
-	public Image getColumnImage(final Object element, final int columnIndex) {
-		OrderTableResult tableResult = (OrderTableResult) element;
-		switch (columnIndex) {
-		case 5:
-			if (tableResult.isImport()) {
-				return OrderPluginImages.CHECKBOX_CHECKED.getImage();
-			} else {
-				return OrderPluginImages.CHECKBOX_UNCHECKED.getImage();
-			}
-		default:
-			return null;
-		}
+	public ImportEditingSupport(final TableViewer viewer) {
+		super(viewer);
+		this.viewer = viewer;
 	}
 
 	@Override
-	public String getColumnText(final Object element, final int columnIndex) {
-		OrderTableResult tableResult = (OrderTableResult) element;
-		Order order = tableResult.getOrder();
-		switch (columnIndex) {
-		case 0:
-			return order.getOrderNumber();
-		case 1:
-			return DATE_FORMAT.format(order.getCreationDate());
-		case 2:
-			return order.getState().getCaption();
-		case 3:
-			return DATE_FORMAT.format(order.getDeliveryDate());
-		case 4:
-			return order.getRecipientFullName();
-		default:
-			return "";
-		}
+	protected CellEditor getCellEditor(final Object element) {
+		return new CheckboxCellEditor(null, SWT.CHECK | SWT.READ_ONLY);
+
 	}
+
+	@Override
+	protected boolean canEdit(final Object element) {
+		return true;
+	}
+
+	@Override
+	protected Object getValue(final Object element) {
+		OrderTableResult orderTableResult = (OrderTableResult) element;
+		return orderTableResult.isImport();
+
+	}
+
+	@Override
+	protected void setValue(final Object element, final Object value) {
+		OrderTableResult orderTableResult = (OrderTableResult) element;
+		orderTableResult.setImport((Boolean) value);
+		viewer.update(element, null);
+	}
+
 }

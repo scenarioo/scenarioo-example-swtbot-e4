@@ -4,7 +4,8 @@ Bundle-Name: Libs
 Bundle-SymbolicName: org.scenarioo.example.e4.libs
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.scenarioo.example.e4.domain,
+Export-Package: org.apache.commons.lang3,
+ org.scenarioo.example.e4.domain,
  org.scenarioo.example.e4.dto,
  org.scenarioo.example.e4.events,
  org.scenarioo.example.e4.services

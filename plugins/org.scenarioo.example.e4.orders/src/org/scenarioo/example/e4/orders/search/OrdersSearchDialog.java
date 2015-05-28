@@ -60,7 +60,6 @@ import org.scenarioo.example.e4.domain.OrderState;
 import org.scenarioo.example.e4.dto.ArticleSearchFilterDTO;
 import org.scenarioo.example.e4.dto.OrderSearchFilter;
 import org.scenarioo.example.e4.orders.OrderPluginImages;
-import org.scenarioo.example.e4.orders.positions.PositionsTableLabelProvider;
 import org.scenarioo.example.e4.orders.positions.edit.ArticleComboHelper;
 import org.scenarioo.example.e4.services.ArticleService;
 import org.scenarioo.example.e4.services.OrderService;
@@ -159,13 +158,14 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 	private void createResultTableViewer(final Composite container) {
 		this.resultTableViewer = new TableViewer(container, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		OrderSearchTableHelper.initializeColumns(resultTableViewer);
 
 		final Table table = resultTableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
 		resultTableViewer.setContentProvider(new ArrayContentProvider());
-		resultTableViewer.setLabelProvider(new PositionsTableLabelProvider());
+		resultTableViewer.setLabelProvider(new OrderSearchResultTableLabelProvider());
 
 		// define layout for the viewer
 		GridData gridData = new GridData();
@@ -175,7 +175,6 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 		resultTableViewer.getControl().setLayoutData(gridData);
-		OrderSearchTableHelper.initializeColumns(resultTableViewer);
 	}
 
 	private void createSearchActivityButton(final Composite container) {
@@ -191,10 +190,10 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				List<TableResult> tableResults = new ArrayList<TableResult>();
+				List<OrderTableResult> tableResults = new ArrayList<OrderTableResult>();
 				Set<Order> orders = orderService.searchForOrders(getOrderSearchInput());
 				for (Order order : orders) {
-					TableResult tableResult = new TableResult(order);
+					OrderTableResult tableResult = new OrderTableResult(order);
 					tableResults.add(tableResult);
 				}
 				resultTableViewer.setInput(tableResults);
@@ -243,8 +242,8 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 	// save content of the Text fields because they get disposed
 	// as soon as the Dialog closes
 	private void saveInput() {
-		List<TableResult> tableResults = getTableViewerInputData();
-		for (TableResult tr : tableResults) {
+		List<OrderTableResult> tableResults = getTableViewerInputData();
+		for (OrderTableResult tr : tableResults) {
 			if (tr.isImport()) {
 				importOrders.add(tr.getOrder());
 			}
@@ -252,8 +251,8 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<TableResult> getTableViewerInputData() {
-		return (List<TableResult>) resultTableViewer.getInput();
+	private List<OrderTableResult> getTableViewerInputData() {
+		return (List<OrderTableResult>) resultTableViewer.getInput();
 	}
 
 	@Override

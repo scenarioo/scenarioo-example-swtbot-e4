@@ -31,12 +31,12 @@ package org.scenarioo.example.e4.orders.search;
 
 import org.scenarioo.example.e4.domain.Order;
 
-public class TableResult {
+public class OrderTableResult {
 
 	private final Order order;
 	private boolean importOrder;
 
-	public TableResult(final Order order) {
+	public OrderTableResult(final Order order) {
 		this.order = order;
 	}
 
@@ -86,7 +86,7 @@ public class TableResult {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		TableResult other = (TableResult) obj;
+		OrderTableResult other = (OrderTableResult) obj;
 		if (order == null) {
 			if (other.order != null) {
 				return false;

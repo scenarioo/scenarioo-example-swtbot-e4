@@ -36,10 +36,18 @@ import org.scenarioo.example.e4.domain.Article;
 import org.scenarioo.example.e4.domain.ArticleId;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.services.internal.dummydata.ArticlesBuilder;
 
 public class ArticleIdStore extends IdStore<ArticleId, Article> {
 
 	protected ArticleIdStore() {
+		ArticlesBuilder articlesBuilder = ArticlesBuilder.getInstance();
+		super.add(articlesBuilder.createDarthVaderArticle());
+		super.add(articlesBuilder.createAnakinSkywalkerArticle());
+		super.add(articlesBuilder.createYodaArticle());
+		super.add(articlesBuilder.createLukeSkywalkerArticle());
+		super.add(articlesBuilder.createHanSoloArticle());
+		super.add(articlesBuilder.createObiWanKenobiArticle());
 	}
 
 	public Map<ArticleId, Article> getArticles(

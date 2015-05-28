@@ -4,7 +4,8 @@ Bundle-Name: Local-services-impl
 Bundle-SymbolicName: org.scenarioo.example.e4.local-services-impl
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.scenarioo.example.e4.domain,
+Import-Package: org.apache.commons.lang3,
+ org.scenarioo.example.e4.domain,
  org.scenarioo.example.e4.dto,
  org.scenarioo.example.e4.events,
  org.scenarioo.example.e4.services

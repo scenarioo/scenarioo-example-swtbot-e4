@@ -29,10 +29,9 @@
 
 package org.scenarioo.example.e4.orders.handlers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -41,6 +40,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.orders.OrderPluginImages;
@@ -66,7 +66,7 @@ public class SearchOrderHandler {
 		Window.setDefaultImage(OrderPluginImages.ORDER_SEARCH.getImage());
 		dialog.create();
 		if (dialog.open() == Window.OK) {
-			List<Order> ordersToOpen = new ArrayList<Order>();
+			List<Order> ordersToOpen = dialog.getSelectedOrders();
 			for (Order orderToOpen : ordersToOpen) {
 				postEvent(orderToOpen);
 			}
@@ -75,10 +75,17 @@ public class SearchOrderHandler {
 	}
 
 	private void postEvent(final Order data) {
-		Map<String, Order> map = new HashMap<String, Order>(1);
+
+		Dictionary<String, Object> map = new Hashtable<String, Object>(2);
+		map.put(EventConstants.EVENT_TOPIC, OrderServiceEvents.TOPIC_ORDER_TREE_ADD);
 		map.put(IEventBroker.DATA, data);
-		eventBroker.post(OrderServiceEvents.TOPIC_ORDER_TREE_ADD,
-				new Event(OrderServiceEvents.TOPIC_ORDER_TREE_ADD, map));
+		Event event = new Event(OrderServiceEvents.TOPIC_ORDER_TREE_ADD, map);
+
+		// Map<String, Order> map = new HashMap<String, Order>(1);
+		// map.put(IEventBroker.DATA, data);
+		// new Event(OrderServiceEvents.TOPIC_ORDER_TREE_ADD,
+		// map)
+		eventBroker.post(OrderServiceEvents.TOPIC_ORDER_TREE_ADD, data);
 	}
 
 }

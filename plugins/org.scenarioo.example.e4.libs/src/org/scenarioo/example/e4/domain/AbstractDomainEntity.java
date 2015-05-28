@@ -85,8 +85,9 @@ public abstract class AbstractDomainEntity<T extends AbstractId> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		AbstractId other = (AbstractId) obj;
-		return abstractId != null && abstractId.equals(other);
+		@SuppressWarnings("unchecked")
+		AbstractDomainEntity<T> other = (AbstractDomainEntity<T>) obj;
+		return abstractId != null && abstractId.equals(other.abstractId);
 	}
 
 	@Override
@@ -102,7 +103,8 @@ public abstract class AbstractDomainEntity<T extends AbstractId> {
 	}
 
 	/**
-	 * @param optimisticLock the optimisticLock to set
+	 * @param optimisticLock
+	 *            the optimisticLock to set
 	 */
 	public void setVersion(final Integer version) {
 		this.version = version;

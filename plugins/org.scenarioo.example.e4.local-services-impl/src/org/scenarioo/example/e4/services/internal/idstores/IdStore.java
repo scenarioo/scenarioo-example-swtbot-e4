@@ -52,7 +52,7 @@ public class IdStore<S extends AbstractId, T extends AbstractDomainEntity<S>> {
 
 	}
 
-	public void put(final T obj) {
+	public void add(final T obj) {
 		map.put(obj.getId(), obj);
 	}
 
