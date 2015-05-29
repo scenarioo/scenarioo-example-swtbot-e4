@@ -42,6 +42,8 @@ public interface OrderService {
 
 	Order createOrder(CreateOrderDTO order);
 
+	void deleteOrder(OrderId id);
+
 	Order getOrder(OrderId id);
 
 	OrderPositionsTableviewDTO getOrderPositionsTableviewDTO(OrderId id);

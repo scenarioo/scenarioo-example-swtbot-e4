@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeItem;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
+import org.scenarioo.example.e4.domain.OrderState;
 import org.scenarioo.example.e4.domain.Position;
 import org.scenarioo.example.e4.domain.PositionId;
 import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
@@ -124,6 +125,21 @@ public class OrdersOverviewPart {
 			orders.remove(removableOrder);
 			viewer.setInput(orders);
 			LOGGER.info("order " + removableOrder + " has been removed from orderOverview.");
+		}
+	}
+
+	@Inject
+	@Optional
+	public void subscribeToOrderDeletedTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_DELETED) final Order deletedOrder) {
+		List<Order> orders = getOrders();
+		// prevent from duplicates!
+		if (orders.contains(deletedOrder)) {
+			int index = orders.indexOf(deletedOrder);
+			orders.remove(deletedOrder);
+			orders.add(index, deletedOrder);
+			viewer.setInput(orders);
+			LOGGER.info("order " + deletedOrder + " has been refreshed in Treeview.");
 		}
 	}
 
@@ -234,6 +250,10 @@ public class OrdersOverviewPart {
 		@Override
 		public boolean hasChildren(final Object element) {
 			if (element instanceof Order) {
+				Order order = (Order) element;
+				if (OrderState.NOT_FOUND.equals(order.getState())) {
+					return false;
+				}
 				return true;
 			}
 			return false;
@@ -247,7 +267,9 @@ public class OrdersOverviewPart {
 			StyledString text = new StyledString();
 			if (element instanceof Order) {
 				Order order = (Order) element;
-				if (orderHasLoaded(order)) {
+				if (OrderState.NOT_FOUND.equals(order.getState())) {
+					cell.setImage(orderNotFoundImage);
+				} else if (orderHasLoaded(order)) {
 					cell.setImage(orderLoadedImage);
 				} else {
 					cell.setImage(orderImage);

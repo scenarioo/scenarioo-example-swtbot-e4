@@ -36,6 +36,7 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +47,9 @@ public class OrderDeleteHandler {
 	private Order activeOrder;
 
 	@Execute
-	public void execute() {
+	public void execute(final OrderService orderService) {
 		LOGGER.info(this.getClass().getSimpleName() + " called. Active Order is: " + activeOrder);
+		orderService.deleteOrder(activeOrder.getId());
 	}
 
 	@CanExecute

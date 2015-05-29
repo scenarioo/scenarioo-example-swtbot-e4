@@ -56,6 +56,10 @@ public class IdStore<S extends AbstractId, T extends AbstractDomainEntity<S>> {
 		map.put(obj.getId(), obj);
 	}
 
+	public T remove(final S id) {
+		return map.remove(id);
+	}
+
 	public T get(final S id) {
 		return map.get(id);
 	}

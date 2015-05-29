@@ -107,6 +107,23 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
+	 * @see org.scenarioo.example.e4.services.OrderService#deleteOrder(org.scenarioo.example.e4.domain.OrderId)
+	 */
+	@Override
+	public void deleteOrder(final OrderId id) {
+
+		SimulateServiceCall.start();
+
+		Order order = orderIdStore.remove(id);
+		OrderPositions orderPositions = positionsIdStore.remove(id);
+
+		LOGGER.info(order + " with " + orderPositions + " has been removed from idStores.");
+
+		updateOrderNotFound(order);
+		postEvent(OrderServiceEvents.TOPIC_ORDER_DELETED, order);
+	}
+
+	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#getOrder(org.scenarioo.example.e4.domain.OrderId)
 	 */
 	@Override
@@ -116,22 +133,25 @@ public class OrderServiceImpl implements OrderService {
 
 		Order order = IdStore.getInstance(Order.class).get(id);
 		if (order == null) {
-			setNextGeneratedId(id);
+			prepareIdSetter(id);
 			order = new Order();
 			order.generateAndSetId(idSetter);
-			order.setOrderNumber("(Not Found)");
-			order.setState(OrderState.NOT_FOUND);
-			orderIdStore.add(order);
+			updateOrderNotFound(order);
 			return order;
 		}
 
 		return order;
 	}
 
+	private void updateOrderNotFound(final Order order) {
+		order.setOrderNumber("(Not Found)");
+		order.setState(OrderState.NOT_FOUND);
+	}
+
 	/**
 	 * @param id
 	 */
-	private void setNextGeneratedId(final OrderId id) {
+	private void prepareIdSetter(final OrderId id) {
 		idSetter.setNextId(id.getId());
 	}
 
@@ -231,4 +251,5 @@ public class OrderServiceImpl implements OrderService {
 	void unregisterEventAdmin(final EventAdmin admin) {
 		this.eventAdmin = null;
 	}
+
 }
