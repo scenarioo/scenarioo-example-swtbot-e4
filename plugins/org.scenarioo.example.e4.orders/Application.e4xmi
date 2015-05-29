@@ -4,7 +4,7 @@
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_MHyeAO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.perspectivestack.0">
       <children xsi:type="advanced:Perspective" xmi:id="_RyCEAO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.perspective.orders" label="Orders">
         <children xsi:type="basic:PartSashContainer" xmi:id="_bC058O5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partsashcontainer.0" horizontal="true">
-          <children xsi:type="basic:PartStack" xmi:id="_Ja0wYO58EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.0">
+          <children xsi:type="basic:PartStack" xmi:id="_Ja0wYO58EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.overview">
             <children xsi:type="basic:Part" xmi:id="_sRHK4O5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.ordersoverview" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.OrdersOverviewPart" label="Orders Overview">
               <menus xmi:id="_OXcQ0O57EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.menu.0">
                 <tags>ViewMenu</tags>
@@ -29,8 +29,7 @@
               </toolbar>
             </children>
           </children>
-          <children xsi:type="basic:PartStack" xmi:id="_8wfucO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.1">
-            <children xsi:type="basic:Part" xmi:id="_KevKoO5fEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.orderdetails" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.OrderDetailsPart" label="Order Details"/>
+          <children xsi:type="basic:PartStack" xmi:id="_8wfucO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.editor">
             <children xsi:type="basic:Part" xmi:id="_LecUIO5fEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.itemdetails" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.ItemDetailsPart" label="Item Details"/>
           </children>
         </children>

@@ -29,6 +29,36 @@
 
 package org.scenarioo.example.e4.orders.parts;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.eclipse.e4.ui.di.Persist;
+import org.eclipse.e4.ui.model.application.ui.MDirtyable;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.swt.widgets.Composite;
+import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.orders.OrderDetailView;
+
 public class OrderDetailsPart {
 
+	@Inject
+	private MDirtyable dirtyable;
+
+	private OrderDetailView odv;
+	private Order order;
+
+	@PostConstruct
+	public void createControls(final Composite parent, final ESelectionService selectionService) {
+
+		Order order = (Order) selectionService.getSelection();
+		this.odv = new OrderDetailView(parent, order);
+
+		this.order = order;
+	}
+
+	@Persist
+	public void save() {
+		// save the content of the view
+		dirtyable.setDirty(false);
+	}
 }
