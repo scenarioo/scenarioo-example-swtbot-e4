@@ -29,12 +29,28 @@
 
 package org.scenarioo.example.e4.orders.handlers;
 
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SaveAllHandler {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SaveAllHandler.class);
+
+	@CanExecute
+	boolean canExecute(@Optional final EPartService partService) {
+		if (partService != null) {
+			return !partService.getDirtyParts().isEmpty();
+		}
+		return false;
+	}
+
 	@Execute
-	public void execute() {
-		System.out.println((this.getClass().getSimpleName() + " called"));
+	void execute(final EPartService partService) {
+		LOGGER.info(this.getClass().getSimpleName() + " called.");
+		partService.saveAll(false);
 	}
 }

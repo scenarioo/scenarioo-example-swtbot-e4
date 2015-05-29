@@ -110,6 +110,7 @@ public class OrderEditHandler {
 		newPart.setLabel(order.getOrderNumber());
 		newPart.setContributionURI(PART_CLASS_URI);
 		newPart.setIconURI(ORDER_ICON_URI);
+		newPart.setCloseable(true);
 		orderIdToMPartMap.put(order.getId(), newPart);
 		return newPart;
 	}

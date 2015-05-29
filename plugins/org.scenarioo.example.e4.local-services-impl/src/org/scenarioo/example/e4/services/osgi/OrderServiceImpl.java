@@ -107,20 +107,37 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
+	 * @see org.scenarioo.example.e4.services.OrderService#saveOrder(org.scenarioo.example.e4.domain.OrderId)
+	 */
+	@Override
+	public Order saveOrder(final Order order) {
+
+		SimulateServiceCall.start();
+
+		orderIdStore.add(order);
+
+		LOGGER.info("saveOrder(" + order + ").");
+		postEvent(OrderServiceEvents.TOPIC_ORDER_UPDATE, order);
+		return order;
+	}
+
+	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#deleteOrder(org.scenarioo.example.e4.domain.OrderId)
 	 */
 	@Override
-	public void deleteOrder(final OrderId id) {
+	public Order deleteOrder(final OrderId id) {
 
 		SimulateServiceCall.start();
 
 		Order order = orderIdStore.remove(id);
 		OrderPositions orderPositions = positionsIdStore.remove(id);
 
-		LOGGER.info(order + " with " + orderPositions + " has been removed from idStores.");
+		LOGGER.info("deleteOrder(" + id.getId() + ")" + order + " with " + orderPositions
+				+ " has been removed from idStores.");
 
 		updateOrderNotFound(order);
 		postEvent(OrderServiceEvents.TOPIC_ORDER_DELETED, order);
+		return order;
 	}
 
 	/**

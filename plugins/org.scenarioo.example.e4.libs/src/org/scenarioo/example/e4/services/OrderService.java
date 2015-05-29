@@ -40,9 +40,11 @@ import org.scenarioo.example.e4.dto.OrderSearchFilter;
 
 public interface OrderService {
 
-	Order createOrder(CreateOrderDTO order);
+	Order createOrder(CreateOrderDTO createOrderDTO);
 
-	void deleteOrder(OrderId id);
+	Order deleteOrder(OrderId id);
+
+	Order saveOrder(Order order);
 
 	Order getOrder(OrderId id);
 

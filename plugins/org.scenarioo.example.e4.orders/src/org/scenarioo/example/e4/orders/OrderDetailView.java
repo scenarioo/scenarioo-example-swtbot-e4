@@ -48,7 +48,7 @@ import org.scenarioo.example.e4.domain.OrderState;
 public class OrderDetailView {
 
 	// Data model
-	private final Order order;
+	private Order order;
 
 	// UI Widgets
 	private final Text orderNumberText;
@@ -174,5 +174,12 @@ public class OrderDetailView {
 		instance.set(Calendar.MONTH, deliveryDateTime.getMonth());
 		instance.set(Calendar.YEAR, deliveryDateTime.getYear());
 		return instance.getTime();
+	}
+
+	/**
+	 * @param order
+	 */
+	public void setOrder(final Order order) {
+		this.order = order;
 	}
 }

@@ -69,14 +69,13 @@ import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.orders.OrderPluginImages;
-import org.scenarioo.example.e4.orders.handlers.OrderCreateHandler;
 import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OrdersOverviewPart {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderCreateHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrdersOverviewPart.class);
 
 	// Services
 	@Inject
@@ -132,14 +131,25 @@ public class OrdersOverviewPart {
 	@Optional
 	public void subscribeToOrderDeletedTopic(
 			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_DELETED) final Order deletedOrder) {
+		updateOrderInTree(deletedOrder);
+	}
+
+	@Inject
+	@Optional
+	public void subscribeToOrderUpdateTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_UPDATE) final Order updatedOrder) {
+		updateOrderInTree(updatedOrder);
+	}
+
+	private void updateOrderInTree(final Order order) {
 		List<Order> orders = getOrders();
 		// prevent from duplicates!
-		if (orders.contains(deletedOrder)) {
-			int index = orders.indexOf(deletedOrder);
-			orders.remove(deletedOrder);
-			orders.add(index, deletedOrder);
+		if (orders.contains(order)) {
+			int index = orders.indexOf(order);
+			orders.remove(order);
+			orders.add(index, order);
 			viewer.setInput(orders);
-			LOGGER.info("order " + deletedOrder + " has been refreshed in Treeview.");
+			LOGGER.info("order " + order + " has been refreshed in Treeview.");
 		}
 	}
 
