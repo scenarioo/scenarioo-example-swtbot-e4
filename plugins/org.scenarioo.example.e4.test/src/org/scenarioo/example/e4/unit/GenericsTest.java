@@ -60,21 +60,5 @@ public class GenericsTest {
 		for (AbstractDomainEntity<? extends AbstractId> entity : producerAbstractIds) {
 			System.out.println(entity.toString());
 		}
-
 	}
-
-	// private class LocalIdGenerator implements IdGenerator {
-	//
-	// /**
-	// * @see org.scenarioo.example.e4.domain.IdGenerator#next()
-	// */
-	// @Override
-	// public Long next() {
-	// return new Long(getRandomId());
-	// }
-	//
-	// private long getRandomId() {
-	// return (long) (Math.random() * 1000000);
-	// }
-	// }
 }
