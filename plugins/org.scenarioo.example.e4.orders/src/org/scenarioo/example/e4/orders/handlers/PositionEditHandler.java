@@ -47,46 +47,48 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
-import org.scenarioo.example.e4.domain.Order;
-import org.scenarioo.example.e4.domain.OrderId;
+import org.scenarioo.example.e4.domain.PositionId;
+import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OrderEditHandler {
+public class PositionEditHandler {
 
 	private static final String MODEL_PARTSTACKS_EDITOR_ID = "org.scenarioo.example.e4.orders.partstack.editor";
 	private static final String MODEL_PERSPECTIVE_ORDERS_ID = "org.scenarioo.example.e4.orders.perspective.orders";
-	private static final String ORDER_ICON_URI = "platform:/plugin/org.scenarioo.example.e4.orders/icons/folder.png";
-	private static final String PART_CLASS_URI = "bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.OrderDetailsPart";
+	private static final String ORDER_ICON_URI = "platform:/plugin/org.scenarioo.example.e4.orders/icons/document.png";
+	private static final String PART_CLASS_URI = "bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.PositionDetailsPart";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderEditHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PositionEditHandler.class);
 
 	@Inject
 	EModelService modelService;
 
-	private Order activeOrder;
+	private PositionWithOrderAndArticleInfoDTO activePositionViewDTO;
 
-	private final Map<OrderId, MPart> orderIdToMPartMap = new HashMap<OrderId, MPart>();
+	private final Map<PositionId, MPart> positionIdToMPartMap = new HashMap<PositionId, MPart>();
 
 	@CanExecute
-	public synchronized boolean canExecute(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final Order activeOrder) {
-		this.activeOrder = activeOrder;
-		return activeOrder != null;
+	public synchronized boolean canExecute(
+			@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final PositionWithOrderAndArticleInfoDTO positionViewDTO) {
+		this.activePositionViewDTO = positionViewDTO;
+		return activePositionViewDTO != null;
 	}
 
 	@Execute
 	public synchronized void execute(final MApplication application, final EPartService partService) {
 
-		Order order = activeOrder;
-		LOGGER.info(this.getClass().getSimpleName() + " called. Active Order is: " + activeOrder);
+		PositionWithOrderAndArticleInfoDTO positionViewDTO = activePositionViewDTO;
+		LOGGER.info(this.getClass().getSimpleName() + " called. Active Position is: "
+				+ positionViewDTO.getPosition());
 
 		// if already exist we show the part
-		if (!orderIdToMPartMap.containsKey(order.getId())) {
+		if (!positionIdToMPartMap.containsKey(positionViewDTO.getPositionId())) {
 			MPartStack partstack = filterOutOrdersPartStack(application);
-			MPart newPart = createAndMapNewPart(order);
+			MPart newPart = createAndMapNewPart(positionViewDTO);
 			partstack.getChildren().add(newPart);
 		}
-		MPart part = orderIdToMPartMap.get(order.getId());
+		MPart part = positionIdToMPartMap.get(positionViewDTO.getPositionId());
 		partService.showPart(part, PartState.ACTIVATE);
 	}
 
@@ -105,13 +107,13 @@ public class OrderEditHandler {
 				+ " does belong to a perspecktive(id=" + MODEL_PERSPECTIVE_ORDERS_ID + ")");
 	}
 
-	private MPart createAndMapNewPart(final Order order) {
+	private MPart createAndMapNewPart(final PositionWithOrderAndArticleInfoDTO positionViewDTO) {
 		MPart newPart = modelService.createModelElement(MPart.class);
-		newPart.setLabel(order.getOrderNumber() + " - " + order.getState().getCaption());
+		newPart.setLabel(positionViewDTO.getPositionDetailPartLabel());
 		newPart.setContributionURI(PART_CLASS_URI);
 		newPart.setIconURI(ORDER_ICON_URI);
 		newPart.setCloseable(true);
-		orderIdToMPartMap.put(order.getId(), newPart);
+		positionIdToMPartMap.put(positionViewDTO.getPositionId(), newPart);
 		return newPart;
 	}
 }

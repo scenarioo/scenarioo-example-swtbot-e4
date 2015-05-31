@@ -27,38 +27,73 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.services;
+package org.scenarioo.example.e4.dto;
 
-import java.util.Set;
-
+import org.scenarioo.example.e4.domain.Article;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.domain.OrderId;
 import org.scenarioo.example.e4.domain.Position;
 import org.scenarioo.example.e4.domain.PositionId;
-import org.scenarioo.example.e4.dto.CreateOrderDTO;
-import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
-import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
-import org.scenarioo.example.e4.dto.OrderSearchFilter;
 
-public interface OrderService {
+public class PositionWithOrderAndArticleInfoDTO {
 
-	Order createOrder(CreateOrderDTO createOrderDTO);
+	private PositionWithArticleInfo posWithArticleInfo;
+	private Order order;
 
-	Boolean deleteOrder(OrderId orderId);
+	public PositionWithOrderAndArticleInfoDTO(final PositionWithArticleInfo posWithArticleInfo, final Order order) {
+		this.posWithArticleInfo = posWithArticleInfo;
+		this.order = order;
+	}
 
-	Order saveOrder(Order order);
+	/**
+	 * 
+	 * @param position
+	 */
+	public void setPositionWithArticleInfo(final PositionWithArticleInfo posWithArticleInfo) {
+		this.posWithArticleInfo = posWithArticleInfo;
+	}
 
-	Order getOrder(OrderId orderId);
+	/**
+	 * @param order
+	 *            the order to set
+	 */
+	public void setOrder(final Order order) {
+		this.order = order;
+	}
 
-	Position addPosition(OrderId orderId, Position position);
+	/**
+	 * @return the order
+	 */
+	public Order getOrder() {
+		return order;
+	}
 
-	Boolean deletePosition(OrderId orderId, PositionId posId);
+	public Article getArticle() {
+		return posWithArticleInfo.getArticle();
+	}
 
-	Position savePosition(OrderId orderId, Position position);
+	public Integer getPositionNumber() {
+		return posWithArticleInfo.getPosNr();
+	}
 
-	OrderPositionsTableviewDTO getOrderPositionsTableviewDTO(OrderId orderId);
+	public Position getPosition() {
+		return posWithArticleInfo.getPosition();
+	}
 
-	OrderPositionsTreeviewDTO getOrderPositionsTreeviewDTO(OrderId orderId);
+	public PositionId getPositionId() {
+		return posWithArticleInfo.getPosition().getId();
+	}
 
-	Set<Order> searchForOrders(OrderSearchFilter orderSearchFilter);
+	public OrderId getOrderId() {
+		return order.getId();
+	}
+
+	public String getPositionDetailPartLabel() {
+		return order.getOrderNumber() + " - " + posWithArticleInfo.getArticle().getArticleNumber() + " - "
+				+ posWithArticleInfo.getPosition().getState().getCaption();
+	}
+
+	public PositionWithArticleInfo getPositionWithArticleInfo() {
+		return posWithArticleInfo;
+	}
 }

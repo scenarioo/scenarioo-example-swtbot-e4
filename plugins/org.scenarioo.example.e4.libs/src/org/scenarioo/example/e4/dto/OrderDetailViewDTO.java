@@ -27,8 +27,47 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.orders.parts;
+package org.scenarioo.example.e4.dto;
 
-public class ItemDetailsPart {
+import org.scenarioo.example.e4.domain.Order;
 
+public class OrderDetailViewDTO {
+
+	private Order order;
+
+	private Integer positionCount;
+
+	/**
+	 * @return the order
+	 */
+	public Order getOrder() {
+		return order;
+	}
+
+	/**
+	 * @param order
+	 *            the order to set
+	 */
+	public void setOrder(final Order order) {
+		this.order = order;
+	}
+
+	/**
+	 * @return the positionCount
+	 */
+	public Integer getPositionCount() {
+		return positionCount;
+	}
+
+	/**
+	 * @param positionCount
+	 *            the positionCount to set
+	 */
+	public void setPositionCount(final Integer positionCount) {
+		this.positionCount = positionCount;
+	}
+
+	public String getOrderDetailPartLabel() {
+		return order.getOrderNumber() + " - " + order.getState().getCaption();
+	}
 }

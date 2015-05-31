@@ -65,12 +65,29 @@ public class OrderPositions extends AbstractDomainEntity<OrderId> {
 		return Collections.unmodifiableList(positions);
 	}
 
-	public void addPosition(final Position pos) {
-		positions.add(pos);
+	public void addOrUpdatePosition(final Position pos) {
+		int index = positions.indexOf(pos);
+		if (index == -1) {
+			positions.add(pos);
+		} else {
+			positions.add(index, pos);
+		}
 	}
 
-	public void removePosition(final Position pos) {
-		positions.add(pos);
+	public Position removePosition(final PositionId posId) {
+		Position posForRemove = null;
+		for (Position position : positions) {
+			if (position.getId().equals(posId)) {
+				posForRemove = position;
+			}
+		}
+		if (posForRemove == null) {
+			return null;
+		}
+		if (positions.remove(posForRemove)) {
+			return posForRemove;
+		}
+		return null;
 	}
 
 	/**
@@ -83,5 +100,13 @@ public class OrderPositions extends AbstractDomainEntity<OrderId> {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);
+	}
+
+	/**
+	 * @param position
+	 * @return indexOfPosition
+	 */
+	public Integer getPositionNumber(final Position position) {
+		return positions.indexOf(position);
 	}
 }

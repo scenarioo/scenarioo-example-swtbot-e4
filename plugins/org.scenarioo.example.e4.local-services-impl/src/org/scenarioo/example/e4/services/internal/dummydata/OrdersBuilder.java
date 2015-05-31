@@ -66,6 +66,7 @@ public class OrdersBuilder {
 	public void createOrder(final String orderNumber) {
 		Order order = new Order();
 		order.generateAndSetId(counter);
+		order.setVersion(new Integer(1));
 		order.setDeliveryDate(createDateTomorrow());
 		order.setOrderNumber(orderNumber);
 		order.setRecipientFullName("Any Name");
@@ -90,9 +91,11 @@ public class OrdersBuilder {
 
 		for (int i = 0; i < numberOfPositions; i++) {
 			Position pos = new Position();
+			pos.generateAndSetId(counter);
+			pos.setVersion(new Integer(1));
 			int index = getRandomNumber(allArticles.size());
 			pos.setArticleId(allArticles.get(index).getId());
-			orderPositions.addPosition(pos);
+			orderPositions.addOrUpdatePosition(pos);
 		}
 		positionsIdStore.add(orderPositions);
 	}

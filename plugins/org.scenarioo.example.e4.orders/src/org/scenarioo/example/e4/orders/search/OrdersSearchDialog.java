@@ -264,4 +264,5 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 	public List<Order> getSelectedOrders() {
 		return importOrders;
 	}
+
 }

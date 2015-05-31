@@ -48,6 +48,29 @@ public class ArticleIdStore extends IdStore<ArticleId, Article> {
 		super.add(articlesBuilder.createLukeSkywalkerArticle());
 		super.add(articlesBuilder.createHanSoloArticle());
 		super.add(articlesBuilder.createObiWanKenobiArticle());
+		super.add(articlesBuilder.createAaylaSecuraArticle());
+		super.add(articlesBuilder.createBobaFettArticle());
+		super.add(articlesBuilder.createAckbarArticle());
+		super.add(articlesBuilder.createAhsokaTanoArticle());
+		super.add(articlesBuilder.createBossNassArticle());
+		super.add(articlesBuilder.createChewbaccaArticle());
+		super.add(articlesBuilder.createGeneralTarpalsArticle());
+		super.add(articlesBuilder.createGreedoArticle());
+
+		super.add(articlesBuilder.createImperialProbeDroidArticle());
+		super.add(articlesBuilder.createJarJarBinksArticle());
+		super.add(articlesBuilder.createJabbaTheHuttArticle());
+		super.add(articlesBuilder.createJawasArticle());
+		super.add(articlesBuilder.createKitFistoArticle());
+		super.add(articlesBuilder.createNuteGunrayArticle());
+		super.add(articlesBuilder.createPadmeAmidalaArticle());
+		super.add(articlesBuilder.createPloKoonJediArticle());
+		super.add(articlesBuilder.createR2D2Article());
+		super.add(articlesBuilder.createSebulbaArticle());
+		super.add(articlesBuilder.createSuperBattleDroidArticle());
+		super.add(articlesBuilder.createTuskenRidersArticle());
+		super.add(articlesBuilder.createWattoArticle());
+
 	}
 
 	public Map<ArticleId, Article> getArticles(

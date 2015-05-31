@@ -67,6 +67,7 @@ import org.scenarioo.example.e4.domain.Position;
 import org.scenarioo.example.e4.domain.PositionId;
 import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
+import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.orders.OrderPluginImages;
 import org.scenarioo.example.e4.services.OrderService;
@@ -98,14 +99,14 @@ public class OrdersOverviewPart {
 	private final Map<PositionId, Order> parentOrders = new HashMap<PositionId, Order>();
 
 	@SuppressWarnings("unchecked")
-	private List<Order> getOrders() {
+	private List<Order> getTreeModel() {
 		return (List<Order>) viewer.getInput();
 	}
 
 	@Inject
 	@Optional
 	public void subscribeToOrderTreeAddTopic(@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_ADD) final Order newOrder) {
-		List<Order> orders = getOrders();
+		List<Order> orders = getTreeModel();
 		// prevent from duplicates!
 		if (!orders.contains(newOrder)) {
 			orders.add(newOrder);
@@ -118,7 +119,9 @@ public class OrdersOverviewPart {
 	@Optional
 	public void subscribeToOrderTreeRemoveTopic(
 			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_TREE_REMOVE) final Order removableOrder) {
-		List<Order> orders = getOrders();
+
+		cleanUpOrderOrder(removableOrder);
+		List<Order> orders = getTreeModel();
 		// prevent from duplicates!
 		if (orders.contains(removableOrder)) {
 			orders.remove(removableOrder);
@@ -130,19 +133,27 @@ public class OrdersOverviewPart {
 	@Inject
 	@Optional
 	public void subscribeToOrderDeletedTopic(
-			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_DELETED) final Order deletedOrder) {
-		updateOrderInTree(deletedOrder);
+			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_DELETE) final Order deletedOrder) {
+		cleanUpOrderOrder(deletedOrder);
+		updateOrderInTreeModel(deletedOrder);
+	}
+
+	private void cleanUpOrderOrder(final Order order) {
+		OrderPositionsTreeviewDTO orderPositions = cachedPositions.remove(order.getId());
+		for (Position position : orderPositions.getOrderPositions().getPositions()) {
+			parentOrders.remove(position.getId());
+		}
 	}
 
 	@Inject
 	@Optional
 	public void subscribeToOrderUpdateTopic(
 			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_UPDATE) final Order updatedOrder) {
-		updateOrderInTree(updatedOrder);
+		updateOrderInTreeModel(updatedOrder);
 	}
 
-	private void updateOrderInTree(final Order order) {
-		List<Order> orders = getOrders();
+	private void updateOrderInTreeModel(final Order order) {
+		List<Order> orders = getTreeModel();
 		// prevent from duplicates!
 		if (orders.contains(order)) {
 			int index = orders.indexOf(order);
@@ -150,6 +161,47 @@ public class OrdersOverviewPart {
 			orders.add(index, order);
 			viewer.setInput(orders);
 			LOGGER.info("order " + order + " has been refreshed in Treeview.");
+		}
+	}
+
+	@Inject
+	@Optional
+	public void subscribeToPositionTreeRemoveTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_POSITION_TREE_REMOVE) final PositionWithOrderAndArticleInfoDTO deletedPosition) {
+		OrderId orderIdInTreeLoaded = deletedPosition.getOrderId();
+		if (cachedPositions.containsKey(orderIdInTreeLoaded)) {
+			OrderPositionsTreeviewDTO children = cachedPositions.get(orderIdInTreeLoaded);
+			if (!children.removePosition(deletedPosition.getPosition())) {
+				LOGGER.info("Position " + deletedPosition + " in OrderTreeView already removed."
+						+ " You are firing too many events!");
+			} else {
+				LOGGER.info("Position " + deletedPosition.getPosition() + " from OrderTreeView removed.");
+			}
+			viewer.refresh(deletedPosition.getOrder(), false);
+		}
+	}
+
+	@Inject
+	@Optional
+	public void subscribeToPositionUpdateTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_POSITION_TREE_UPDATE) final PositionWithOrderAndArticleInfoDTO updatedOrder) {
+		addOrUpdatePositionInTree(updatedOrder);
+	}
+
+	@Inject
+	@Optional
+	public void subscribeToPositionAddTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_POSITION_TREE_ADD) final PositionWithOrderAndArticleInfoDTO addedPosition) {
+		addOrUpdatePositionInTree(addedPosition);
+	}
+
+	private void addOrUpdatePositionInTree(final PositionWithOrderAndArticleInfoDTO addedPosition) {
+		OrderId orderIdInTreeLoaded = addedPosition.getOrderId();
+		if (cachedPositions.containsKey(orderIdInTreeLoaded)) {
+			OrderPositionsTreeviewDTO children = cachedPositions.get(orderIdInTreeLoaded);
+			children.addOrUpdatePosition(addedPosition);
+			LOGGER.info("Position " + addedPosition.getPosition() + " in OrderTreeView added/updated.");
+			viewer.update(addedPosition.getPosition(), null);
 		}
 	}
 
@@ -250,10 +302,8 @@ public class OrdersOverviewPart {
 		public Object getParent(final Object element) {
 
 			if (element instanceof PositionWithArticleInfo) {
-				PositionWithArticleInfo pos = (PositionWithArticleInfo) element;
-				return parentOrders.get(pos.getPosition().getId());
+				return getOrder((PositionWithArticleInfo) element);
 			}
-
 			return null;
 		}
 
@@ -268,6 +318,10 @@ public class OrdersOverviewPart {
 			}
 			return false;
 		}
+	}
+
+	private Order getOrder(final PositionWithArticleInfo pos) {
+		return parentOrders.get(pos.getPosition().getId());
 	}
 
 	private class ViewLabelProvider extends StyledCellLabelProvider {
@@ -318,7 +372,13 @@ public class OrdersOverviewPart {
 		@Override
 		public void selectionChanged(final SelectionChangedEvent event) {
 			Object first = ((IStructuredSelection) event.getSelection()).getFirstElement();
-			selectionService.setSelection(first);
+			if (first instanceof PositionWithArticleInfo) {
+				PositionWithArticleInfo posWithArticleInfo = (PositionWithArticleInfo) first;
+				Order order = getOrder(posWithArticleInfo);
+				selectionService.setSelection(new PositionWithOrderAndArticleInfoDTO(posWithArticleInfo, order));
+			} else {
+				selectionService.setSelection(first);
+			}
 		}
 	}
 

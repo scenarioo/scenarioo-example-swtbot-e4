@@ -33,10 +33,12 @@ public class OrderServiceEvents {
 
 	public static final String TOPIC_ORDER_TREE_ADD = "TOPIC_ORDER_TREE/ADD";
 	public static final String TOPIC_ORDER_TREE_REMOVE = "TOPIC_ORDER_TREE/REMOVE";
+	public static final String TOPIC_POSITION_TREE_ADD = "TOPIC_POSITION_TREE/ADD";
+	public static final String TOPIC_POSITION_TREE_UPDATE = "TOPIC_POSITION_TREE/UPDATE";
+	public static final String TOPIC_POSITION_TREE_REMOVE = "TOPIC_POSITION_TREE/REMOVE";
 	public static final String TOPIC_ORDER_UPDATE = "TOPIC_ORDER/UPDATE";
-	public static final String TOPIC_ORDER_DELETED = "TOPIC_ORDER/DELETED";
-	public static final String TOPIC_POSITION_CREATE = "TOPIC_POSITIONS/CREATE";
-	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITIONS/UPDATE";
-	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITIONS/DELETED";
+	public static final String TOPIC_ORDER_DELETE = "TOPIC_ORDER/DELETE";
+	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITION/UPDATE";
+	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITION/DELETE";
 
 }

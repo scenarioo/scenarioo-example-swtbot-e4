@@ -69,7 +69,24 @@ public class OrderPositionsTreeviewDTO {
 			Article article = articleInfoFromPositions.get(pos.getArticleId());
 			PositionWithArticleInfo posWithArticleInfo = new PositionWithArticleInfo(nr, pos, article);
 			posWithArticleInfos.add(posWithArticleInfo);
+			nr++;
 		}
 		return posWithArticleInfos;
+	}
+
+	/**
+	 * @param addedPosition
+	 */
+	public void addOrUpdatePosition(final PositionWithOrderAndArticleInfoDTO addedPosition) {
+		orderPositions.addOrUpdatePosition(addedPosition.getPosition());
+		Article article = addedPosition.getArticle();
+		articleInfoFromPositions.put(article.getId(), article);
+	}
+
+	/**
+	 * @param position
+	 */
+	public boolean removePosition(final Position removablePosition) {
+		return orderPositions.removePosition(removablePosition.getId()) != null;
 	}
 }

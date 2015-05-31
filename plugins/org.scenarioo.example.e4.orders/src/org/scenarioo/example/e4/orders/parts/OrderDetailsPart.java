@@ -32,7 +32,9 @@ package org.scenarioo.example.e4.orders.parts;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Persist;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -40,6 +42,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.orders.OrderDetailView;
 import org.scenarioo.example.e4.services.OrderService;
 
@@ -53,6 +56,35 @@ public class OrderDetailsPart {
 
 	private OrderDetailView orderDetailPanel;
 	private Order order;
+
+	@Inject
+	@Optional
+	public void subscribeToOrderDeleteTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_DELETE) final Order deletedOrder,
+			final MPart mpart) {
+		updateOrderInView(deletedOrder, mpart);
+	}
+
+	@Inject
+	@Optional
+	public void subscribeToOrderUpdateTopic(
+			@UIEventTopic(OrderServiceEvents.TOPIC_ORDER_UPDATE) final Order updatedOrder,
+			final MPart mpart) {
+		updateOrderInView(updatedOrder, mpart);
+	}
+
+	private void updateOrderInView(final Order order, final MPart mpart) {
+		if (this.order.getId().equals(order.getId())) {
+			if (!dirtyable.isDirty()) {
+				// do not overwrite inputData if it is dirty, we don't want to overwrite the users input Data
+				orderDetailPanel.setOrder(order);
+			}
+			// View Data can always be updated
+			orderDetailPanel.setPositionCount(new Integer(10));
+			this.order = order;
+			mpart.setLabel(order.getOrderNumber() + " - " + order.getState().getCaption());
+		}
+	}
 
 	@PostConstruct
 	public void createControls(final Composite parent, final ESelectionService selectionService) {
@@ -87,7 +119,6 @@ public class OrderDetailsPart {
 			Order editedOrder = orderDetailPanel.getOrderForUpdate();
 			order = orderService.saveOrder(editedOrder);
 			orderDetailPanel.setOrder(order);
-			mpart.setLabel(order.getOrderNumber());
 			// save the content of the view
 			dirtyable.setDirty(false);
 		}

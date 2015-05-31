@@ -31,7 +31,7 @@ package org.scenarioo.example.e4.dto;
 
 public class ArticleSearchFilterDTO {
 
-	private static Integer DEFAULT_PAGE_COUNT = 20;
+	private static Integer DEFAULT_PAGE_COUNT = 30;
 	private static Integer DEFAULT_PAGE_START = 0;
 
 	private Integer count;

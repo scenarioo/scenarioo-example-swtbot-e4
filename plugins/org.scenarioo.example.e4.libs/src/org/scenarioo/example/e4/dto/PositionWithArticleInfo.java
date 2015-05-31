@@ -31,11 +31,12 @@ package org.scenarioo.example.e4.dto;
 
 import org.scenarioo.example.e4.domain.Article;
 import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.domain.PositionId;
 
 public class PositionWithArticleInfo {
 
 	private Integer posNr;
-	private final Position position;
+	private Position position;
 	private Article article; // Immutable in Context of OrderPosition
 
 	public PositionWithArticleInfo(final Integer posNr, final Position position, final Article article) {
@@ -61,18 +62,8 @@ public class PositionWithArticleInfo {
 		this.position.setArticleId(article.getId());
 	}
 
-	/**
-	 * 
-	 */
 	public void setPosNr(final Integer posNr) {
 		this.posNr = posNr;
-	}
-
-	/**
-	 * @return the positon
-	 */
-	public Position getPosition() {
-		return position;
 	}
 
 	/**
@@ -80,6 +71,21 @@ public class PositionWithArticleInfo {
 	 */
 	public Integer getPosNr() {
 		return posNr;
+	}
+
+	public PositionId getPositionId() {
+		return position.getId();
+	}
+
+	/**
+	 * @return the position
+	 */
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(final Position position) {
+		this.position = position;
 	}
 
 }

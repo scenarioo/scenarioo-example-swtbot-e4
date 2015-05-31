@@ -11,3 +11,4 @@ Export-Package: org.apache.commons.lang3,
  org.scenarioo.example.e4.services
 Bundle-ClassPath: lib/commons-lang3-3.4.jar,
  .
+Require-Bundle: org.eclipse.jface;bundle-version="3.10.2"

@@ -35,7 +35,8 @@ public enum PositionState {
 	RESERVED("Reserved"),
 	COMMISSIONING("commissioning"),
 	SENT("Sent"),
-	FINALISED("Finalised");
+	FINALISED("Finalised"),
+	DELETED("Deleted");
 
 	private String caption;
 
@@ -46,4 +47,37 @@ public enum PositionState {
 	public String getCaption() {
 		return caption;
 	}
+
+	public static String[] getItems() {
+		String[] items = new String[PositionState.values().length];
+		int i = 0;
+		for (PositionState state : PositionState.values()) {
+			items[i] = state.caption;
+			i++;
+		}
+		return items;
+	}
+
+	public static int getSelectedIndex(final PositionState stateForSelection) {
+		int i = 0;
+		for (PositionState state : PositionState.values()) {
+			if (state.equals(stateForSelection)) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+
+	public static PositionState getSelectedState(final Integer index) {
+		int i = 0;
+		for (PositionState state : PositionState.values()) {
+			if (index.equals(i)) {
+				return state;
+			}
+			i++;
+		}
+		return null;
+	}
+
 }

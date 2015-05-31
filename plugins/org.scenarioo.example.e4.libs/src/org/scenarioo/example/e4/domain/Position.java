@@ -56,6 +56,7 @@ public class Position extends AbstractDomainEntity<PositionId> {
 	public Position(final Position position) {
 		super(position);
 		this.state = position.state;
+		this.articleId = position.articleId;
 		this.amount = position.amount;
 	}
 

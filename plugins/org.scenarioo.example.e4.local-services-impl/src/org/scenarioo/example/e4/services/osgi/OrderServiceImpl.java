@@ -47,10 +47,14 @@ import org.scenarioo.example.e4.domain.OrderId;
 import org.scenarioo.example.e4.domain.OrderPositions;
 import org.scenarioo.example.e4.domain.OrderState;
 import org.scenarioo.example.e4.domain.Position;
+import org.scenarioo.example.e4.domain.PositionId;
+import org.scenarioo.example.e4.domain.PositionState;
 import org.scenarioo.example.e4.dto.CreateOrderDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
 import org.scenarioo.example.e4.dto.OrderSearchFilter;
+import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
+import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.services.OrderService;
 import org.scenarioo.example.e4.services.internal.Counter;
@@ -92,6 +96,7 @@ public class OrderServiceImpl implements OrderService {
 
 		// Store Order part
 		Order order = orderWithPos.getOrder();
+		order.setVersion(new Integer(1));
 		order.generateAndSetId(counter);
 		orderIdStore.add(order);
 
@@ -114,6 +119,7 @@ public class OrderServiceImpl implements OrderService {
 
 		SimulateServiceCall.start();
 
+		incrementVersion(order);
 		orderIdStore.add(order);
 
 		LOGGER.info("saveOrder(" + order + ").");
@@ -122,10 +128,18 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
+	 * @param order
+	 */
+	private void incrementVersion(final Order order) {
+		Integer newVersion = order.getVersion() + 1;
+		order.setVersion(newVersion);
+	}
+
+	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#deleteOrder(org.scenarioo.example.e4.domain.OrderId)
 	 */
 	@Override
-	public Order deleteOrder(final OrderId id) {
+	public Boolean deleteOrder(final OrderId id) {
 
 		SimulateServiceCall.start();
 
@@ -136,8 +150,12 @@ public class OrderServiceImpl implements OrderService {
 				+ " has been removed from idStores.");
 
 		updateOrderNotFound(order);
-		postEvent(OrderServiceEvents.TOPIC_ORDER_DELETED, order);
-		return order;
+		postEvent(OrderServiceEvents.TOPIC_ORDER_DELETE, order);
+		for (Position pos : orderPositions.getPositions()) {
+			pos.setState(PositionState.DELETED);
+			postEvent(OrderServiceEvents.TOPIC_POSITION_DELETE, pos);
+		}
+		return order != null;
 	}
 
 	/**
@@ -161,7 +179,11 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private void updateOrderNotFound(final Order order) {
-		order.setOrderNumber("(Not Found)");
+		String oldOrderNumber = order.getOrderNumber();
+		if (oldOrderNumber == null) {
+			oldOrderNumber = "";
+		}
+		order.setOrderNumber(oldOrderNumber + "(Not Found)");
 		order.setState(OrderState.NOT_FOUND);
 	}
 
@@ -188,16 +210,13 @@ public class OrderServiceImpl implements OrderService {
 					&& order.getOrderNumber().contains(orderSearchFilter.getOrderNumber())) {
 				result.add(order);
 			}
-
 			if (orderSearchFilter.getState() != null
 					&& orderSearchFilter.getOrderNumber().equals(order)) {
 				result.add(order);
 			}
-
 			if (orderHasOnePositionThatMatchArticleId(order, orderSearchFilter)) {
 				result.add(order);
 			}
-
 		}
 
 		return result;
@@ -249,6 +268,94 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
+	 * @see org.scenarioo.example.e4.services.OrderService#addPosition(org.scenarioo.example.e4.domain.OrderId,
+	 *      org.scenarioo.example.e4.domain.PositionId)
+	 */
+	@Override
+	public Position addPosition(final OrderId orderId, final Position position) {
+
+		SimulateServiceCall.start();
+
+		// Update Position
+		position.setVersion(new Integer(1));
+		position.generateAndSetId(counter);
+
+		// Store position under OrderPositions
+		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
+		orderPositions.addOrUpdatePosition(position);
+
+		LOGGER.info("addPosition.. " + orderId + " added new " + position);
+
+		PositionWithOrderAndArticleInfoDTO addedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
+		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_ADD, addedPosition);
+
+		return position;
+	}
+
+	private PositionWithOrderAndArticleInfoDTO getPositionWithOrderAndArticleInfoDTO(final OrderId orderId,
+			final Position position) {
+
+		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
+		Integer posNr = orderPositions.getPositionNumber(position);
+		PositionWithArticleInfo posWithArticleInfo = new PositionWithArticleInfo(posNr, position,
+				this.articleIdStore.get(position.getArticleId()));
+		return new PositionWithOrderAndArticleInfoDTO(posWithArticleInfo,
+				this.orderIdStore.get(orderId));
+	}
+
+	/**
+	 * @see org.scenarioo.example.e4.services.OrderService#deletePosition(org.scenarioo.example.e4.domain.OrderId,
+	 *      org.scenarioo.example.e4.domain.PositionId)
+	 */
+	@Override
+	public Boolean deletePosition(final OrderId orderId, final PositionId posId) {
+		SimulateServiceCall.start();
+
+		OrderPositions orderPos = this.positionsIdStore.get(orderId);
+		Position removedPos = orderPos.removePosition(posId);
+		removedPos.setState(PositionState.DELETED);
+
+		LOGGER.info("deletePosition(" + orderId + ", " + posId + ").");
+
+		PositionWithOrderAndArticleInfoDTO removedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, removedPos);
+		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_REMOVE, removedPosition);
+		postEvent(OrderServiceEvents.TOPIC_POSITION_DELETE, removedPosition.getPositionWithArticleInfo());
+		// Because of PositionNr. All others Position also needs to be updated as well!
+		for (Position pos : orderPos.getPositions()) {
+			PositionWithOrderAndArticleInfoDTO otherPos = getPositionWithOrderAndArticleInfoDTO(orderId, pos);
+			postEvent(OrderServiceEvents.TOPIC_POSITION_UPDATE, otherPos.getPositionWithArticleInfo());
+		}
+		return removedPos != null;
+	}
+
+	/**
+	 * @see org.scenarioo.example.e4.services.OrderService#savePosition(org.scenarioo.example.e4.domain.OrderId,
+	 *      org.scenarioo.example.e4.domain.Position)
+	 */
+	@Override
+	public Position savePosition(final OrderId orderId, final Position position) {
+
+		SimulateServiceCall.start();
+
+		incrementVersion(position);
+		OrderPositions orderPos = this.positionsIdStore.get(orderId);
+		orderPos.addOrUpdatePosition(position);
+
+		LOGGER.info("savePosition(" + orderId + ", " + position + ").");
+
+		PositionWithOrderAndArticleInfoDTO updatedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
+		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_UPDATE, updatedPosition);
+		postEvent(OrderServiceEvents.TOPIC_POSITION_UPDATE, updatedPosition.getPositionWithArticleInfo());
+
+		return position;
+	}
+
+	private void incrementVersion(final Position position) {
+		Integer newVersion = position.getVersion() + 1;
+		position.setVersion(newVersion);
+	}
+
+	/**
 	 * We use eventAdmin due IEventBroker is not available in OSGI Context.
 	 */
 	private EventAdmin eventAdmin;
@@ -268,5 +375,4 @@ public class OrderServiceImpl implements OrderService {
 	void unregisterEventAdmin(final EventAdmin admin) {
 		this.eventAdmin = null;
 	}
-
 }

@@ -200,7 +200,7 @@ public class OrderPositionsTableview {
 		// ArticelId must be set!
 
 		List<PositionWithArticleInfo> inputData = getInputData();
-		if (inputData.size() == 0) {
+		if (inputData == null || inputData.size() == 0) {
 			inputCorrectMsgLabel.setText("Add at Least one Position.");
 			return false;
 		}
@@ -229,7 +229,7 @@ public class OrderPositionsTableview {
 		// add All the data from Table
 		List<PositionWithArticleInfo> inputData = getInputData();
 		for (PositionWithArticleInfo pos : inputData) {
-			orderPositions.addPosition(pos.getPosition());
+			orderPositions.addOrUpdatePosition(pos.getPosition());
 		}
 		return orderPositions;
 	}

@@ -89,7 +89,7 @@ public class OrderDetailView {
 		// Order State
 		Label orderStateLabel = new Label(container, SWT.NONE);
 		orderStateLabel.setText("Order State");
-		stateCombo = new Combo(container, SWT.BORDER | SWT.SINGLE);
+		stateCombo = new Combo(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
 		stateCombo.setEnabled(false);
 		stateCombo.setItems(OrderState.getItems());
 		stateCombo.select(OrderState.getSelectedIndex(order.getState()));
@@ -181,5 +181,12 @@ public class OrderDetailView {
 	 */
 	public void setOrder(final Order order) {
 		this.order = order;
+	}
+
+	/**
+	 * @param integer
+	 */
+	public void setPositionCount(final Integer integer) {
+		// TODO positionCount not yet implemented
 	}
 }

@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
@@ -61,6 +62,11 @@ public class OrderSearchHandler {
 		OrdersSearchDialog dialog = new OrdersSearchDialog(shell, articleService, orderService);
 		Window.setDefaultImage(OrderPluginImages.ORDER_SEARCH.getImage());
 		dialog.create();
+		Shell innerShell = dialog.getShell();
+		Point point = innerShell.getSize();
+		point.x = point.x + 150;
+		point.y = point.y + 150;
+		innerShell.setSize(point);
 		if (dialog.open() == Window.OK) {
 			List<Order> ordersToOpen = dialog.getSelectedOrders();
 			for (Order orderToOpen : ordersToOpen) {

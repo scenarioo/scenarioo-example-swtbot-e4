@@ -29,9 +29,7 @@
               </toolbar>
             </children>
           </children>
-          <children xsi:type="basic:PartStack" xmi:id="_8wfucO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.editor">
-            <children xsi:type="basic:Part" xmi:id="_LecUIO5fEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.part.itemdetails" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.parts.ItemDetailsPart" label="Item Details"/>
-          </children>
+          <children xsi:type="basic:PartStack" xmi:id="_8wfucO5dEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.partstack.editor"/>
         </children>
       </children>
     </children>
@@ -54,10 +52,12 @@
   <handlers xmi:id="_tQosMO5zEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.removeorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderRemoveHandler" command="_FU9IMO5xEeSxWb11zxVslg"/>
   <handlers xmi:id="_ME1h4AVtEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handler.deleteorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderDeleteHandler" command="_9ThH0AVaEeW1pr70JV_QNA"/>
   <handlers xmi:id="_Hj6LsO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.updateOrder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderEditHandler" command="_SXdVMO5xEeSxWb11zxVslg"/>
-  <handlers xmi:id="_UHV3EO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.exit" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.ExitHandler" command="_3ArKQO5wEeSxWb11zxVslg"/>
   <handlers xmi:id="_5vuK0ASzEeWj4oLD9ah1qA" elementId="org.scenarioo.example.e4.orders.handler.searchorder" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.OrderSearchHandler" command="_Mj22gAR4EeWj4oLD9ah1qA"/>
   <handlers xmi:id="_p5MtEAVuEeW1pr70JV_QNA" elementId="org.scenarioo.example.e4.orders.handler.addposition" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.PositionAddHandler" command="_lA_xYAVVEeW1pr70JV_QNA"/>
+  <handlers xmi:id="_5dSBcAecEeWB97IyZarSZg" elementId="org.scenarioo.example.e4.orders.handler.1" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.PositionEditHandler" command="_EwzVkAVXEeW1pr70JV_QNA"/>
+  <handlers xmi:id="_-KDSkAecEeWB97IyZarSZg" elementId="org.scenarioo.example.e4.orders.handler.2" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.PositionDeleteHandler" command="_17EF0AVVEeW1pr70JV_QNA"/>
   <handlers xmi:id="_EFxisAXzEeWDdNPufXIBRw" elementId="org.scenarioo.example.e4.orders.handler.0" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.SaveAllHandler" command="_sE6nUO5wEeSxWb11zxVslg"/>
+  <handlers xmi:id="_UHV3EO50EeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.handler.exit" contributionURI="bundleclass://org.scenarioo.example.e4.orders/org.scenarioo.example.e4.orders.handlers.ExitHandler" command="_3ArKQO5wEeSxWb11zxVslg"/>
   <commands xmi:id="_sE6nUO5wEeSxWb11zxVslg" elementId="org.eclipse.ui.file.saveAll" commandName="Save All"/>
   <commands xmi:id="_3ArKQO5wEeSxWb11zxVslg" elementId="org.eclipse.ui.file.exit" commandName="Exit"/>
   <commands xmi:id="_5VXwwO5wEeSxWb11zxVslg" elementId="org.scenarioo.example.e4.orders.command.createorder" commandName="Create Order"/>

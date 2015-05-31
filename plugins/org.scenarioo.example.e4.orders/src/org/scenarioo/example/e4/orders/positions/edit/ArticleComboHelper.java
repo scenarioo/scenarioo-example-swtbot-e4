@@ -79,6 +79,11 @@ public class ArticleComboHelper {
 		return articleForIndex.get(index);
 	}
 
+	public Article getArticleForId(final ArticleId articleId) {
+		int index = getIndexForArticleId(articleId);
+		return getArticleForIndex(index);
+	}
+
 	private String getDisplayableArticleString(final Article article) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(article.getId().getId());

@@ -12,7 +12,10 @@ Import-Package: org.apache.commons.lang3,
 Require-Bundle: slf4j.api;bundle-version="1.6.6",
  org.eclipse.osgi.services;bundle-version="3.4.0",
  javax.inject,
- org.eclipse.e4.core.services
+ org.eclipse.e4.core.services,
+ org.eclipse.osgi;bundle-version="3.10.2",
+ org.eclipse.equinox.common;bundle-version="3.6.200",
+ org.eclipse.jface;bundle-version="3.10.2"
 Service-Component: OSGI-INF/order-service.xml,
  OSGI-INF/article-service.xml
 Bundle-ActivationPolicy: lazy

@@ -27,92 +27,55 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.domain;
+package org.scenarioo.example.e4.services.internal;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
+public enum ArticleImages {
 
+	AAYLA_SECURA("aayla_secura_jedi_128x128.png"),
+	ACKBAR("ackbar_128x128.png"),
+	AHSOKA_TANO("ahsoka_tano_128x128.png"),
+	ANAKIN_JEDI("anakin_jedi_128x128.png"),
+	BOBA_FETT("boba_fett_128x128.png"),
+	BOSS_NASS("boss_nass_128x128.png"),
+	CHEWBACCA("chewbacca_128x128.png"),
+	GENERAL_TARPALS("general_tarpals_128x128.png"),
+	GREEDO("greedo_128x128.png"),
+	HAN_SOLO("han_solo_128x128.png"),
+	IMPERIAL_PROPE_DROID("imperial_probe_droid_128x128.png"),
+	JABBA_THE_HUTT("jabba_the_hutt_128x128.png"),
+	JAR_JAR_BINKS("jar_jar_binks_128x128.png"),
+	JAWAS("jawas_128x128.png"),
+	KIT_FISTO("kit_fisto_128x128.png"),
+	LUKE_SKYWALKER("luke_skywalker_128x128.png"),
+	MASTER_OBI_WAN_KENOBI("master_obi_wan_128x128.png"),
+	NUTE_GUNRAY("nute_gunray_128x128.png"),
+	PADME_AMIDALA("padme_amidala_128x128.png"),
+	PLO_KOON_JEDI("plo_koon_jedi_128x128.png"),
+	R2D2("R2D2_128x128.png"),
+	SEBULBA("sebulba_128x128.png"),
+	SUPER_BATTLE_DROID("super_battle_droid_128x128.png"),
+	TUSKEN_RIDERS("tusken_riders_128x128.png"),
+	VADER("vader_128x128.png"),
+	WATTO("watto_128x128.png"),
+	YODA("yoda_128x128.png");
 
-public class Article extends AbstractDomainEntity<ArticleId> {
-
-	private String articleNumber;
-	private String description;
-	private Unit unit;
 	private ImageDescriptor imageDescriptor;
 
-	/**
-	 * @see org.scenarioo.example.e4.domain.AbstractDomainEntity#createInstance(java.lang.Long)
-	 */
-	@Override
-	protected ArticleId createInstance(final Long id) {
-		return new ArticleId(id);
+	private ArticleImages(final String fileName) {
+		Bundle bundle = FrameworkUtil.getBundle(ArticleImages.class);
+		URL url = FileLocator.find(bundle, new Path("icons/" + fileName), null);
+		imageDescriptor = ImageDescriptor.createFromURL(url);
 	}
 
-	/**
-	 * @return the articleNumber
-	 */
-	public String getArticleNumber() {
-		return articleNumber;
-	}
-
-	/**
-	 * @param articleNumber the articleNumber to set
-	 */
-	public void setArticleNumber(final String articleNumber) {
-		this.articleNumber = articleNumber;
-	}
-
-	/**
-	 * @return the description
-	 */
-	public String getShortDescription() {
-		if (description != null && description.length() > 10) {
-			return description.substring(0, 6) + "..";
-		}
-		return description;
-	}
-
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	/**
-	 * @return the unit
-	 */
-	public Unit getUnit() {
-		return unit;
-	}
-
-	/**
-	 * @param unit
-	 *            the unit to set
-	 */
-	public void setUnit(final Unit unit) {
-		this.unit = unit;
-	}
-
-	/**
-	 * @return the imageDescriptor
-	 */
 	public ImageDescriptor getImageDescriptor() {
 		return imageDescriptor;
 	}
-
-	/**
-	 * @param imageDescriptor the imageDescriptor to set
-	 */
-	public void setImageDescriptor(ImageDescriptor imageDescriptor) {
-		this.imageDescriptor = imageDescriptor;
-	}
-
 }

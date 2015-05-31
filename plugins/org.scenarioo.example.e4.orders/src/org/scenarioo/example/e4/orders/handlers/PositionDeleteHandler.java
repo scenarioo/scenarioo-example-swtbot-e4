@@ -35,7 +35,8 @@ import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
+import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,17 +44,19 @@ public class PositionDeleteHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PositionDeleteHandler.class);
 
-	private Order activeOrder;
+	private PositionWithOrderAndArticleInfoDTO activePositionViewDTO;
 
 	@Execute
-	public void execute() {
-		LOGGER.info(this.getClass().getSimpleName() + " called. Active Order is: " + activeOrder);
+	public void execute(final OrderService orderService) {
+		LOGGER.info(this.getClass().getSimpleName() + " called. Active Position is: " + activePositionViewDTO);
+		orderService.deletePosition(activePositionViewDTO.getOrderId(), activePositionViewDTO.getPositionId());
 	}
 
 	@CanExecute
-	public boolean canExecute(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final Order activeOrder) {
-		this.activeOrder = activeOrder;
-		return activeOrder != null;
+	public boolean canExecute(
+			@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final PositionWithOrderAndArticleInfoDTO activePositionViewDTO) {
+		this.activePositionViewDTO = activePositionViewDTO;
+		return activePositionViewDTO != null;
 	}
 
 }
