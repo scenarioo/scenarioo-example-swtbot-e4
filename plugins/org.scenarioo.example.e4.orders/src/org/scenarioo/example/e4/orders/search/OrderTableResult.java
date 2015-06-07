@@ -31,7 +31,7 @@ package org.scenarioo.example.e4.orders.search;
 
 import org.scenarioo.example.e4.domain.Order;
 
-public class OrderTableResult {
+public class OrderTableResult implements Comparable<OrderTableResult> {
 
 	private final Order order;
 	private boolean importOrder;
@@ -55,7 +55,8 @@ public class OrderTableResult {
 	}
 
 	/**
-	 * @param checkBox the checkBox to set
+	 * @param checkBox
+	 *            the checkBox to set
 	 */
 	public void setImport(final boolean importOrder) {
 		this.importOrder = importOrder;
@@ -95,6 +96,15 @@ public class OrderTableResult {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(final OrderTableResult o) {
+		return this.order.getOrderNumber().compareToIgnoreCase(
+				o.getOrder().getOrderNumber());
 	}
 
 }

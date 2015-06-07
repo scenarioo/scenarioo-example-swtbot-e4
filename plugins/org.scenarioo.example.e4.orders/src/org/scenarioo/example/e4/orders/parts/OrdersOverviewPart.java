@@ -140,6 +140,9 @@ public class OrdersOverviewPart {
 
 	private void cleanUpOrderOrder(final Order order) {
 		OrderPositionsTreeviewDTO orderPositions = cachedPositions.remove(order.getId());
+		if (orderPositions == null) {
+			return;
+		}
 		for (Position position : orderPositions.getOrderPositions().getPositions()) {
 			parentOrders.remove(position.getId());
 		}

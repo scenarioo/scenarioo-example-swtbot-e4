@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="luna" sequenceNumber="28">
+<?pde version="3.8"?><target name="luna" sequenceNumber="29">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.2.1.201402241301"/>
-<unit id="org.eclipse.swtbot.feature.group" version="2.2.1.201402241301"/>
-<repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
-</location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.feature.feature.group" version="1.0.7"/>
 <unit id="org.slf4j.feature.feature.group" version="1.6.6"/>
@@ -20,6 +15,11 @@
 <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.102.v20150204-1316"/>
 <unit id="org.eclipse.rcp.sdk.id" version="4.4.2.M20150204-1700"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.4"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.3.0.201505290926"/>
+<unit id="org.eclipse.swtbot.feature.group" version="2.3.0.201505290926"/>
+<repository location="http://download.eclipse.org/technology/swtbot/snapshots"/>
 </location>
 </locations>
 </target>

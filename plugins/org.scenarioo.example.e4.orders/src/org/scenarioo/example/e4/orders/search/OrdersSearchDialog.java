@@ -31,6 +31,7 @@ package org.scenarioo.example.e4.orders.search;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -196,6 +197,7 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 					OrderTableResult tableResult = new OrderTableResult(order);
 					tableResults.add(tableResult);
 				}
+				Collections.sort(tableResults);
 				resultTableViewer.setInput(tableResults);
 			}
 		});
