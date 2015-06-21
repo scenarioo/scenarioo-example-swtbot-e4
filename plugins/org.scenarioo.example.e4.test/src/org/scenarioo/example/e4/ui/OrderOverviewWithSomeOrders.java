@@ -29,45 +29,46 @@
 
 package org.scenarioo.example.e4.ui;
 
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.BeforeClass;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
+public class OrderOverviewWithSomeOrders extends RemoveAllOrderFromOrderOverview {
 
-	@Test
-	public void execute() {
+	protected static int ordersCountWithOrderAsOrderNumber;
+	protected static int initializedOrdersInOrderOverview;
 
-		bot.toolbarButtonWithTooltip("Create Order").click();
+	@BeforeClass
+	public static void setupOrder() throws Exception {
+		searchFourOrders();
+		initializedOrdersInOrderOverview = bot.tree().rowCount();
+	}
+
+	private static void searchFourOrders() {
+
+		SWTBotView view = wbBot.partById(PART_ID_ORDER_OVERVIEW);
+		view.toolbarButton("Search Order").click();
+
 		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
-		bot.button("Next >").click();
-		bot.buttonWithTooltip("Add Position").click();
+		text.typeText("Order");
+
+		bot.buttonWithTooltip("Start Search").click();
 
 		// Select Item in Table
 		SWTBotTable table = bot.table();
-		table.click(0, 4);
+		OrderOverviewWithSomeOrders.ordersCountWithOrderAsOrderNumber = table.rowCount();
+		table.click(0, 5);
 		bot.sleep(1000);
-		bot.text(1).setText("3");
-		bot.table().click(0, 2);
+		table.click(1, 5);
 		bot.sleep(1000);
-		bot.ccomboBox(0).setSelection(6);
-		table.click(0, 3);
+		table.click(3, 5);
+		bot.sleep(1000);
+		table.click(5, 5);
 		bot.sleep(1000);
 
 		// click Finish
-		bot.button("Finish").click();
+		bot.button("OK").click();
 
-		// Assert 1 more Orders available in OrderOverview
-		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(1, tree.rowCount());
-
-		bot.sleep(3000);
 	}
-
 }

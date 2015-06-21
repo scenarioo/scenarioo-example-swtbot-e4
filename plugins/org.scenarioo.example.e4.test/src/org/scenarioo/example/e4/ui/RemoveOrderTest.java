@@ -29,45 +29,58 @@
 
 package org.scenarioo.example.e4.ui;
 
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
+public class RemoveOrderTest extends OrderOverviewWithSomeOrders {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOrderTest.class);
 
 	@Test
 	public void execute() {
 
-		bot.toolbarButtonWithTooltip("Create Order").click();
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
-		bot.button("Next >").click();
-		bot.buttonWithTooltip("Add Position").click();
-
-		// Select Item in Table
-		SWTBotTable table = bot.table();
-		table.click(0, 4);
-		bot.sleep(1000);
-		bot.text(1).setText("3");
-		bot.table().click(0, 2);
-		bot.sleep(1000);
-		bot.ccomboBox(0).setSelection(6);
-		table.click(0, 3);
-		bot.sleep(1000);
-
-		// click Finish
-		bot.button("Finish").click();
-
-		// Assert 1 more Orders available in OrderOverview
 		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(1, tree.rowCount());
+		tree.select("Order 2");
+		bot.sleep(1000);
+		SWTBotMenu menu = tree.getTreeItem("Order 2").contextMenu("Remove Order").click();
+		LOGGER.info(menu.toString());
 
-		bot.sleep(3000);
+		bot.sleep(1000);
+
+		// Assert 3 Orders available in OrderOverview
+		Assert.assertEquals(initializedOrdersInOrderOverview - 1, tree.rowCount());
+
+		verifyTheOrderIsNotDeleted();
+
+		LOGGER.info(getClass().getSimpleName() + " successful!");
+	}
+
+	private void verifyTheOrderIsNotDeleted() {
+
+		SWTBotView view = RemoveAllOrderFromOrderOverview.wbBot.partById(PART_ID_ORDER_OVERVIEW);
+		view.toolbarButton("Search Order").click();
+		SWTBotText text = bot.textWithLabel("&Order Number");
+		text.typeText("Order");
+		bot.buttonWithTooltip("Start Search").click();
+
+		SWTBotTable table = bot.table();
+		SWTBotTableItem item = table.getTableItem("Order 2");
+
+		LOGGER.info(item.toString());
+		Assert.assertNotNull(item);
+
+		bot.button("Cancel").click();
 	}
 
 }

@@ -29,45 +29,48 @@
 
 package org.scenarioo.example.e4.ui;
 
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
+public class NoDuplicateOrderTest extends OrderOverviewWithSomeOrders {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(NoDuplicateOrderTest.class);
 
 	@Test
 	public void execute() {
 
-		bot.toolbarButtonWithTooltip("Create Order").click();
+		LOGGER.info(getClass().getSimpleName() + " started.");
+
+		readdTheSameOrdersAgain();
+
+		Assert.assertEquals(initializedOrdersInOrderOverview, bot.tree().rowCount());
+
+		LOGGER.info(getClass().getSimpleName() + " successful!");
+	}
+
+	private void readdTheSameOrdersAgain() {
+
+		SWTBotView view = wbBot.partById(PART_ID_ORDER_OVERVIEW);
+		view.toolbarButton("Search Order").click();
 		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
-		bot.button("Next >").click();
-		bot.buttonWithTooltip("Add Position").click();
+		text.typeText("Order");
+		bot.buttonWithTooltip("Start Search").click();
 
-		// Select Item in Table
 		SWTBotTable table = bot.table();
-		table.click(0, 4);
+		table.click(0, 5);
 		bot.sleep(1000);
-		bot.text(1).setText("3");
-		bot.table().click(0, 2);
-		bot.sleep(1000);
-		bot.ccomboBox(0).setSelection(6);
-		table.click(0, 3);
+		table.click(1, 5);
 		bot.sleep(1000);
 
-		// click Finish
-		bot.button("Finish").click();
-
-		// Assert 1 more Orders available in OrderOverview
-		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(1, tree.rowCount());
-
-		bot.sleep(3000);
+		bot.button("OK").click();
 	}
 
 }

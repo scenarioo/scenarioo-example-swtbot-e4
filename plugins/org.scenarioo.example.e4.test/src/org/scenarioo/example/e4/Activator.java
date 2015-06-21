@@ -27,47 +27,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4;
 
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
+public class Activator implements BundleActivator {
 
-	@Test
-	public void execute() {
+	private static BundleContext context;
 
-		bot.toolbarButtonWithTooltip("Create Order").click();
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
-		bot.button("Next >").click();
-		bot.buttonWithTooltip("Add Position").click();
+	static BundleContext getContext() {
+		return context;
+	}
 
-		// Select Item in Table
-		SWTBotTable table = bot.table();
-		table.click(0, 4);
-		bot.sleep(1000);
-		bot.text(1).setText("3");
-		bot.table().click(0, 2);
-		bot.sleep(1000);
-		bot.ccomboBox(0).setSelection(6);
-		table.click(0, 3);
-		bot.sleep(1000);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+	 */
+	public void start(final BundleContext bundleContext) throws Exception {
+		Activator.context = bundleContext;
+	}
 
-		// click Finish
-		bot.button("Finish").click();
-
-		// Assert 1 more Orders available in OrderOverview
-		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(1, tree.rowCount());
-
-		bot.sleep(3000);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	 */
+	public void stop(final BundleContext bundleContext) throws Exception {
+		Activator.context = null;
 	}
 
 }

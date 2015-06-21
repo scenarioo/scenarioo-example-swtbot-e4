@@ -29,45 +29,46 @@
 
 package org.scenarioo.example.e4.ui;
 
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.workbench.IWorkbench;
+import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.osgi.framework.FrameworkUtil;
+import org.scenarioo.example.e4.Activator;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
+public class RemoveAllOrderFromOrderOverview {
 
-	@Test
-	public void execute() {
+	protected static final String PART_ID_ORDER_OVERVIEW = "org.scenarioo.example.e4.orders.part.ordersoverview";
+	protected static SWTBot bot;
+	protected static final SWTWorkbenchBot wbBot = new SWTWorkbenchBot(getEclipseContext());
 
-		bot.toolbarButtonWithTooltip("Create Order").click();
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
-		bot.button("Next >").click();
-		bot.buttonWithTooltip("Add Position").click();
-
-		// Select Item in Table
-		SWTBotTable table = bot.table();
-		table.click(0, 4);
-		bot.sleep(1000);
-		bot.text(1).setText("3");
-		bot.table().click(0, 2);
-		bot.sleep(1000);
-		bot.ccomboBox(0).setSelection(6);
-		table.click(0, 3);
-		bot.sleep(1000);
-
-		// click Finish
-		bot.button("Finish").click();
-
-		// Assert 1 more Orders available in OrderOverview
-		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(1, tree.rowCount());
-
-		bot.sleep(3000);
+	@BeforeClass
+	public static void setup() throws Exception {
+		// don't use SWTWorkbenchBot here which relies on Platform 3.x
+		bot = new SWTBot();
 	}
 
+	@AfterClass
+	public static void cleanUp() {
+
+		// We Remove all Orders from OrderOverview
+		SWTBotTree tree = bot.tree();
+		int ordersCount = tree.rowCount();
+		for (int i = 0; i < ordersCount; i++) {
+			bot.sleep(1000);
+			tree.select(0).contextMenu("Remove Order").click();
+		}
+
+		bot.sleep(2000);
+	}
+
+	private static IEclipseContext getEclipseContext() {
+		final IEclipseContext serviceContext = EclipseContextFactory.getServiceContext(FrameworkUtil.getBundle(
+				Activator.class).getBundleContext());
+		return serviceContext.get(IWorkbench.class).getApplication().getContext();
+	}
 }

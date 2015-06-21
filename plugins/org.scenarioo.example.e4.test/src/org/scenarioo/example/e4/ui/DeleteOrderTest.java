@@ -29,45 +29,88 @@
 
 package org.scenarioo.example.e4.ui;
 
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
+public class DeleteOrderTest extends OrderOverviewWithSomeOrders {
 
-	@Test
-	public void execute() {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderTest.class);
 
+	private static final String ORDER_NUMBER_TEMP = "Temp";
+
+	@BeforeClass
+	public static void createOrderTemp() {
+
+		// add new Order, As we don't want to interfere with other test cases
 		bot.toolbarButtonWithTooltip("Create Order").click();
 		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
+		text.typeText(ORDER_NUMBER_TEMP);
 		bot.button("Next >").click();
 		bot.buttonWithTooltip("Add Position").click();
 
 		// Select Item in Table
 		SWTBotTable table = bot.table();
+
+		// Position Amount
 		table.click(0, 4);
 		bot.sleep(1000);
-		bot.text(1).setText("3");
+		bot.text(1).setText("2");
+
+		// Select Item
 		bot.table().click(0, 2);
 		bot.sleep(1000);
-		bot.ccomboBox(0).setSelection(6);
+		bot.ccomboBox(0).setSelection(13);
+
+		// loose Focus
 		table.click(0, 3);
 		bot.sleep(1000);
 
 		// click Finish
 		bot.button("Finish").click();
-
-		// Assert 1 more Orders available in OrderOverview
-		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(1, tree.rowCount());
-
-		bot.sleep(3000);
 	}
 
+	@Test
+	public void execute() {
+
+		SWTBotTree tree = bot.tree();
+		SWTBotMenu menu = tree.getTreeItem(ORDER_NUMBER_TEMP).contextMenu("Delete Order").click();
+		LOGGER.info(menu.toString());
+
+		bot.sleep(1000);
+
+		// Assert 5 Orders available in OrderOverview
+		Assert.assertEquals(initializedOrdersInOrderOverview + 1, tree.rowCount());
+
+		// Verify Order has been deleted
+		verifyTempOrderHasBeenDeleted();
+
+		LOGGER.info(getClass().getSimpleName() + " successful!");
+	}
+
+	private void verifyTempOrderHasBeenDeleted() {
+
+		SWTBotView view = wbBot.partById(PART_ID_ORDER_OVERVIEW);
+		view.toolbarButton("Search Order").click();
+		SWTBotText text = bot.textWithLabel("&Order Number");
+		text.typeText(ORDER_NUMBER_TEMP);
+		bot.buttonWithTooltip("Start Search").click();
+
+		SWTBotTable table = bot.table();
+		int rowCountAfterDelete = table.rowCount();
+
+		Assert.assertEquals(0, rowCountAfterDelete);
+
+		bot.button("Cancel").click();
+	}
 }
