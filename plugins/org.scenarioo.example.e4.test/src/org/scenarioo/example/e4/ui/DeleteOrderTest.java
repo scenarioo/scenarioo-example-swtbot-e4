@@ -37,17 +37,23 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.scenarioo.example.e4.BaseSWTBotTest;
+import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DeleteOrderTest extends OrderOverviewWithSomeOrders {
+public class DeleteOrderTest extends BaseSWTBotTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderTest.class);
 
 	private static final String ORDER_NUMBER_TEMP = "Temp";
+
+	@Rule
+	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
 	@BeforeClass
 	public static void createOrderTemp() {
@@ -90,7 +96,7 @@ public class DeleteOrderTest extends OrderOverviewWithSomeOrders {
 		bot.sleep(1000);
 
 		// Assert 5 Orders available in OrderOverview
-		Assert.assertEquals(initializedOrdersInOrderOverview + 1, tree.rowCount());
+		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), tree.rowCount());
 
 		// Verify Order has been deleted
 		verifyTempOrderHasBeenDeleted();

@@ -27,48 +27,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.rules;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.junit.BeforeClass;
+import org.junit.rules.MethodRule;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
 
-public class OrderOverviewWithSomeOrders extends RemoveAllOrderFromOrderOverview {
+public class OrderOverviewCleanUpRule implements MethodRule {
 
-	protected static int ordersCountWithOrderAsOrderNumber;
-	protected static int initializedOrdersInOrderOverview;
-
-	@BeforeClass
-	public static void setupOrder() throws Exception {
-		searchFourOrders();
-		initializedOrdersInOrderOverview = bot.tree().rowCount();
-	}
-
-	private static void searchFourOrders() {
-
-		SWTBotView view = wbBot.partById(PART_ID_ORDER_OVERVIEW);
-		view.toolbarButton("Search Order").click();
-
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Order");
-
-		bot.buttonWithTooltip("Start Search").click();
-
-		// Select Item in Table
-		SWTBotTable table = bot.table();
-		OrderOverviewWithSomeOrders.ordersCountWithOrderAsOrderNumber = table.rowCount();
-		table.click(0, 5);
-		bot.sleep(1000);
-		table.click(1, 5);
-		bot.sleep(1000);
-		table.click(3, 5);
-		bot.sleep(1000);
-		table.click(5, 5);
-		bot.sleep(1000);
-
-		// click Finish
-		bot.button("OK").click();
-
+	/**
+	 * @see org.junit.rules.MethodRule#apply(org.junit.runners.model.Statement, org.junit.runners.model.FrameworkMethod,
+	 *      java.lang.Object)
+	 */
+	@Override
+	public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
+		return new OrderOverviewCleanUpStatement(base);
 	}
 }

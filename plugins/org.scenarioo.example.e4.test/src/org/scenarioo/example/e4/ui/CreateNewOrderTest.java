@@ -36,9 +36,10 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.scenarioo.example.e4.BaseSWTBotTest;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
+public class CreateNewOrderTest extends BaseSWTBotTest {
 
 	@Test
 	public void execute() {
@@ -67,7 +68,7 @@ public class CreateNewOrderTest extends RemoveAllOrderFromOrderOverview {
 		SWTBotTree tree = bot.tree();
 		Assert.assertEquals(1, tree.rowCount());
 
-		bot.sleep(3000);
+		bot.sleep(1000);
 	}
 
 }

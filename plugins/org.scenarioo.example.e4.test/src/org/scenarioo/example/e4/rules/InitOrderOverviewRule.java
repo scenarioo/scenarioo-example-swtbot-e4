@@ -27,48 +27,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.rules;
 
-import org.eclipse.e4.core.contexts.EclipseContextFactory;
-import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.workbench.IWorkbench;
-import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.osgi.framework.FrameworkUtil;
-import org.scenarioo.example.e4.Activator;
+import org.junit.rules.MethodRule;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
 
-public class RemoveAllOrderFromOrderOverview {
+public class InitOrderOverviewRule implements MethodRule {
 
-	protected static final String PART_ID_ORDER_OVERVIEW = "org.scenarioo.example.e4.orders.part.ordersoverview";
-	protected static SWTBot bot;
-	protected static final SWTWorkbenchBot wbBot = new SWTWorkbenchBot(getEclipseContext());
-
-	@BeforeClass
-	public static void setup() throws Exception {
-		// don't use SWTWorkbenchBot here which relies on Platform 3.x
-		bot = new SWTBot();
+	private InitOrderOverviewStatement statement;
+	
+	/**
+	 * @see org.junit.rules.MethodRule#apply(org.junit.runners.model.Statement, org.junit.runners.model.FrameworkMethod,
+	 *      java.lang.Object)
+	 */
+	@Override
+	public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
+		this.statement = new InitOrderOverviewStatement(base);
+		return statement;
 	}
 
-	@AfterClass
-	public static void cleanUp() {
-
-		// We Remove all Orders from OrderOverview
-		SWTBotTree tree = bot.tree();
-		int ordersCount = tree.rowCount();
-		for (int i = 0; i < ordersCount; i++) {
-			bot.sleep(1000);
-			tree.select(0).contextMenu("Remove Order").click();
-		}
-
-		bot.sleep(2000);
+	public int getTotalPersistedOrders() {
+		return statement.totalPersistedOrders;
 	}
 
-	private static IEclipseContext getEclipseContext() {
-		final IEclipseContext serviceContext = EclipseContextFactory.getServiceContext(FrameworkUtil.getBundle(
-				Activator.class).getBundleContext());
-		return serviceContext.get(IWorkbench.class).getApplication().getContext();
+	public int getInitializedOrdersInOrderOverview() {
+		return statement.initializedOrdersInOrderOverview;
 	}
+
 }

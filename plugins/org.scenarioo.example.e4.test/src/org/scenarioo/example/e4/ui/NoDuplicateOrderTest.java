@@ -34,15 +34,21 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.scenarioo.example.e4.BaseSWTBotTest;
+import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class NoDuplicateOrderTest extends OrderOverviewWithSomeOrders {
+public class NoDuplicateOrderTest extends BaseSWTBotTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NoDuplicateOrderTest.class);
+
+	@Rule
+	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
 	@Test
 	public void execute() {
@@ -51,7 +57,7 @@ public class NoDuplicateOrderTest extends OrderOverviewWithSomeOrders {
 
 		readdTheSameOrdersAgain();
 
-		Assert.assertEquals(initializedOrdersInOrderOverview, bot.tree().rowCount());
+		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), bot.tree().rowCount());
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}

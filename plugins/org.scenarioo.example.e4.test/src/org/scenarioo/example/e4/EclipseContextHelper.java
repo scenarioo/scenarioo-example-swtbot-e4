@@ -27,56 +27,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.BaseSWTBotTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.workbench.IWorkbench;
+import org.osgi.framework.FrameworkUtil;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class FindOrderTest extends BaseSWTBotTest {
+public class EclipseContextHelper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FindOrderTest.class);
-
-	@Test
-	public void execute() {
-
-		SWTBotView view = BaseSWTBotTest.wbBot.partById(PART_ID_ORDER_OVERVIEW);
-		view.toolbarButton("Search Order").click();
-
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Order");
-
-		bot.buttonWithTooltip("Start Search").click();
-
-		// Select Item in Table
-		SWTBotTable table = bot.table();
-		table.click(0, 5);
-		bot.sleep(1000);
-		table.click(1, 5);
-		bot.sleep(1000);
-		table.click(3, 5);
-		bot.sleep(1000);
-		table.click(5, 5);
-		bot.sleep(1000);
-
-		// click Finish
-		bot.button("OK").click();
-
-		// Assert 4 Orders available in OrderOverview
-		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(4, tree.rowCount());
-
-		bot.sleep(1000);
-
-		LOGGER.info(getClass().getSimpleName() + " successful!");
+	public static IEclipseContext getEclipseContext() {
+		final IEclipseContext serviceContext = EclipseContextFactory.getServiceContext(FrameworkUtil.getBundle(
+				Activator.class).getBundleContext());
+		return serviceContext.get(IWorkbench.class).getApplication().getContext();
 	}
+
 }

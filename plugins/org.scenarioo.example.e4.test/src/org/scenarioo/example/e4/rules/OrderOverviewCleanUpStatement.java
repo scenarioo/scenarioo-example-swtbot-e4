@@ -27,56 +27,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.rules;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.BaseSWTBotTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.runners.model.Statement;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class FindOrderTest extends BaseSWTBotTest {
+public class OrderOverviewCleanUpStatement extends Statement {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FindOrderTest.class);
+	private final Statement base;
+	private final SWTBot bot;
 
-	@Test
-	public void execute() {
+	public OrderOverviewCleanUpStatement(final Statement base) {
+		this.base = base;
+		this.bot = new SWTBot();
+	}
 
-		SWTBotView view = BaseSWTBotTest.wbBot.partById(PART_ID_ORDER_OVERVIEW);
-		view.toolbarButton("Search Order").click();
+	/**
+	 * @see org.junit.runners.model.Statement#evaluate()
+	 */
+	@Override
+	public void evaluate() throws Throwable {
+		base.evaluate();
 
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Order");
+		// We execute after the test
+		removeAllOrdersFromOrderOverview();
+	}
 
-		bot.buttonWithTooltip("Start Search").click();
+	private void removeAllOrdersFromOrderOverview() {
 
-		// Select Item in Table
-		SWTBotTable table = bot.table();
-		table.click(0, 5);
-		bot.sleep(1000);
-		table.click(1, 5);
-		bot.sleep(1000);
-		table.click(3, 5);
-		bot.sleep(1000);
-		table.click(5, 5);
-		bot.sleep(1000);
-
-		// click Finish
-		bot.button("OK").click();
-
-		// Assert 4 Orders available in OrderOverview
+		// We Remove all Orders from OrderOverview
 		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(4, tree.rowCount());
+		int ordersCount = tree.rowCount();
+		for (int i = 0; i < ordersCount; i++) {
+			bot.sleep(1000);
+			tree.select(0).contextMenu("Remove Order").click();
+		}
 
 		bot.sleep(1000);
 
-		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 }

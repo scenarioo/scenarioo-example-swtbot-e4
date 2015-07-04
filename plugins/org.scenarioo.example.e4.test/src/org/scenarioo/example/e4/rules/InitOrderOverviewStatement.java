@@ -27,66 +27,71 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.rules;
 
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.runners.model.Statement;
 import org.scenarioo.example.e4.BaseSWTBotTest;
-import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.scenarioo.example.e4.EclipseContextHelper;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class RemoveOrderTest extends BaseSWTBotTest {
+public class InitOrderOverviewStatement extends Statement {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOrderTest.class);
+	private final Statement base;
+	private final SWTBot bot;
+	private final SWTWorkbenchBot wbBot;
 
-	@Rule
-	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
-	@Test
-	public void execute() {
+	public int totalPersistedOrders;
+	public int initializedOrdersInOrderOverview;
 
-		SWTBotTree tree = bot.tree();
-		tree.select("Order 2");
-		bot.sleep(1000);
-		SWTBotMenu menu = tree.getTreeItem("Order 2").contextMenu("Remove Order").click();
-		LOGGER.info(menu.toString());
-
-		bot.sleep(1000);
-
-		// Assert 3 Orders available in OrderOverview
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview() - 1, tree.rowCount());
-
-		verifyTheOrderIsNotDeleted();
-
-		LOGGER.info(getClass().getSimpleName() + " successful!");
+	public InitOrderOverviewStatement(final Statement base) {
+		this.base = base;
+		this.bot = new SWTBot();
+		this.wbBot = new SWTWorkbenchBot(EclipseContextHelper.getEclipseContext());
 	}
 
-	private void verifyTheOrderIsNotDeleted() {
+	/**
+	 * @see org.junit.runners.model.Statement#evaluate()
+	 */
+	@Override
+	public void evaluate() throws Throwable {
+		
+		// We execute before the test
+		addFourOrdersToOrdersOverview();
+		initializedOrdersInOrderOverview = bot.tree().rowCount();
+		
+		base.evaluate();
+	}
 
-		SWTBotView view = BaseSWTBotTest.wbBot.partById(PART_ID_ORDER_OVERVIEW);
+	private void addFourOrdersToOrdersOverview() {
+
+		SWTBotView view = wbBot.partById(BaseSWTBotTest.PART_ID_ORDER_OVERVIEW);
 		view.toolbarButton("Search Order").click();
+
 		SWTBotText text = bot.textWithLabel("&Order Number");
 		text.typeText("Order");
+
 		bot.buttonWithTooltip("Start Search").click();
 
+		// Select Item in Table
 		SWTBotTable table = bot.table();
-		SWTBotTableItem item = table.getTableItem("Order 2");
+		totalPersistedOrders = table.rowCount();
+		table.click(0, 5);
+		bot.sleep(1000);
+		table.click(1, 5);
+		bot.sleep(1000);
+		table.click(3, 5);
+		bot.sleep(1000);
+		table.click(5, 5);
+		bot.sleep(1000);
 
-		LOGGER.info(item.toString());
-		Assert.assertNotNull(item);
+		// click Finish
+		bot.button("OK").click();
 
-		bot.button("Cancel").click();
 	}
 
 }
