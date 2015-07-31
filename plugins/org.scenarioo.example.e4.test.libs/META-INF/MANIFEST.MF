@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test Libs
+Bundle-SymbolicName: org.scenarioo.example.e4.test.libs
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: lib/scenarioo-java-2.0.1-20141208.170959-1.jar
+
