@@ -38,42 +38,41 @@ import org.scenarioo.model.docu.entities.UseCase;
 
 public class ScenariooRule implements TestRule {
 
-	 private final String useCaseName;
-	 private final ScenarioDocuWriter writer;
-	
-	 public ScenariooRule( final String useCaseName,final ScenarioDocuWriter writer) { // (1)
-		 this.useCaseName = useCaseName;
-		 this.writer = writer;
-	 }
-	
-	 @Override
-	 public Statement apply(final Statement base, final Description description) {
-	 return new Statement() {
-	
-	 @Override
-	 public void evaluate() throws Throwable {
-	 saveUseCase(description); // (2)
-	 saveScenario(description);
-	 base.evaluate();
-	 }
-	
-	 private void saveScenario(final Description description) {
-	 Scenario scenario = new Scenario();
-	 scenario.setName(description.getMethodName()); // (4)
-	 writer.saveScenario(getUseCaseName(description), scenario);
-	 }
-	
-	
-	 private void saveUseCase(final Description description) {
-	 UseCase useCase = new UseCase();
-	 useCase.setName(getUseCaseName(description));
-	 writer.saveUseCase(useCase);
-	 }
-	
-	 private String getUseCaseName(final Description description) {
-	 return description.getTestClass().getSimpleName(); // (3)
-	 }
-	 };
-	 }
+	private final String useCaseName;
+	private final ScenarioDocuWriter writer;
+
+	public ScenariooRule(final String useCaseName, final ScenarioDocuWriter writer) { // (1)
+		this.useCaseName = useCaseName;
+		this.writer = writer;
+	}
+
+	@Override
+	public Statement apply(final Statement base, final Description description) {
+		return new Statement() {
+
+			@Override
+			public void evaluate() throws Throwable {
+				saveUseCase(description); // (2)
+				saveScenario(description);
+				base.evaluate();
+			}
+
+			private void saveScenario(final Description description) {
+				Scenario scenario = new Scenario();
+				scenario.setName(description.getTestClass().getSimpleName()); // (4)
+				writer.saveScenario(getUseCaseName(description), scenario);
+			}
+
+			private void saveUseCase(final Description description) {
+				UseCase useCase = new UseCase();
+				useCase.setName(getUseCaseName(description));
+				writer.saveUseCase(useCase);
+			}
+
+			private String getUseCaseName(final Description description) {
+				return useCaseName;
+			}
+		};
+	}
 
 }
