@@ -17,6 +17,7 @@
         <module>../plugins/org.scenarioo.example.e4.logging.config</module>
         <module>../plugins/org.scenarioo.example.e4.orders</module>
         <module>../plugins/org.scenarioo.example.e4.test</module>
+        <module>../plugins/org.scenarioo.example.e4.test.libs</module>
         <module>../org.scenarioo.example.e4.product</module>
     </modules>
 </project> 
