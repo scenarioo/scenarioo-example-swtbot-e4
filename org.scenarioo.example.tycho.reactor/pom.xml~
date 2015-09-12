@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.scenarioo.example</groupId>
+    <artifactId>e4-tycho-aggregator</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <modules>
+        <module>../org.scenarioo.example.tycho.parent</module>
+        <module>../org.scenarioo.example.e4.targetdefinition</module>
+        <module>../features/org.scenarioo.example.e4.orders.feature</module>
+        <module>../plugins/org.scenarioo.example.e4.libs</module>
+        <module>../plugins/org.scenarioo.example.e4.local-services-impl</module>
+        <module>../plugins/org.scenarioo.example.e4.logging.config</module>
+        <module>../plugins/org.scenarioo.example.e4.orders</module>
+        <module>../plugins/org.scenarioo.example.e4.test</module>
+        <module>../org.scenarioo.example.e4.product</module>
+    </modules>
+</project> 
