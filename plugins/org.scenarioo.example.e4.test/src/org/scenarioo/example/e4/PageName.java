@@ -29,46 +29,8 @@
 
 package org.scenarioo.example.e4;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.scenarioo.example.e4.rules.OrderOverviewCleanUpRule;
-import org.scenarioo.example.e4.rules.ScenariooRule;
-
-public class BaseSWTBotTest {
-
-	public static final String PART_ID_ORDER_OVERVIEW = "org.scenarioo.example.e4.orders.part.ordersoverview";
-	private static final String scenariooBuildInfo = getDateString();
-	protected static SWTBot bot;
-	protected static SWTWorkbenchBot wbBot;
-	protected final ScenariooWriterHelper scenariooWriterHelper;
-
-	@Rule
-	public ScenariooRule scenariooRule;
-
-	@Rule
-	public OrderOverviewCleanUpRule orderOverviewCleanUpRule = new OrderOverviewCleanUpRule();
-
-	public BaseSWTBotTest() {
-		scenariooWriterHelper = new ScenariooWriterHelper("Orders", scenariooBuildInfo);
-		scenariooRule = new ScenariooRule(scenariooWriterHelper);
-	}
-
-	@BeforeClass
-	public static void setup() throws Exception {
-		// don't use SWTWorkbenchBot here which relies on Platform 3.x
-		bot = new SWTBot();
-		wbBot = new SWTWorkbenchBot(EclipseContextHelper.getEclipseContext());
-	}
-
-	private static String getDateString() {
-		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy-HHmm");
-		return formatter.format(date);
-	}
-
+public enum PageName {
+	ORDER_NEW_1,
+	ORDER_NEW_2,
+	ORDER_OVERVIEW;
 }

@@ -44,7 +44,6 @@ public class InitOrderOverviewStatement extends Statement {
 	private final SWTBot bot;
 	private final SWTWorkbenchBot wbBot;
 
-
 	public int totalPersistedOrders;
 	public int initializedOrdersInOrderOverview;
 

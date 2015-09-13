@@ -32,47 +32,33 @@ package org.scenarioo.example.e4.rules;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.scenarioo.api.ScenarioDocuWriter;
-import org.scenarioo.model.docu.entities.Scenario;
-import org.scenarioo.model.docu.entities.UseCase;
+import org.scenarioo.example.e4.ScenariooWriterHelper;
 
 public class ScenariooRule implements TestRule {
 
-	private final String useCaseName;
-	private final ScenarioDocuWriter writer;
+	private final ScenariooWriterHelper writerHelper;
 
-	public ScenariooRule(final String useCaseName, final ScenarioDocuWriter writer) { // (1)
-		this.useCaseName = useCaseName;
-		this.writer = writer;
+	/**
+	 * @param scenarioobuildinfo2
+	 */
+	public ScenariooRule(final ScenariooWriterHelper writerHelper) {
+		this.writerHelper = writerHelper;
 	}
 
 	@Override
 	public Statement apply(final Statement base, final Description description) {
+		String scenarioName = description.getTestClass().getSimpleName();
+		this.writerHelper.setScenarioName(scenarioName);
 		return new Statement() {
 
 			@Override
 			public void evaluate() throws Throwable {
-				saveUseCase(description); // (2)
-				saveScenario(description);
+
+				// Write usecase.xml and sceanrio.xml before Test execution
+				writerHelper.saveUseCase(description);
+				writerHelper.saveScenario(description);
 				base.evaluate();
-			}
-
-			private void saveScenario(final Description description) {
-				Scenario scenario = new Scenario();
-				scenario.setName(description.getTestClass().getSimpleName()); // (4)
-				writer.saveScenario(getUseCaseName(description), scenario);
-			}
-
-			private void saveUseCase(final Description description) {
-				UseCase useCase = new UseCase();
-				useCase.setName(getUseCaseName(description));
-				writer.saveUseCase(useCase);
-			}
-
-			private String getUseCaseName(final Description description) {
-				return useCaseName;
 			}
 		};
 	}
-
 }
