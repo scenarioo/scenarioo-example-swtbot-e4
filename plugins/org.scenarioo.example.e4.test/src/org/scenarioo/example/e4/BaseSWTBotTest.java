@@ -29,32 +29,52 @@
 
 package org.scenarioo.example.e4;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.scenarioo.example.e4.rules.OrderOverviewCleanUpRule;
 import org.scenarioo.example.e4.rules.ScenariooRule;
 
 public class BaseSWTBotTest {
 
 	public static final String PART_ID_ORDER_OVERVIEW = "org.scenarioo.example.e4.orders.part.ordersoverview";
-	private static final String scenariooBuildInfo = getDateString();
+	private static final Date scenariooBuildDate = new Date();
+	private static final UnitTestWatcher buildFailedWatcher = new UnitTestWatcher();
 	protected static SWTBot bot;
 	protected static SWTWorkbenchBot wbBot;
-	protected final ScenariooWriterHelper scenariooWriterHelper;
+	protected final String useCaseName = "Orders";
+	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
 
 	@Rule
-	public ScenariooRule scenariooRule;
+	public final TestWatcher testWatchterRule = new TestWatcher() {
+		@Override
+		protected void failed(final Throwable e, final Description description) {
+			scenariooRule.scenarioFailed();
+			if (buildFailedWatcher.success) {
+				buildFailedWatcher.success = false;
+				scenariooWriterHelper.writeFailedBuildFile();
+			}
+		}
+
+		@Override
+		protected void finished(final Description description) {
+			scenariooWriterHelper.flush();
+		}
+	};
 
 	@Rule
-	public OrderOverviewCleanUpRule orderOverviewCleanUpRule = new OrderOverviewCleanUpRule();
+	public final ScenariooRule scenariooRule;
+
+	@Rule
+	public final OrderOverviewCleanUpRule orderOverviewCleanUpRule = new OrderOverviewCleanUpRule();
 
 	public BaseSWTBotTest() {
-		scenariooWriterHelper = new ScenariooWriterHelper("Orders", scenariooBuildInfo);
+		scenariooWriterHelper.setUseCaseName("Orders");
 		scenariooRule = new ScenariooRule(scenariooWriterHelper);
 	}
 
@@ -65,10 +85,7 @@ public class BaseSWTBotTest {
 		wbBot = new SWTWorkbenchBot(EclipseContextHelper.getEclipseContext());
 	}
 
-	private static String getDateString() {
-		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy-HHmm");
-		return formatter.format(date);
+	private static class UnitTestWatcher {
+		private boolean success = true;
 	}
-
 }

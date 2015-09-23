@@ -30,18 +30,22 @@
 package org.scenarioo.example.e4;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import org.junit.runner.Description;
 import org.scenarioo.api.ScenarioDocuWriter;
+import org.scenarioo.model.docu.entities.Build;
 import org.scenarioo.model.docu.entities.Page;
 import org.scenarioo.model.docu.entities.Scenario;
+import org.scenarioo.model.docu.entities.Status;
 import org.scenarioo.model.docu.entities.Step;
 import org.scenarioo.model.docu.entities.StepDescription;
 import org.scenarioo.model.docu.entities.UseCase;
 
 public class ScenariooWriterHelper {
 
-	private final String useCaseName;
+	private final Build build;
+	private String useCaseName;
 	private final ScenarioDocuWriter docuWriter;
 	private String scenarioName = null;
 
@@ -50,10 +54,26 @@ public class ScenariooWriterHelper {
 	/**
 	 * @param scenarioobuildinfo2
 	 */
-	public ScenariooWriterHelper(final String useCaseName, final String scenariooBuildInfo) {
-		this.useCaseName = useCaseName;
+	public ScenariooWriterHelper(final Date date) {
+		String scenariooBuildInfo = getDateString(date);
 		this.docuWriter = new ScenarioDocuWriter(new File("scenarioo-data"),
 				"HEAD", scenariooBuildInfo);
+		this.build = new Build(scenariooBuildInfo);
+		this.build.setName(scenariooBuildInfo);
+		this.build.setStatus(Status.SUCCESS);
+		this.build.setDate(date);
+		this.build.setRevision(scenariooBuildInfo);
+		this.docuWriter.saveBuildDescription(build);
+	}
+
+	private String getDateString(final Date date) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy-HHmm");
+		String dateString = formatter.format(date);
+		return dateString;
+	}
+
+	public void setUseCaseName(final String useCaseName) {
+		this.useCaseName = useCaseName;
 	}
 
 	public void setScenarioName(final String scenarioName) {
@@ -74,13 +94,14 @@ public class ScenariooWriterHelper {
 		saveStep(step);
 	}
 
-	public void saveScenario(final Description description) {
+	public void saveScenario(final Status status) {
 		Scenario scenario = new Scenario();
 		scenario.setName(scenarioName);
+		scenario.setStatus(status);
 		docuWriter.saveScenario(useCaseName, scenario);
 	}
 
-	public void saveUseCase(final Description description) {
+	public void saveUseCase() {
 		UseCase useCase = new UseCase();
 		useCase.setName(useCaseName);
 		docuWriter.saveUseCase(useCase);
@@ -96,5 +117,20 @@ public class ScenariooWriterHelper {
 	 */
 	private void saveStep(final Step step) {
 		docuWriter.saveStep(useCaseName, scenarioName, step);
+	}
+
+	/**
+	 * @param scenarioobuildinfo
+	 */
+	public void writeFailedBuildFile() {
+		build.setStatus(Status.FAILED);
+		this.docuWriter.saveBuildDescription(build);
+	}
+
+	/**
+	 * 
+	 */
+	public void flush() {
+		this.docuWriter.flush();
 	}
 }
