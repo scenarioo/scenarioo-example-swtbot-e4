@@ -7,4 +7,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.scenarioo.api,
  org.scenarioo.model.docu.entities
 Bundle-ClassPath: lib/scenarioo-java-2.0.1-20141208.170959-1.jar,
+ lib/commons-io-2.4.jar,
  .
+Require-Bundle: org.scenarioo.example.e4.libs;bundle-version="1.0.0"
