@@ -54,11 +54,11 @@ public class BaseSWTBotTest {
 	public final TestWatcher testWatchterRule = new TestWatcher() {
 		@Override
 		protected void failed(final Throwable e, final Description description) {
-			scenariooRule.scenarioFailed();
 			if (buildFailedWatcher.success) {
 				buildFailedWatcher.success = false;
 				scenariooWriterHelper.writeFailedBuildFile();
 			}
+			scenariooWriterHelper.writeScenariooFailedFile();
 		}
 
 		@Override

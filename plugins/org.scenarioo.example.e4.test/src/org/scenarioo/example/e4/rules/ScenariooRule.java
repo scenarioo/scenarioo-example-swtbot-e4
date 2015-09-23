@@ -33,13 +33,10 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
-import org.scenarioo.model.docu.entities.Status;
 
 public class ScenariooRule implements TestRule {
 
 	private final ScenariooWriterHelper writerHelper;
-
-	private Status scenarioStatus = Status.SUCCESS;
 
 	/**
 	 * @param scenarioobuildinfo2
@@ -51,21 +48,15 @@ public class ScenariooRule implements TestRule {
 	@Override
 	public Statement apply(final Statement base, final Description description) {
 		String scenarioName = description.getTestClass().getSimpleName();
-		this.writerHelper.setScenarioName(scenarioName);
+		this.writerHelper.saveSuccessfulScenario(scenarioName);
 		return new Statement() {
 
 			@Override
 			public void evaluate() throws Throwable {
 				writerHelper.saveUseCase();
-				// Write usecase.xml before Test execution
+				// Write usecase.xml sceanrio.xml before Test execution
 				base.evaluate();
-				// Write sceanrio.xml after Test execution
-				writerHelper.saveScenario(scenarioStatus);
 			}
 		};
-	}
-
-	public void scenarioFailed() {
-		scenarioStatus = Status.FAILED;
 	}
 }

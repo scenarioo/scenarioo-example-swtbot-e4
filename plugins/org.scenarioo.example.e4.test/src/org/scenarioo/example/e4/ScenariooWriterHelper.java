@@ -45,9 +45,9 @@ import org.scenarioo.model.docu.entities.UseCase;
 public class ScenariooWriterHelper {
 
 	private final Build build;
+	private final Scenario scenario = new Scenario();
 	private String useCaseName;
 	private final ScenarioDocuWriter docuWriter;
-	private String scenarioName = null;
 
 	private int currentIndex = 0;
 
@@ -76,8 +76,10 @@ public class ScenariooWriterHelper {
 		this.useCaseName = useCaseName;
 	}
 
-	public void setScenarioName(final String scenarioName) {
-		this.scenarioName = scenarioName;
+	public void saveSuccessfulScenario(final String scenarioName) {
+		scenario.setName(scenarioName);
+		scenario.setStatus(Status.SUCCESS);
+		docuWriter.saveScenario(useCaseName, scenario);
 	}
 
 	public void writeStep(final String title, final PageName pageName, final byte[] screenshot) {
@@ -94,13 +96,6 @@ public class ScenariooWriterHelper {
 		saveStep(step);
 	}
 
-	public void saveScenario(final Status status) {
-		Scenario scenario = new Scenario();
-		scenario.setName(scenarioName);
-		scenario.setStatus(status);
-		docuWriter.saveScenario(useCaseName, scenario);
-	}
-
 	public void saveUseCase() {
 		UseCase useCase = new UseCase();
 		useCase.setName(useCaseName);
@@ -108,7 +103,7 @@ public class ScenariooWriterHelper {
 	}
 
 	private void saveScreenshotAsPng(final int currentIndex, final byte[] screenshot) {
-		docuWriter.saveScreenshotAsPng(useCaseName, scenarioName, currentIndex,
+		docuWriter.saveScreenshotAsPng(useCaseName, scenario.getName(), currentIndex,
 				screenshot);
 	}
 
@@ -116,7 +111,7 @@ public class ScenariooWriterHelper {
 	 * @param step
 	 */
 	private void saveStep(final Step step) {
-		docuWriter.saveStep(useCaseName, scenarioName, step);
+		docuWriter.saveStep(useCaseName, scenario.getName(), step);
 	}
 
 	/**
@@ -132,5 +127,13 @@ public class ScenariooWriterHelper {
 	 */
 	public void flush() {
 		this.docuWriter.flush();
+	}
+
+	/**
+	 * 
+	 */
+	public void writeScenariooFailedFile() {
+		scenario.setStatus(Status.FAILED);
+		this.docuWriter.saveScenario(useCaseName, scenario);
 	}
 }
