@@ -29,25 +29,57 @@
 
 package org.scenarioo.example.e4;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.junit.BeforeClass;
+import java.util.Date;
+
 import org.junit.Rule;
-import org.scenarioo.example.e4.rules.OrderOverviewCleanUpRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import org.scenarioo.example.e4.rules.ScenariooRule;
 
-public class BaseSWTBotTest {
+public class ScenariooTestWrapper extends BaseSWTBotTest {
 
-	public static final String PART_ID_ORDER_OVERVIEW = "org.scenarioo.example.e4.orders.part.ordersoverview";
-	protected static SWTBot bot;
-	protected static SWTWorkbenchBot wbBot;
+	private static final ScreenShooter screenShooter = new ScreenShooter();
+
+	protected static byte[] screenshot() {
+		return screenShooter.capture();
+	}
+
+	private static final Date scenariooBuildDate = new Date();
+	private static final UnitTestWatcher buildFailedWatcher = new UnitTestWatcher();
+	protected final String useCaseName = "Orders";
+	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
 
 	@Rule
-	public final OrderOverviewCleanUpRule orderOverviewCleanUpRule = new OrderOverviewCleanUpRule();
+	public final TestWatcher testWatchterRule = new TestWatcher() {
+		@Override
+		protected void failed(final Throwable e, final Description description) {
+			if (buildFailedWatcher.success) {
+				buildFailedWatcher.success = false;
+				scenariooWriterHelper.writeFailedBuildFile();
+			}
+			scenariooWriterHelper.writeScenariooFailedFile();
+		}
 
-	@BeforeClass
-	public static void setup() throws Exception {
-		// don't use SWTWorkbenchBot here which relies on Platform 3.x
-		bot = new SWTBot();
-		wbBot = new SWTWorkbenchBot(EclipseContextHelper.getEclipseContext());
+		@Override
+		protected void finished(final Description description) {
+			scenariooWriterHelper.flush();
+		}
+	};
+
+	@Rule
+	public final ScenariooRule scenariooRule;
+
+	public ScenariooTestWrapper() {
+		scenariooWriterHelper.setUseCaseName(useCaseName);
+		scenariooRule = new ScenariooRule(scenariooWriterHelper);
 	}
+
+	private static class UnitTestWatcher {
+		private boolean success = true;
+	}
+
+	protected void generateDocuForInitialView() {
+		scenariooWriterHelper.writeStep("order_overview", PageName.ORDER_OVERVIEW, screenshot());
+	}
+
 }

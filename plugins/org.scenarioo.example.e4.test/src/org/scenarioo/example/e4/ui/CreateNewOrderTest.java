@@ -29,11 +29,6 @@
 
 package org.scenarioo.example.e4.ui;
 
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
@@ -41,48 +36,30 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.BaseSWTBotTest;
 import org.scenarioo.example.e4.PageName;
+import org.scenarioo.example.e4.ScenariooTestWrapper;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends BaseSWTBotTest {
+public class CreateNewOrderTest extends ScenariooTestWrapper {
 
 	@Test
 	public void execute() {
 
-		scenariooWriterHelper.writeStep("order_overview", PageName.ORDER_OVERVIEW, screenshot());
-		// bot.captureScreenshot("screenshots/temp.png");
+		generateDocuForInitialView();
 
-		bot.toolbarButtonWithTooltip("Create Order").click();
-		scenariooWriterHelper.writeStep("new_order_page_1", PageName.ORDER_NEW_1, screenshot());
+		startNewOrderDialogAndGenerateDocu();
 
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
-		scenariooWriterHelper.writeStep("order_number_entered", PageName.ORDER_NEW_1, screenshot());
+		enterOrderNumberAndGenerateDocu();
 
-		bot.button("Next >").click();
-		scenariooWriterHelper.writeStep("new_order_page_2", PageName.ORDER_NEW_2, screenshot());
+		clickNextPageAndGenerateDocu();
 
-		bot.buttonWithTooltip("Add Position").click();
-		scenariooWriterHelper.writeStep("add_position", PageName.ORDER_NEW_2, screenshot());
+		addPositionAndGenerateDocu();
 
-		// Select Item in Table
-		SWTBotTable table = bot.table();
-		table.click(0, 4);
-		bot.sleep(1000);
-		bot.text(1).setText("3");
-		scenariooWriterHelper.writeStep("position_count_entered", PageName.ORDER_NEW_2, screenshot());
+		SWTBotTable table = enterAmountForFirstRowAndGenerateDocu();
 
-		bot.table().click(0, 2);
-		bot.sleep(1000);
-		bot.ccomboBox(0).setSelection(6);
-		table.click(0, 3);
-		bot.sleep(1000);
-		scenariooWriterHelper.writeStep("item_selected", PageName.ORDER_NEW_2, screenshot());
+		selectItemForFirstRowAndGenerateDocu(table);
 
-		// click Finish
-		bot.button("Finish").click();
-		scenariooWriterHelper.writeStep("order_visible_in_order_overview", PageName.ORDER_OVERVIEW, screenshot());
+		finishNewOrderDialogAndGenerateDocu();
 
 		// Assert 1 more Orders available in OrderOverview
 		SWTBotTree tree = bot.tree();
@@ -91,57 +68,62 @@ public class CreateNewOrderTest extends BaseSWTBotTest {
 		bot.sleep(1000);
 	}
 
-	private byte[] screenshot() {
-
-		final Display display = Display.getDefault();
-		final Rectangle biggestRectangle = getWidthestAndHighestBounds(display);
-		final Image image = new Image(display, biggestRectangle);
-
-		Display.getDefault().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				GC gc = new GC(display);
-				gc.copyArea(image, biggestRectangle.x, biggestRectangle.y);
-				gc.dispose();
-			}
-		});
-		return image.getImageData().data;
+	private void finishNewOrderDialogAndGenerateDocu() {
+		// click Finish
+		bot.button("Finish").click();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_visible_in_order_overview", PageName.ORDER_OVERVIEW, screenshot());
 	}
 
-	private Rectangle getWidthestAndHighestBounds(final Display display) {
-
-		BiggestRectangleCalculator rect = new BiggestRectangleCalculator(display);
-
-		Display.getDefault().syncExec(rect);
-		return rect.biggest;
+	/**
+	 * @param table
+	 */
+	private void selectItemForFirstRowAndGenerateDocu(final SWTBotTable table) {
+		bot.table().click(0, 2);
+		bot.sleep(100);
+		bot.ccomboBox(0).setSelection(6);
+		table.click(0, 3); // Input is accepted after focus lost
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("item_selected", PageName.ORDER_NEW_2, screenshot());
 	}
 
-	private class BiggestRectangleCalculator implements Runnable {
+	/**
+	 * @return
+	 */
+	private SWTBotTable enterAmountForFirstRowAndGenerateDocu() {
+		// Select Item in Table
+		SWTBotTable table = bot.table();
+		table.click(0, 4);
+		bot.text(1).setText("3");
+		bot.sleep(100);
+		table.click(0, 3); // Input is accepted after focus lost
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("position_count_entered", PageName.ORDER_NEW_2, screenshot());
+		return table;
+	}
 
-		private Rectangle biggest = null;
-		private final Display display;
+	private void addPositionAndGenerateDocu() {
+		bot.buttonWithTooltip("Add Position").click();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("add_position", PageName.ORDER_NEW_2, screenshot());
+	}
 
-		/**
-		 * 
-		 */
-		public BiggestRectangleCalculator(final Display display) {
-			this.display = display;
-		}
+	private void clickNextPageAndGenerateDocu() {
+		bot.button("Next >").click();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("new_order_page_2", PageName.ORDER_NEW_2, screenshot());
+	}
 
-		/**
-		 * @see java.lang.Runnable#run()
-		 */
-		@Override
-		public void run() {
-			Shell[] shells = display.getShells();
-			Rectangle biggestRectangle = shells[0].getBounds();
+	private void enterOrderNumberAndGenerateDocu() {
+		SWTBotText text = bot.textWithLabel("&Order Number");
+		text.typeText("Huhu");
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_number_entered", PageName.ORDER_NEW_1, screenshot());
+	}
 
-			for (int i = 1; i < shells.length; i++) {
-				Rectangle rectangle = shells[i].getBounds();
-				biggestRectangle = biggestRectangle.union(rectangle);
-			}
-			this.biggest = biggestRectangle;
-		}
+	private void startNewOrderDialogAndGenerateDocu() {
+		bot.toolbarButtonWithTooltip("Create Order").click();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("new_order_page_1", PageName.ORDER_NEW_1, screenshot());
 	}
 }
