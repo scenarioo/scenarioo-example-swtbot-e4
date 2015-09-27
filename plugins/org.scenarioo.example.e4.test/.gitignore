@@ -1,2 +1,4 @@
 /bin/
 /target/
+/scenarioo-data/HEAD/*
+!/scenarioo-data/HEAD/branch.xml
