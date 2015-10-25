@@ -29,47 +29,46 @@
 
 package org.scenarioo.example.e4.ui;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.BaseSWTBotTest;
+import org.scenarioo.example.e4.ScenariooTestWrapper;
+import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class FindOrderTest extends BaseSWTBotTest {
+public class FindOrderTest extends ScenariooTestWrapper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindOrderTest.class);
+
+	private final SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
+			scenariooWriterHelper);
 
 	@Test
 	public void execute() {
 
-		SWTBotView view = BaseSWTBotTest.wbBot.partById(PART_ID_ORDER_OVERVIEW);
-		view.toolbarButton("Search Order").click();
+		generateDocuForInitialView();
 
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Order");
+		searchOrdersDialog.open();
 
-		bot.buttonWithTooltip("Start Search").click();
+		searchOrdersDialog.enterOrderNumber("Order");
+
+		searchOrdersDialog.startSearch();
 
 		// Select Item in Table
-		SWTBotTable table = bot.table();
-		table.click(0, 5);
-		bot.sleep(1000);
-		table.click(1, 5);
-		bot.sleep(1000);
-		table.click(3, 5);
-		bot.sleep(1000);
-		table.click(5, 5);
-		bot.sleep(1000);
+		searchOrdersDialog.selectOrderAndGenerateDocu(0);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(1);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(3);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(5);
 
 		// click Finish
-		bot.button("OK").click();
+		searchOrdersDialog.ok();
 
 		// Assert 4 Orders available in OrderOverview
 		SWTBotTree tree = bot.tree();

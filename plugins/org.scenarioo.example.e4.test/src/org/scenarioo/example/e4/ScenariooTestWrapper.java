@@ -31,6 +31,8 @@ package org.scenarioo.example.e4;
 
 import java.util.Date;
 
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -79,7 +81,29 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 	}
 
 	protected void generateDocuForInitialView() {
+		bot.sleep(100);
 		scenariooWriterHelper.writeStep("order_overview", PageName.ORDER_OVERVIEW, screenshot());
+	}
+
+	/**
+	 * @param menu
+	 */
+	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu) {
+		menu.click();
+		bot.sleep(500);
+		scenariooWriterHelper.writeStep("menu_entry_clicked", PageName.ORDER_OVERVIEW, screenshot());
+	}
+
+	/**
+	 * @param tree
+	 * @return
+	 */
+	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final String orderNumber,
+			final String actionName) {
+		SWTBotMenu menu = tree.getTreeItem(orderNumber).contextMenu(actionName);
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_number_selected", PageName.ORDER_OVERVIEW, screenshot());
+		return menu;
 	}
 
 }

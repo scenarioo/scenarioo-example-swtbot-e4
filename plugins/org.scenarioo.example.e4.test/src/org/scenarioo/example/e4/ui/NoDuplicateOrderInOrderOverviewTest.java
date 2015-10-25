@@ -30,67 +30,54 @@
 package org.scenarioo.example.e4.ui;
 
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
-import org.scenarioo.example.e4.rules.CreateTempOrderRule;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DeleteOrderTest extends ScenariooTestWrapper {
+public class NoDuplicateOrderInOrderOverviewTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NoDuplicateOrderInOrderOverviewTest.class);
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
-	@Rule
-	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
-
 	@Test
 	public void execute() {
 
+		LOGGER.info(getClass().getSimpleName() + " started.");
+
 		generateDocuForInitialView();
 
-		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Delete Order");
-		LOGGER.info(menu.toString());
+		readdTheSameOrdersAgain();
 
-		clickMenuEntryAndGenerateDocu(menu);
-
-		// Assert 5 Orders available in OrderOverview
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), tree.rowCount());
-
-		// Verify Order has been deleted
-		verifyTempOrderHasBeenDeleted();
+		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), bot.tree().rowCount());
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
-	private void verifyTempOrderHasBeenDeleted() {
+	private void readdTheSameOrdersAgain() {
 
 		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
 				scenariooWriterHelper);
 
 		searchOrdersDialog.open();
 
-		searchOrdersDialog.enterOrderNumber(CreateTempOrderRule.ORDER_NUMBER_TEMP);
+		searchOrdersDialog.enterOrderNumber("Order");
 
 		searchOrdersDialog.startSearch();
 
-		SWTBotTable table = bot.table();
-		int rowCountAfterDelete = table.rowCount();
+		searchOrdersDialog.selectOrderAndGenerateDocu(0);
 
-		Assert.assertEquals(0, rowCountAfterDelete);
+		searchOrdersDialog.selectOrderAndGenerateDocu(1);
 
-		bot.button("Cancel").click();
+		searchOrdersDialog.ok();
 	}
+
 }

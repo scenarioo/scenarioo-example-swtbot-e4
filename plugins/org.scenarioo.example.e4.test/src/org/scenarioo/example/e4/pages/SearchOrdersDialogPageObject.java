@@ -27,68 +27,66 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.pages;
 
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.BaseSWTBotTest;
-import org.scenarioo.example.e4.ScenariooTestWrapper;
-import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.scenarioo.example.e4.PageName;
+import org.scenarioo.example.e4.ScenariooWriterHelper;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
-public class RemoveOrderTest extends ScenariooTestWrapper {
+public class SearchOrdersDialogPageObject extends PageObject {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOrderTest.class);
-
-	@Rule
-	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
-
-	@Test
-	public void execute() {
-
-		generateDocuForInitialView();
-
-		SWTBotTree tree = bot.tree();
-
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, "Order 2", "Remove Order");
-		LOGGER.info(menu.toString());
-
-		clickMenuEntryAndGenerateDocu(menu);
-
-		// Assert 3 Orders available in OrderOverview
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview() - 1, tree.rowCount());
-
-		verifyTheOrderIsNotDeleted();
-
-		LOGGER.info(getClass().getSimpleName() + " successful!");
+	public SearchOrdersDialogPageObject(final ScenariooWriterHelper scenariooWriterHelper) {
+		super(scenariooWriterHelper);
 	}
 
-	private void verifyTheOrderIsNotDeleted() {
-
-		SWTBotView view = BaseSWTBotTest.wbBot.partById(PART_ID_ORDER_OVERVIEW);
+	public void open() {
+		SWTBotView view = wbBot.partById(BaseSWTBotTest.PART_ID_ORDER_OVERVIEW);
 		view.toolbarButton("Search Order").click();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("search_dialog_action_clicked", PageName.SEARCH_DIALOG, screenshot());
+	}
+
+	/**
+	 * 
+	 */
+	public void enterOrderNumber(final String orderNumber) {
 		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Order");
+		text.typeText(orderNumber);
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_number_entered", PageName.SEARCH_DIALOG, screenshot());
+	}
+
+	/**
+	 * 
+	 */
+	public void startSearch() {
 		bot.buttonWithTooltip("Start Search").click();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("start_search_clicked", PageName.SEARCH_DIALOG, screenshot());
+	}
 
+	/**
+	 * 
+	 */
+	public void ok() {
+		bot.button("OK").click();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_dialog_ok", PageName.ORDER_OVERVIEW, screenshot());
+	}
+
+	/**
+	 * 
+	 * @param table
+	 * @param rowindex
+	 */
+	public void selectOrderAndGenerateDocu(final int rowindex) {
 		SWTBotTable table = bot.table();
-		SWTBotTableItem item = table.getTableItem("Order 2");
-
-		LOGGER.info(item.toString());
-		Assert.assertNotNull(item);
-
-		bot.button("Cancel").click();
+		table.click(rowindex, 5);
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_" + rowindex + "_selected", PageName.SEARCH_DIALOG, screenshot());
 	}
 
 }

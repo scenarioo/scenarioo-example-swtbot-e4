@@ -32,5 +32,6 @@ package org.scenarioo.example.e4;
 public enum PageName {
 	ORDER_NEW_1,
 	ORDER_NEW_2,
-	ORDER_OVERVIEW;
+	ORDER_OVERVIEW,
+	SEARCH_DIALOG;
 }
