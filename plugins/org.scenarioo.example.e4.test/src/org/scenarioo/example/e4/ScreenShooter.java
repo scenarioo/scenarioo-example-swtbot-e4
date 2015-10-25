@@ -31,6 +31,7 @@ package org.scenarioo.example.e4;
 
 import java.io.ByteArrayOutputStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -42,6 +43,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.Result;
 
+/**
+ * Calculates minimal used Area and makes a screenshot of it. Handles the UI Thread Synchronization by itself.
+ */
 public class ScreenShooter {
 
 	public byte[] capture() {
@@ -102,16 +106,18 @@ public class ScreenShooter {
 			Rectangle biggestRectangle = null;
 
 			Rectangle screenBounds = display.getBounds();
+			System.out.println("Screen: " + screenBounds);
 			int i = 0;
 			for (Shell shell : display.getShells()) {
 				// We dont want to have Screenshots from shells like
 				// the "PartRenderingEngine's limbo" from e4
+				// How can we reach that? => Filter out all Shells without name and all shells outside from screen.
 				System.out.println("Shell " + i + " text: " + shell.getText() + " shell.toString(): "
 						+ shell.toString());
 				Rectangle rectangle = shell.getBounds();
-				System.out.println("Rechteck: " + rectangle.toString());
-				System.out.println("Screen: " + screenBounds);
-				if (screenBounds.intersects(rectangle)) {
+				System.out.println("Rechteck " + i + ": " + rectangle.toString());
+				if (!StringUtils.isEmpty(shell.getText()) && screenBounds.intersects(rectangle)) {
+					System.out.println("Shell " + i + " text: " + shell.getText() + " added.");
 					if (biggestRectangle == null) {
 						biggestRectangle = rectangle;
 					} else {

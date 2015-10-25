@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Scenarioo Eclipse RCP Example with SWT UI Toolkit" uid="org.scenarioo.example.e4.product" id="org.scenarioo.example.e4.orders.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" useFeatures="true" includeLaunchers="true">
+<product name="Scenarioo SwtBot example integration for e4 application" uid="org.scenarioo.example.e4.product" id="org.scenarioo.example.e4.orders.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" useFeatures="true" includeLaunchers="true">
+
 
    <configIni use="default">
    </configIni>
@@ -15,6 +16,7 @@
 
    <windowImages/>
 
+
    <launcher>
       <solaris/>
       <win useIco="false">
@@ -22,8 +24,10 @@
       </win>
    </launcher>
 
+
    <vm>
    </vm>
+
 
    <plugins>
    </plugins>
@@ -42,6 +46,8 @@
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <property name="appName" value="MainShell" />
+      <property name="eclipse.product" value="org.scenarioo.example.e4.orders.product" />
    </configurations>
 
 </product>

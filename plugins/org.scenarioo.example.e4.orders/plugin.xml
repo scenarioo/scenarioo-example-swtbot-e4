@@ -7,10 +7,10 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.e4.ui.workbench.swt.E4Application"
-            name="Scenarioo Eclipse RCP Example with SWT UI Toolkit">
+            name="Scenarioo SwtBot example integration for e4 application">
          <property
                name="appName"
-               value="Scenarioo Eclipse RCP Example with SWT UI Toolkit">
+               value="Scenarioo SwtBot example integration for e4 application">
          </property>
       </product>
    </extension>
@@ -35,5 +35,16 @@
 		</with>
 	  </definition>
    </extension>
-
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.e4.ui.workbench.swt.E4Application"
+            name="Scenarioo SwtBot example integration">
+         <property
+               name="appName"
+               value="Scenarioo SwtBot example integration">
+         </property>
+      </product>
+   </extension>
 </plugin>
