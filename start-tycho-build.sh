@@ -1,2 +1,2 @@
 cd org.scenarioo.example.tycho.reactor
-mvn clean install -Dtycho.localArtifacts=ignore
+./mvnw clean install -Dtycho.localArtifacts=ignore
