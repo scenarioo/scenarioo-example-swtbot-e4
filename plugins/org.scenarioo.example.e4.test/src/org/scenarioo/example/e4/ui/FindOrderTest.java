@@ -77,5 +77,7 @@ public class FindOrderTest extends ScenariooTestWrapper {
 		bot.sleep(1000);
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
+
+		// throw new IllegalStateException("test the statuses");
 	}
 }

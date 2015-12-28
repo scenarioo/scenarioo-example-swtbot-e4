@@ -42,28 +42,40 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 
 	private static final ScreenShooter screenShooter = new ScreenShooter();
 
-	protected static byte[] screenshot() {
-		return screenShooter.capture();
-	}
-
 	private static final Date scenariooBuildDate = new Date();
-	private static final UnitTestWatcher buildFailedWatcher = new UnitTestWatcher();
-	protected final String useCaseName = "Orders";
-	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
 
+	protected final UseCaseName useCaseName = UseCaseName.ORDERS;
+	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
+	private final EntityStateManager entityStateHelper;
+	
 	@Rule
-	public final TestWatcher testWatchterRule = new TestWatcher() {
+	public final TestWatcher buildFileWriter = new TestWatcher() {
+
 		@Override
 		protected void failed(final Throwable e, final Description description) {
-			if (buildFailedWatcher.success) {
-				buildFailedWatcher.success = false;
-				scenariooWriterHelper.writeFailedBuildFile();
+			if (entityStateHelper.changeBuildStateTo(EntityState.FAILED)) {
+				scenariooWriterHelper.writeBuildFileWithFailedState();
 			}
-			scenariooWriterHelper.writeScenariooFailedFile();
+			if (entityStateHelper.changeUseCaseStateTo(EntityState.FAILED)) {
+				scenariooWriterHelper.saveFailedUseCase();
+			}
+			if (entityStateHelper.changeScenarioStateTo(EntityState.FAILED)) {
+				scenariooWriterHelper.saveFailedScenarioo();
+			}
 		}
 
 		@Override
 		protected void finished(final Description description) {
+			if (entityStateHelper.changeBuildStateTo(EntityState.SUCCESS)) {
+				scenariooWriterHelper.writeBuildFileWithSuccessState();
+			}
+			if (entityStateHelper.changeUseCaseStateTo(EntityState.SUCCESS)) {
+				scenariooWriterHelper.saveSuccessfulUseCase();
+			}
+			if (entityStateHelper.changeScenarioStateTo(EntityState.SUCCESS)) {
+				scenariooWriterHelper.saveSuccessfulScenario();
+			}
+
 			scenariooWriterHelper.flush();
 		}
 	};
@@ -74,10 +86,11 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 	public ScenariooTestWrapper() {
 		scenariooWriterHelper.setUseCaseName(useCaseName);
 		scenariooRule = new ScenariooRule(scenariooWriterHelper);
+		entityStateHelper = new EntityStateManager(useCaseName);
 	}
 
-	private static class UnitTestWatcher {
-		private boolean success = true;
+	protected static byte[] screenshot() {
+		return screenShooter.capture();
 	}
 
 	protected void generateDocuForInitialView() {
@@ -105,5 +118,4 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 		scenariooWriterHelper.writeStep("order_number_selected", PageName.ORDER_OVERVIEW, screenshot());
 		return menu;
 	}
-
 }

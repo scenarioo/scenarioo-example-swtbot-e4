@@ -27,35 +27,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.rules;
+package org.scenarioo.example.e4;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import org.scenarioo.example.e4.ScenariooWriterHelper;
+public enum UseCaseName {
 
-public class ScenariooRule implements TestRule {
+	ORDERS("Orders"),
+	POSITIONS("Positions");
 
-	private final ScenariooWriterHelper writerHelper;
+	String text;
 
-	/**
-	 * @param writerHelper
-	 */
-	public ScenariooRule(final ScenariooWriterHelper writerHelper) {
-		this.writerHelper = writerHelper;
+	private UseCaseName(final String names) {
+		this.text = names;
 	}
 
 	@Override
-	public Statement apply(final Statement base, final Description description) {
-		String simpleClassName = description.getTestClass().getSimpleName();
-		final String scenarioName = simpleClassName.replace("Test", "");
-		writerHelper.setScenarioName(scenarioName);
-		return new Statement() {
-
-			@Override
-			public void evaluate() throws Throwable {
-				base.evaluate();
-			}
-		};
+	public String toString() {
+		return text;
 	}
 }

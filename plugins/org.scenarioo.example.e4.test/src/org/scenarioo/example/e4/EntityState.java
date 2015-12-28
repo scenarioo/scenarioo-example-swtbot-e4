@@ -27,35 +27,36 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.rules;
+package org.scenarioo.example.e4;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import org.scenarioo.example.e4.ScenariooWriterHelper;
+public enum EntityState {
 
-public class ScenariooRule implements TestRule {
-
-	private final ScenariooWriterHelper writerHelper;
+	SUCCESS(true), FAILED(false), NOT_WRITTEN(true);
 
 	/**
-	 * @param writerHelper
+	 * Once the state is FAILED it is not possible to change to any other states.
+	 * NOT_WRITTEN is the entry state it can only happen at the Beginning.
 	 */
-	public ScenariooRule(final ScenariooWriterHelper writerHelper) {
-		this.writerHelper = writerHelper;
+	private boolean transitionToOtherStatesPossible;
+
+	private EntityState(final boolean transitionPossible) {
+		this.transitionToOtherStatesPossible = transitionPossible;
 	}
 
-	@Override
-	public Statement apply(final Statement base, final Description description) {
-		String simpleClassName = description.getTestClass().getSimpleName();
-		final String scenarioName = simpleClassName.replace("Test", "");
-		writerHelper.setScenarioName(scenarioName);
-		return new Statement() {
+	/**
+	 * @param targetBuildState
+	 * @return boolean
+	 */
+	public boolean isTransitionPossibleTo(final EntityState targetEntityState) {
 
-			@Override
-			public void evaluate() throws Throwable {
-				base.evaluate();
-			}
-		};
+		if (this == targetEntityState) {
+			return false;
+		}
+
+		if (targetEntityState == NOT_WRITTEN) {
+			return false;
+		}
+		return transitionToOtherStatesPossible;
 	}
+
 }

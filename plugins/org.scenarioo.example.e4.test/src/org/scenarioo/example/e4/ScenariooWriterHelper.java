@@ -52,7 +52,8 @@ public class ScenariooWriterHelper {
 	private int currentIndex = 0;
 
 	/**
-	 * @param scenarioobuildinfo2
+	 * 
+	 * @param date
 	 */
 	public ScenariooWriterHelper(final Date date) {
 		String scenariooBuildInfo = getDateString(date);
@@ -60,10 +61,8 @@ public class ScenariooWriterHelper {
 				"HEAD", scenariooBuildInfo);
 		this.build = new Build(scenariooBuildInfo);
 		this.build.setName(scenariooBuildInfo);
-		this.build.setStatus(Status.SUCCESS);
 		this.build.setDate(date);
 		this.build.setRevision(scenariooBuildInfo);
-		this.docuWriter.saveBuildDescription(build);
 	}
 
 	private String getDateString(final Date date) {
@@ -72,14 +71,12 @@ public class ScenariooWriterHelper {
 		return dateString;
 	}
 
-	public void setUseCaseName(final String useCaseName) {
-		this.useCaseName = useCaseName;
+	public void setUseCaseName(final UseCaseName useCaseName) {
+		this.useCaseName = useCaseName.toString();
 	}
 
-	public void saveSuccessfulScenario(final String scenarioName) {
-		scenario.setName(scenarioName);
-		scenario.setStatus(Status.SUCCESS);
-		docuWriter.saveScenario(useCaseName, scenario);
+	public void setScenarioName(final String scenariooName) {
+		this.scenario.setName(scenariooName);
 	}
 
 	public void writeStep(final String title, final PageName pageName, final byte[] screenshot) {
@@ -96,8 +93,16 @@ public class ScenariooWriterHelper {
 		saveStep(step);
 	}
 
-	public void saveUseCase() {
+	public void saveSuccessfulUseCase() {
 		UseCase useCase = new UseCase();
+		useCase.setStatus(Status.SUCCESS);
+		useCase.setName(useCaseName);
+		docuWriter.saveUseCase(useCase);
+	}
+
+	public void saveFailedUseCase() {
+		UseCase useCase = new UseCase();
+		useCase.setStatus(Status.FAILED);
 		useCase.setName(useCaseName);
 		docuWriter.saveUseCase(useCase);
 	}
@@ -114,26 +119,27 @@ public class ScenariooWriterHelper {
 		docuWriter.saveStep(useCaseName, scenario.getName(), step);
 	}
 
-	/**
-	 * @param scenarioobuildinfo
-	 */
-	public void writeFailedBuildFile() {
+	public void writeBuildFileWithSuccessState() {
+		build.setStatus(Status.SUCCESS);
+		this.docuWriter.saveBuildDescription(build);
+	}
+
+	public void writeBuildFileWithFailedState() {
 		build.setStatus(Status.FAILED);
 		this.docuWriter.saveBuildDescription(build);
 	}
 
-	/**
-	 * 
-	 */
-	public void flush() {
-		this.docuWriter.flush();
+	public void saveSuccessfulScenario() {
+		scenario.setStatus(Status.SUCCESS);
+		docuWriter.saveScenario(useCaseName, scenario);
 	}
 
-	/**
-	 * 
-	 */
-	public void writeScenariooFailedFile() {
+	public void saveFailedScenarioo() {
 		scenario.setStatus(Status.FAILED);
 		this.docuWriter.saveScenario(useCaseName, scenario);
+	}
+
+	public void flush() {
+		this.docuWriter.flush();
 	}
 }
