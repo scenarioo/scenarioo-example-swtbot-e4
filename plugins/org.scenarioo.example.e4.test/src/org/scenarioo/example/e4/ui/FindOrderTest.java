@@ -78,6 +78,6 @@ public class FindOrderTest extends ScenariooTestWrapper {
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 
-		// throw new IllegalStateException("test the statuses");
+		throw new IllegalStateException("test the statuses");
 	}
 }

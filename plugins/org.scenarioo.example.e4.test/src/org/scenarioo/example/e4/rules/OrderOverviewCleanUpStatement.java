@@ -48,10 +48,12 @@ public class OrderOverviewCleanUpStatement extends Statement {
 	 */
 	@Override
 	public void evaluate() throws Throwable {
-		base.evaluate();
-
-		// We execute after the test
-		removeAllOrdersFromOrderOverview();
+		try {
+			base.evaluate();
+		} finally {
+			// We execute after the test
+			removeAllOrdersFromOrderOverview();
+		}
 	}
 
 	private void removeAllOrdersFromOrderOverview() {

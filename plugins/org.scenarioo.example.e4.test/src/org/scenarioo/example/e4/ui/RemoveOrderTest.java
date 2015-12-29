@@ -73,7 +73,7 @@ public class RemoveOrderTest extends ScenariooTestWrapper {
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 
-		// throw new IllegalStateException("test the statuses");
+		throw new IllegalStateException("test the statuses");
 	}
 
 	private void verifyTheOrderIsNotDeleted() {
