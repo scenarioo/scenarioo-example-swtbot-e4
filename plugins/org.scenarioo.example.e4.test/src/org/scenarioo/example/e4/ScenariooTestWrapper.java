@@ -31,8 +31,13 @@ package org.scenarioo.example.e4;
 
 import java.util.Date;
 
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -47,7 +52,7 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 	protected final UseCaseName useCaseName = UseCaseName.ORDERS;
 	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
 	private final EntityStateManager entityStateHelper;
-	
+
 	@Rule
 	public final TestWatcher buildFileWriter = new TestWatcher() {
 
@@ -103,6 +108,12 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 	 */
 	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu) {
 		menu.click();
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				menu.widget.getParent().setVisible(false);
+			}
+		});
 		bot.sleep(500);
 		scenariooWriterHelper.writeStep("menu_entry_clicked", PageName.ORDER_OVERVIEW, screenshot());
 	}
@@ -113,9 +124,30 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 	 */
 	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
-		SWTBotMenu menu = tree.getTreeItem(orderNumber).contextMenu(actionName);
+
+		final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);
+		final SWTBotMenu menuAction = treeItem.contextMenu(actionName);
+
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				Menu menu = tree.widget.getMenu();
+				Point menuItemLocation = getMenuItemLocation(treeItem);
+				menu.setLocation(menuItemLocation.x, menuItemLocation.y);
+				menu.setVisible(true);
+			}
+		});
 		bot.sleep(100);
 		scenariooWriterHelper.writeStep("order_number_selected", PageName.ORDER_OVERVIEW, screenshot());
-		return menu;
+		return menuAction;
+	}
+
+	private Point getMenuItemLocation(final SWTBotTreeItem treeItem) {
+		Point absolutLocation = treeItem.widget.getParent().toDisplay(0, 0);
+		Rectangle bounds = treeItem.widget.getBounds();
+		System.out.println("Relative Bounds: " + bounds.toString());
+		return new Point(absolutLocation.x + bounds.x + bounds.width, absolutLocation.y
+				+ bounds.y + bounds.height / 2);
 	}
 }
