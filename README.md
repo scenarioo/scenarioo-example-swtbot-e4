@@ -13,3 +13,4 @@ Limitation: The SWTBot tests run correctly on a linux machine. We know that Wind
 
 # Start the app
 In the folder org.scenarioo.example.e4.product/target you will find the builded eclipse e4 application. You can start it you and you will see the application works how it is document with scenarioo.
+
