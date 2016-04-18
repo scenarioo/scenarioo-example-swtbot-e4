@@ -41,15 +41,14 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.scenarioo.example.e4.rules.ScenariooRule;
+import org.scenarioo.example.e4.rules.ScenarioNameRule;
 
-public class ScenariooTestWrapper extends BaseSWTBotTest {
+public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 
 	private static final ScreenShooter screenShooter = new ScreenShooter();
 
 	private static final Date scenariooBuildDate = new Date();
 
-	protected final UseCaseName useCaseName = UseCaseName.ORDERS;
 	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
 	private final EntityStateManager entityStateHelper;
 
@@ -86,12 +85,20 @@ public class ScenariooTestWrapper extends BaseSWTBotTest {
 	};
 
 	@Rule
-	public final ScenariooRule scenariooRule;
+	public final ScenarioNameRule scenarioNameRule;
 
 	public ScenariooTestWrapper() {
+		UseCaseName useCaseName = getUseCaseName();
 		scenariooWriterHelper.setUseCaseName(useCaseName);
-		scenariooRule = new ScenariooRule(scenariooWriterHelper);
+		scenariooWriterHelper.setScenarioDescription(getScenarioDescription());
+		scenarioNameRule = new ScenarioNameRule(scenariooWriterHelper);
 		entityStateHelper = new EntityStateManager(useCaseName);
+	}
+
+	protected abstract UseCaseName getUseCaseName();
+
+	protected String getScenarioDescription() {
+		return "";
 	}
 
 	protected static byte[] screenshot() {

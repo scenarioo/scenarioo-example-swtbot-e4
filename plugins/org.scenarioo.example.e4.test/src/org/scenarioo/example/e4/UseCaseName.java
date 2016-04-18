@@ -31,7 +31,10 @@ package org.scenarioo.example.e4;
 
 public enum UseCaseName {
 
-	ORDERS("Orders"),
+	IMPORT_ORDER("Import Order"),
+	CREATE_ORDER("Create Order"),
+	DELETE_ORDER("Delete Order"),
+	REMOVE_ORDER("Remove Order"),
 	POSITIONS("Positions");
 
 	String text;

@@ -32,6 +32,11 @@ package org.scenarioo.example.e4;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Create one Manager per Scenario. Build State and Use Case state is shared between instances with static properties.
+ * 
+ * Be careful with parallel Test execution. This class is not thread safe.
+ */
 public class EntityStateManager {
 
 	private static EntityState actualBuildState = EntityState.NOT_WRITTEN;

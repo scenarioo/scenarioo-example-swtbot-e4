@@ -34,14 +34,17 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
 
-public class ScenariooRule implements TestRule {
+/**
+ * Maps the Test Class name (without Test) to the scenario name.
+ */
+public class ScenarioNameRule implements TestRule {
 
 	private final ScenariooWriterHelper writerHelper;
 
 	/**
 	 * @param writerHelper
 	 */
-	public ScenariooRule(final ScenariooWriterHelper writerHelper) {
+	public ScenarioNameRule(final ScenariooWriterHelper writerHelper) {
 		this.writerHelper = writerHelper;
 	}
 

@@ -79,6 +79,10 @@ public class ScenariooWriterHelper {
 		this.scenario.setName(scenariooName);
 	}
 
+	public void setScenarioDescription(final String description) {
+		this.scenario.setDescription(description);
+	}
+
 	public void writeStep(final String title, final PageName pageName, final byte[] screenshot) {
 		Step step = new Step();
 

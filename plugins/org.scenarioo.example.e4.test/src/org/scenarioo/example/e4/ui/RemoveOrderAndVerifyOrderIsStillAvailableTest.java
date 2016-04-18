@@ -30,39 +30,69 @@
 package org.scenarioo.example.e4.ui;
 
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
+import org.scenarioo.example.e4.UseCaseName;
 import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class NoDuplicateOrderInOrderOverviewTest extends ScenariooTestWrapper {
+public class RemoveOrderAndVerifyOrderIsStillAvailableTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(NoDuplicateOrderInOrderOverviewTest.class);
+	private static final String REMOVED_ORDER_NUMBER = "Order 2";
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOrderAndVerifyOrderIsStillAvailableTest.class);
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
+	/**
+	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
+	 */
+	@Override
+	protected UseCaseName getUseCaseName() {
+		return UseCaseName.REMOVE_ORDER;
+	}
+
+	/**
+	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getScenariooDescription()
+	 */
+	@Override
+	protected String getScenarioDescription() {
+		return "This scenario removes an order from order overview via Context menu. "
+				+ "Then it showes that the removed order is still available in the repository.";
+	}
+
 	@Test
 	public void execute() {
 
-		LOGGER.info(getClass().getSimpleName() + " started.");
-
 		generateDocuForInitialView();
 
-		readdTheSameOrdersAgain();
+		SWTBotTree tree = bot.tree();
 
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), bot.tree().rowCount());
+		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, REMOVED_ORDER_NUMBER, "Remove Order");
+		LOGGER.info(menu.toString());
+
+		clickMenuEntryAndGenerateDocu(menu);
+
+		// Assert 3 Orders available in OrderOverview
+		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview() - 1, tree.rowCount());
+
+		verifyRemovedOrderHasNotBeenDeleted();
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
-	private void readdTheSameOrdersAgain() {
+	private void verifyRemovedOrderHasNotBeenDeleted() {
 
 		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
 				scenariooWriterHelper);
@@ -73,11 +103,30 @@ public class NoDuplicateOrderInOrderOverviewTest extends ScenariooTestWrapper {
 
 		searchOrdersDialog.startSearch();
 
-		searchOrdersDialog.selectOrderAndGenerateDocu(0);
+		SWTBotTable table = bot.table();
+		SWTBotTableItem item = table.getTableItem(REMOVED_ORDER_NUMBER);
 
-		searchOrdersDialog.selectOrderAndGenerateDocu(1);
+		LOGGER.info(item.toString());
+		Assert.assertNotNull(item);
 
-		searchOrdersDialog.ok();
+		bot.button("Cancel").click();
 	}
+
+	// private void verifyTheOrderIsNotDeleted() {
+	//
+	// SWTBotView view = BaseSWTBotTest.wbBot.partById(PART_ID_ORDER_OVERVIEW);
+	// view.toolbarButton("Search Order").click();
+	// SWTBotText text = bot.textWithLabel("&Order Number");
+	// text.typeText("Order");
+	// bot.buttonWithTooltip("Start Search").click();
+	//
+	// SWTBotTable table = bot.table();
+	// SWTBotTableItem item = table.getTableItem("Order 2");
+	//
+	// LOGGER.info(item.toString());
+	// Assert.assertNotNull(item);
+	//
+	// bot.button("Cancel").click();
+	// }
 
 }

@@ -35,17 +35,26 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
+import org.scenarioo.example.e4.UseCaseName;
 import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class FindOrderTest extends ScenariooTestWrapper {
+public class ImportOrderTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FindOrderTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImportOrderTest.class);
 
 	private final SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
 			scenariooWriterHelper);
+
+	/**
+	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
+	 */
+	@Override
+	protected UseCaseName getUseCaseName() {
+		return UseCaseName.IMPORT_ORDER;
+	}
 
 	@Test
 	public void execute() {
@@ -78,6 +87,5 @@ public class FindOrderTest extends ScenariooTestWrapper {
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 
-		throw new IllegalStateException("test the statuses");
 	}
 }

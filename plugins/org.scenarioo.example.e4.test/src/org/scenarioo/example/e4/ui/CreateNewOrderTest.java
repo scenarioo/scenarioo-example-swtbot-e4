@@ -38,10 +38,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
+import org.scenarioo.example.e4.UseCaseName;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class CreateNewOrderTest extends ScenariooTestWrapper {
 
+	/**
+	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
+	 */
+	@Override
+	protected UseCaseName getUseCaseName() {
+		return UseCaseName.CREATE_ORDER;
+	}
+	
 	@Test
 	public void execute() {
 
