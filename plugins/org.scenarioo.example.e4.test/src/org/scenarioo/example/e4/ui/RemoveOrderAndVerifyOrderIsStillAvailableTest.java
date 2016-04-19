@@ -112,21 +112,4 @@ public class RemoveOrderAndVerifyOrderIsStillAvailableTest extends ScenariooTest
 		bot.button("Cancel").click();
 	}
 
-	// private void verifyTheOrderIsNotDeleted() {
-	//
-	// SWTBotView view = BaseSWTBotTest.wbBot.partById(PART_ID_ORDER_OVERVIEW);
-	// view.toolbarButton("Search Order").click();
-	// SWTBotText text = bot.textWithLabel("&Order Number");
-	// text.typeText("Order");
-	// bot.buttonWithTooltip("Start Search").click();
-	//
-	// SWTBotTable table = bot.table();
-	// SWTBotTableItem item = table.getTableItem("Order 2");
-	//
-	// LOGGER.info(item.toString());
-	// Assert.assertNotNull(item);
-	//
-	// bot.button("Cancel").click();
-	// }
-
 }
