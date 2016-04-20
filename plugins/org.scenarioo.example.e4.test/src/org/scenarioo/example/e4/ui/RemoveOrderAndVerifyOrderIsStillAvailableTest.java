@@ -75,7 +75,7 @@ public class RemoveOrderAndVerifyOrderIsStillAvailableTest extends ScenariooTest
 	@Test
 	public void execute() {
 
-		generateDocuForInitialView();
+		generateDocuForOrderOverview();
 
 		SWTBotTree tree = bot.tree();
 

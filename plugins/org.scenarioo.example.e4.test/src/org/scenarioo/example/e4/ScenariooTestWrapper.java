@@ -105,31 +105,67 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		return screenShooter.capture();
 	}
 
-	protected void generateDocuForInitialView() {
+	protected void generateDocuForOrderOverview() {
+		generateDocuForInitialView(PageName.ORDER_OVERVIEW);
+	}
+
+	protected void generateDocuForInitialView(final PageName pageName) {
 		bot.sleep(100);
-		scenariooWriterHelper.writeStep("order_overview", PageName.ORDER_OVERVIEW, screenshot());
+		scenariooWriterHelper.writeStep("initial_view", pageName, screenshot());
+	}
+
+	/**
+	 * PageName is Order_Overview.
+	 * 
+	 * @param menu
+	 */
+	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu) {
+		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_OVERVIEW);
 	}
 
 	/**
 	 * @param menu
 	 */
-	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu) {
+	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu, final PageName pageName) {
+		clickMenuEntryAndCloseContextMenu(menu);
+		scenariooWriterHelper.writeStep(menu.getText() + "_menu_entry_clicked", pageName, screenshot());
+	}
+
+	/**
+	 * @param menu
+	 */
+	protected void clickMenuEntryAndCloseContextMenu(final SWTBotMenu menu) {
 		menu.click();
+		closeContextMenu(menu);
+		bot.sleep(500);
+	}
+
+	private void closeContextMenu(final SWTBotMenu menu) {
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				menu.widget.getParent().setVisible(false);
 			}
 		});
-		bot.sleep(500);
-		scenariooWriterHelper.writeStep("menu_entry_clicked", PageName.ORDER_OVERVIEW, screenshot());
 	}
 
 	/**
 	 * @param tree
-	 * @return
+	 * @return SWTBotMenu
 	 */
 	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final String orderNumber,
+			final String actionName) {
+
+		SWTBotMenu contextMenu = getContextMenu(tree, orderNumber, actionName);
+		scenariooWriterHelper.writeStep("order_number_selected", PageName.ORDER_OVERVIEW, screenshot());
+		return contextMenu;
+	}
+
+	/**
+	 * @param tree
+	 * @return SWTBotMenu
+	 */
+	protected SWTBotMenu getContextMenu(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
 
 		final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);
@@ -146,7 +182,6 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 			}
 		});
 		bot.sleep(100);
-		scenariooWriterHelper.writeStep("order_number_selected", PageName.ORDER_OVERVIEW, screenshot());
 		return menuAction;
 	}
 

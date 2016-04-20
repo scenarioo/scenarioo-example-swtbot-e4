@@ -54,7 +54,7 @@ public class CreateNewOrderTest extends ScenariooTestWrapper {
 	@Test
 	public void execute() {
 
-		generateDocuForInitialView();
+		generateDocuForOrderOverview();
 
 		startNewOrderDialogAndGenerateDocu();
 

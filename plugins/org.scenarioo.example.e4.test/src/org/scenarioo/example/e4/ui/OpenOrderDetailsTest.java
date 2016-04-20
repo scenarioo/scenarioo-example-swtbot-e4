@@ -29,39 +29,38 @@
 
 package org.scenarioo.example.e4.ui;
 
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
-import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
-import org.scenarioo.example.e4.rules.CreateTempOrderRule;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends ScenariooTestWrapper {
+public class OpenOrderDetailsTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest.class);
+	private static final String ORDER_NUMBER = "Order 2";
+	private static final String ORDER_STATE = "New";
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExpandAndCollapsOrderInOrderOverviewTest.class);
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
-
-	@Rule
-	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.DELETE_ORDER;
+		return UseCaseName.OPEN_ORDER_DETAILS;
 	}
 
 	/**
@@ -69,8 +68,7 @@ public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends Scenario
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "This scenario deletes an Order via Context menu in the order overview. "
-				+ "Then it verfies at the end that the deleted order is not anymore available in the repository.";
+		return "Opens an Order in the order detail view to show all properties of the order.";
 	}
 
 	@Test
@@ -79,36 +77,19 @@ public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends Scenario
 		generateDocuForOrderOverview();
 
 		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Delete Order");
+		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, ORDER_NUMBER, "Edit Order");
 		LOGGER.info(menu.toString());
 
-		clickMenuEntryAndGenerateDocu(menu);
+		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_DETAIL);
 
-		// Assert 5 Orders available in OrderOverview
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), tree.rowCount());
+		SWTBotView partByTitle = wbBot.partByTitle(ORDER_NUMBER + " - " + ORDER_STATE);
 
-		// Verify Order has been deleted
-		verifyTempOrderHasBeenDeleted();
+		Assert.assertNotNull(partByTitle);
+
+		// close order details
+		partByTitle.close();
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
-	private void verifyTempOrderHasBeenDeleted() {
-
-		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
-				scenariooWriterHelper);
-
-		searchOrdersDialog.open();
-
-		searchOrdersDialog.enterOrderNumber(CreateTempOrderRule.ORDER_NUMBER_TEMP);
-
-		searchOrdersDialog.startSearch();
-
-		SWTBotTable table = bot.table();
-		int rowCountAfterDelete = table.rowCount();
-
-		Assert.assertEquals(0, rowCountAfterDelete);
-
-		bot.button("Cancel").click();
-	}
 }

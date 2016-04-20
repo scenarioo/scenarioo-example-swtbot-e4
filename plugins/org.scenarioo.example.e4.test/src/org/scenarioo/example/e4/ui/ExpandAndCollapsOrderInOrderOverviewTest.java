@@ -30,38 +30,34 @@
 package org.scenarioo.example.e4.ui;
 
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
-import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
-import org.scenarioo.example.e4.rules.CreateTempOrderRule;
+import org.scenarioo.example.e4.orders.parts.OrdersOverviewPart;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends ScenariooTestWrapper {
+public class ExpandAndCollapsOrderInOrderOverviewTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExpandAndCollapsOrderInOrderOverviewTest.class);
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
-
-	@Rule
-	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.DELETE_ORDER;
+		return UseCaseName.SHOW_ALL_ORDER_ITEMS;
 	}
 
 	/**
@@ -69,8 +65,8 @@ public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends Scenario
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "This scenario deletes an Order via Context menu in the order overview. "
-				+ "Then it verfies at the end that the deleted order is not anymore available in the repository.";
+		return "Show the difference between order with loaded and not loaded Positions. "
+				+ "Hint: The number in brackets represents the positions count of loaded orders";
 	}
 
 	@Test
@@ -79,36 +75,43 @@ public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends Scenario
 		generateDocuForOrderOverview();
 
 		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Delete Order");
-		LOGGER.info(menu.toString());
+		final SWTBotTreeItem treeItem = tree.getTreeItem("Order 2");
 
-		clickMenuEntryAndGenerateDocu(menu);
+		expandTreeItemAndGenerateDocu(treeItem);
 
-		// Assert 5 Orders available in OrderOverview
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), tree.rowCount());
+		Assert.assertTrue(treeItem.isExpanded());
 
-		// Verify Order has been deleted
-		verifyTempOrderHasBeenDeleted();
+		collapseTreeItemAndGenerateDocu(treeItem);
+
+		Assert.assertFalse(treeItem.isExpanded());
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
-	private void verifyTempOrderHasBeenDeleted() {
-
-		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
-				scenariooWriterHelper);
-
-		searchOrdersDialog.open();
-
-		searchOrdersDialog.enterOrderNumber(CreateTempOrderRule.ORDER_NUMBER_TEMP);
-
-		searchOrdersDialog.startSearch();
-
-		SWTBotTable table = bot.table();
-		int rowCountAfterDelete = table.rowCount();
-
-		Assert.assertEquals(0, rowCountAfterDelete);
-
-		bot.button("Cancel").click();
+	/**
+	 * @param treeItem
+	 */
+	private void collapseTreeItemAndGenerateDocu(final SWTBotTreeItem treeItem) {
+		OrdersOverviewPart ordersOverviewPart = (OrdersOverviewPart) wbBot.partByTitle("Orders Overview").getPart()
+				.getObject();
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(Boolean.FALSE);
+		treeItem.collapse();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_number_2_collapsed", PageName.ORDER_OVERVIEW, screenshot());
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(null);
 	}
+
+	/**
+	 * @param treeItem
+	 */
+	private void expandTreeItemAndGenerateDocu(final SWTBotTreeItem treeItem) {
+		OrdersOverviewPart ordersOverviewPart = (OrdersOverviewPart) wbBot.partByTitle("Orders Overview").getPart()
+				.getObject();
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(Boolean.TRUE);
+		treeItem.expand();
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep("order_number_2_expanded", PageName.ORDER_OVERVIEW, screenshot());
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(null);
+	}
+
 }

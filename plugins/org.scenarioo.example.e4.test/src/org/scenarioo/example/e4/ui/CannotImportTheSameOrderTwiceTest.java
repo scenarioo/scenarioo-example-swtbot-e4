@@ -54,7 +54,7 @@ public class CannotImportTheSameOrderTwiceTest extends ScenariooTestWrapper {
 
 		LOGGER.info(getClass().getSimpleName() + " started.");
 
-		generateDocuForInitialView();
+		generateDocuForOrderOverview();
 
 		readdTheSameOrdersAgain();
 

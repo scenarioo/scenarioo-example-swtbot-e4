@@ -35,6 +35,13 @@ public enum UseCaseName {
 	CREATE_ORDER("Create Order"),
 	DELETE_ORDER("Delete Order"),
 	REMOVE_ORDER("Remove Order"),
+	SHOW_ALL_ORDER_ITEMS("Show all order items"),
+	OPEN_ORDER_DETAILS("Open order details"), // cannot be open twice
+	EDIT_ORDER("Edit order"),
+	ADD_POSITION("Add position"),
+	EDIT_POSITION("Edit position"), // Change Item & Change Position Number
+	DELETE_POSITION("Delete position"), // What happens when it was the last position?
+	OPEN_POSITION_DETAILS("Open order details"), // cannot be open twice
 	POSITIONS("Positions");
 
 	String text;

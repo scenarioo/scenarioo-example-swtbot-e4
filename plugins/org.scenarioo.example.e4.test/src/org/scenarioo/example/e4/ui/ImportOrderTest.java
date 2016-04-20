@@ -59,7 +59,7 @@ public class ImportOrderTest extends ScenariooTestWrapper {
 	@Test
 	public void execute() {
 
-		generateDocuForInitialView();
+		generateDocuForOrderOverview();
 
 		searchOrdersDialog.open();
 
