@@ -83,7 +83,7 @@ public class ArticlesBuilder {
 				+ " During the Battle of Endor, later revealed to be a trap for him and the Alliance, he led Alliance naval forces against the Death"
 				+ " Star II. He held the distinction of having been the Supreme Commander of the New Republic Defense Force for nearly two decades and"
 				+ " defeating two Imperial Grand Admirals, Osvald Teshik and Peccati Syn, along with numerous other threats. He wrote the manual for"
-				+ " the New Republic Fleet Academy, titled Fleet Tactics and Combat Methodology.\\n\\nAfter the Pellaeon–Gavrisom Treaty, Ackbar"
+				+ " the New Republic Fleet Academy, titled Fleet Tactics and Combat Methodology.\\n\\nAfter the Pellaeonï¿½Gavrisom Treaty, Ackbar"
 				+ " retired to a quiet life of writing his memoirs and advising. However, although old and infirm, he would plan the decisive Battle"
 				+ " of Ebaq 9 that brought about the end of Tsavong Lah and much of the Yuuzhan Vong fleet. He would die of old age in 29 ABY and"
 				+ " be remembered as a great military leader.");
@@ -170,7 +170,7 @@ public class ArticlesBuilder {
 		Article article = new Article();
 		article.generateAndSetId(counter);
 		article.setArticleNumber("Boss Rugor Nass");
-		article.setDescription("Gungan leader in The Phantom Menace, and attends Padmé Amidala's funeral in Revenge of the Sith");
+		article.setDescription("Gungan leader in The Phantom Menace, and attends PadmÃ© Amidala's funeral in Revenge of the Sith");
 		article.setImageDescriptor(ArticleImages.BOSS_NASS.getImageDescriptor());
 		article.setUnit(Unit.PIECE);
 		return article;
@@ -239,7 +239,7 @@ public class ArticlesBuilder {
 		Article article = new Article();
 		article.generateAndSetId(counter);
 		article.setArticleNumber("Jar Jar Binks");
-		article.setDescription("General in the Gungan Grand Army, Representative of the Gungan race, Senator of Chommell Sector (substituting for Padmé Amidala)");
+		article.setDescription("General in the Gungan Grand Army, Representative of the Gungan race, Senator of Chommell Sector (substituting for PadmÃ© Amidala)");
 		article.setImageDescriptor(ArticleImages.JAR_JAR_BINKS.getImageDescriptor());
 		article.setUnit(Unit.PIECE);
 		return article;
@@ -295,7 +295,7 @@ public class ArticlesBuilder {
 				+ " Finally, after years of being considered for a seat on the Jedi Council, Fisto was appointed to the august body due to his exemplary achievements during the Clone Wars."
 				+ " As the war continued, Fisto was appointed to the Jedi Council. He was later dispatched with Obi-Wan Kenobi and Anakin Skywalker to Cato Neimoidia on a mission to capture Nute Gunray,"
 				+ " who barely escaped the encounter with the three famous Jedi. During the Battle of Coruscant, Fisto aided in the aerial battle against the Separatist invasion forces."
-				+ " Upon Anakin Skywalker’s revelation that Palpatine was in fact Darth Sidious, Fisto, along with Mace Windu, Agen Kolar, and Saesee Tiin, attempted to arrest the Supreme Chancellor,"
+				+ " Upon Anakin Skywalkerï¿½s revelation that Palpatine was in fact Darth Sidious, Fisto, along with Mace Windu, Agen Kolar, and Saesee Tiin, attempted to arrest the Supreme Chancellor,"
 				+ " but failed. In that final confrontation with the scheming Sith Lord, Fisto perished at the hands of Darth Sidious.");
 		article.setImageDescriptor(ArticleImages.KIT_FISTO.getImageDescriptor());
 		article.setUnit(Unit.PIECE);
@@ -312,7 +312,7 @@ public class ArticlesBuilder {
 		article.setDescription("Nute Gunray was a Neimoidian male who served as a stint Minister of the Trade Federation until he rose in power after the Stark Hyperspace War in 44 BBY,"
 				+ " eventually becoming Viceroy of the Trade Federation. In 32 BBY, Gunray participated in the occupation of Naboo with the Federation Army to settle a"
 				+ " trade dispute that began in the Galactic Senate. With the help of Darth Sidious, Gunray invaded the planet to end the trade dispute and secured all facilities"
-				+ " in the capital of Theed. He attempted to force the incumbent Queen of Naboo Padmé Amidala to sign a treaty to make his invasion legal, however she refused and"
+				+ " in the capital of Theed. He attempted to force the incumbent Queen of Naboo PadmÃ© Amidala to sign a treaty to make his invasion legal, however she refused and"
 				+ " the Siege of Naboo continued. The Trade Federation soon surrendered to Naboo forces following the Battle of Naboo. Gunray was taken to the Galactic Republic capital"
 				+ " on Coruscant to be charged with acts of war. During the Separatist Crisis that following the Invasion of Naboo, Gunray confronted former Jedi Master, Count Dooku,"
 				+ " who began a separatist movement that opposed the Republic. Dooku, who secretly was Sidious's Sith apprentice under the name of Darth Tyranus, helped him through his"
@@ -340,7 +340,7 @@ public class ArticlesBuilder {
 	public Article createPadmeAmidalaArticle() {
 		Article article = new Article();
 		article.generateAndSetId(counter);
-		article.setArticleNumber("Padmé Amidala");
+		article.setArticleNumber("PadmÃ© Amidala");
 		article.setDescription("Princess of Theed, Queen of Naboo, Senator of the Chommell Sector and Naboo");
 		article.setImageDescriptor(ArticleImages.PADME_AMIDALA.getImageDescriptor());
 		article.setUnit(Unit.PIECE);
