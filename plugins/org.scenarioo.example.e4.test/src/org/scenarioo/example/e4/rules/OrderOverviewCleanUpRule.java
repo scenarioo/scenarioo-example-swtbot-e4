@@ -29,18 +29,17 @@
 
 package org.scenarioo.example.e4.rules;
 
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-public class OrderOverviewCleanUpRule implements MethodRule {
+public class OrderOverviewCleanUpRule implements TestRule {
 
 	/**
-	 * @see org.junit.rules.MethodRule#apply(org.junit.runners.model.Statement, org.junit.runners.model.FrameworkMethod,
-	 *      java.lang.Object)
+	 * @see org.junit.rules.TestRule#apply(org.junit.runners.model.Statement, org.junit.runner.Description)
 	 */
 	@Override
-	public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
+	public Statement apply(final Statement base, final Description description) {
 		return new OrderOverviewCleanUpStatement(base);
 	}
 }

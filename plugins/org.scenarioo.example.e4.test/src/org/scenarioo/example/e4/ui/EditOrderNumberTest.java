@@ -31,27 +31,34 @@ package org.scenarioo.example.e4.ui;
 
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
 import org.scenarioo.example.e4.rules.CreateTempOrderRule;
+import org.scenarioo.example.e4.rules.DeleteOrderRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class EditOrderNumberTest extends ScenariooTestWrapper {
 
+	private static final String TARGET_ORDER_NUMBER = "New Order Number";
+
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest.class);
 
 	private static final String ORDER_STATE = "New";
+
+	@Override
+	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
+		return outerRuleChain.around(new DeleteOrderRule(TARGET_ORDER_NUMBER));
+	}
 
 	@Rule
 	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
@@ -76,9 +83,7 @@ public class EditOrderNumberTest extends ScenariooTestWrapper {
 	@Test
 	public void execute() {
 
-		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenu(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
-		clickMenuEntryAndCloseContextMenu(menu);
+		findTreeItemAndClickContextMenuEntry(bot.tree(), CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
 
 		generateDocuForInitialView(PageName.ORDER_DETAIL);
 
@@ -98,7 +103,7 @@ public class EditOrderNumberTest extends ScenariooTestWrapper {
 	private void enterOrderNumberAndGenerateDocu() {
 		SWTBotText text = bot.textWithLabel("&Order Number");
 		text.setText("");
-		text.typeText("New Order Number");
+		text.typeText(TARGET_ORDER_NUMBER);
 		bot.sleep(100);
 		scenariooWriterHelper.writeStep("order_number_entered", PageName.ORDER_DETAIL, screenshot());
 	}

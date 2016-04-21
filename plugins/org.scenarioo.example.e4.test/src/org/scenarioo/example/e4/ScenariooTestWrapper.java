@@ -123,21 +123,22 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_OVERVIEW);
 	}
 
-	/**
-	 * @param menu
-	 */
-	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu, final PageName pageName) {
-		clickMenuEntryAndCloseContextMenu(menu);
-		scenariooWriterHelper.writeStep(menu.getText() + "_menu_entry_clicked", pageName, screenshot());
+	protected void findTreeItemAndClickContextMenuEntry(final SWTBotTree tree, final String orderNumber,
+			final String actionName) {
+		SWTBotMenu contextMenu = tree.getTreeItem(orderNumber).contextMenu(actionName);
+		bot.sleep(100);
+		contextMenu.click();
+		bot.sleep(500);
 	}
 
 	/**
 	 * @param menu
 	 */
-	protected void clickMenuEntryAndCloseContextMenu(final SWTBotMenu menu) {
+	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu, final PageName pageName) {
 		menu.click();
 		closeContextMenu(menu);
 		bot.sleep(500);
+		scenariooWriterHelper.writeStep(menu.getText() + "_menu_entry_clicked", pageName, screenshot());
 	}
 
 	private void closeContextMenu(final SWTBotMenu menu) {
@@ -156,8 +157,8 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
 
-		SWTBotMenu contextMenu = getContextMenu(tree, orderNumber, actionName);
-		scenariooWriterHelper.writeStep("order_number_selected", PageName.ORDER_OVERVIEW, screenshot());
+		SWTBotMenu contextMenu = getContextMenuAndSetItVisible(tree, orderNumber, actionName);
+		scenariooWriterHelper.writeStep("context_menu_opened", PageName.ORDER_OVERVIEW, screenshot());
 		return contextMenu;
 	}
 
@@ -165,7 +166,7 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 	 * @param tree
 	 * @return SWTBotMenu
 	 */
-	protected SWTBotMenu getContextMenu(final SWTBotTree tree, final String orderNumber,
+	private SWTBotMenu getContextMenuAndSetItVisible(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
 
 		final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);

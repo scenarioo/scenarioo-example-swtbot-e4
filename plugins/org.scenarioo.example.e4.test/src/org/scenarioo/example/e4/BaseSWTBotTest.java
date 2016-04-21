@@ -33,6 +33,8 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.scenarioo.example.e4.rules.OrderOverviewCleanUpRule;
 
 public class BaseSWTBotTest {
@@ -42,7 +44,19 @@ public class BaseSWTBotTest {
 	protected static SWTWorkbenchBot wbBot;
 
 	@Rule
-	public final OrderOverviewCleanUpRule orderOverviewCleanUpRule = new OrderOverviewCleanUpRule();
+	public final RuleChain ruleChain = createRuleChain();
+
+	private RuleChain createRuleChain() {
+		return appendInnerRules(RuleChain.outerRule(createOuterRule()));
+	}
+
+	protected TestRule createOuterRule() {
+		return new OrderOverviewCleanUpRule();
+	}
+
+	protected RuleChain appendInnerRules(final RuleChain ruleChain) {
+		return ruleChain;
+	}
 
 	@BeforeClass
 	public static void setup() throws Exception {

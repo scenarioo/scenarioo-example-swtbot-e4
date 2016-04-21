@@ -35,13 +35,17 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
+import org.scenarioo.example.e4.rules.DeleteOrderRule;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class CreateNewOrderTest extends ScenariooTestWrapper {
+
+	private static final String ORDER_NUMBER = "Huhu";
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
@@ -51,6 +55,11 @@ public class CreateNewOrderTest extends ScenariooTestWrapper {
 		return UseCaseName.CREATE_ORDER;
 	}
 	
+	@Override
+	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
+		return outerRuleChain.around(new DeleteOrderRule(ORDER_NUMBER));
+	}
+
 	@Test
 	public void execute() {
 
@@ -125,7 +134,7 @@ public class CreateNewOrderTest extends ScenariooTestWrapper {
 
 	private void enterOrderNumberAndGenerateDocu() {
 		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.typeText("Huhu");
+		text.typeText(ORDER_NUMBER);
 		bot.sleep(100);
 		scenariooWriterHelper.writeStep("order_number_entered", PageName.ORDER_NEW_1, screenshot());
 	}

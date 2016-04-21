@@ -86,7 +86,7 @@ public class OpenOrderDetailsTest extends ScenariooTestWrapper {
 
 		Assert.assertNotNull(partByTitle);
 
-		// close order details
+		// close order details view
 		partByTitle.close();
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
