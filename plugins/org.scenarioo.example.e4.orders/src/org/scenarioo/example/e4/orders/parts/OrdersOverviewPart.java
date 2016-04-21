@@ -78,6 +78,12 @@ public class OrdersOverviewPart {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrdersOverviewPart.class);
 
+	/**
+	 * This flag is only used by test. This is an example why SWT cannot be recommended in further projects.
+	 * The problem is that TreeItem#setExpanded(true) is not the same as if you click the expended icon in the UI.
+	 */
+	private Boolean overSteerNodeItemExpandedForTest = null;
+
 	// Services
 	@Inject
 	private OrderService orderService;
@@ -204,7 +210,7 @@ public class OrdersOverviewPart {
 			OrderPositionsTreeviewDTO children = cachedPositions.get(orderIdInTreeLoaded);
 			children.addOrUpdatePosition(addedPosition);
 			LOGGER.info("Position " + addedPosition.getPosition() + " in OrderTreeView added/updated.");
-			viewer.update(addedPosition.getPosition(), null);
+			viewer.refresh(addedPosition.getOrder());
 		}
 	}
 
@@ -287,7 +293,7 @@ public class OrdersOverviewPart {
 		@Override
 		public Object[] getChildren(final Object parentElement) {
 			if (parentElement instanceof Order) {
-				Order order = (Order) parentElement;
+				final Order order = (Order) parentElement;
 				OrderPositionsTreeviewDTO orderPositionsTreeviewDTO = cachedPositions.get(order.getId());
 				if (orderPositionsTreeviewDTO == null) {
 					orderPositionsTreeviewDTO = orderService.getOrderPositionsTreeviewDTO(order.getId());
@@ -345,7 +351,11 @@ public class OrdersOverviewPart {
 			} else {
 				cell.setImage(orderPositionImage);
 				PositionWithArticleInfo position = (PositionWithArticleInfo) element;
-				text.append(position.getArticle().getArticleNumber());
+				if (position.getArticle() != null) {
+					text.append(position.getArticle().getArticleNumber());
+				} else {
+					text.append("new");
+				}
 			}
 			cell.setText(text.toString());
 			cell.setStyleRanges(text.getStyleRanges());
@@ -358,7 +368,10 @@ public class OrdersOverviewPart {
 		StyledString text = new StyledString();
 		text.append(order.getOrderNumber());
 
-		if (orderHasLoaded(order) && !isNodeExpanded(cell)) {
+		boolean nodeExpanded = isNodeExpanded(cell);
+		LOGGER.info("isNode expanded:" + nodeExpanded);
+
+		if (orderHasLoaded(order) && !nodeExpanded) {
 			text.append(" (" + cachedPositions.get(order.getId()).getOrderPositions().getPositions().size()
 					+ ") ", StyledString.COUNTER_STYLER);
 		}
@@ -366,6 +379,9 @@ public class OrdersOverviewPart {
 	}
 
 	private boolean isNodeExpanded(final ViewerCell cell) {
+		if (overSteerNodeItemExpandedForTest != null) {
+			return overSteerNodeItemExpandedForTest;
+		}
 		ViewerRow viewerRow = cell.getViewerRow();
 		TreeItem item = (TreeItem) viewerRow.getItem();
 		return item.getExpanded();
@@ -396,5 +412,13 @@ public class OrdersOverviewPart {
 		this.orderNotFoundImage.dispose();
 		this.orderLoadedImage.dispose();
 		this.orderPositionImage.dispose();
+	}
+
+	/**
+	 * @param nodeItemIsExpanded
+	 *            the nodeItemIsExpanded to set
+	 */
+	public void setOverSteerNodeItemExpandedForTest(final Boolean overSteerNodeItemExpandedForTest) {
+		this.overSteerNodeItemExpandedForTest = overSteerNodeItemExpandedForTest;
 	}
 }

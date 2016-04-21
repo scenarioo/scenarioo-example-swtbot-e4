@@ -70,6 +70,7 @@ public class OrderPositions extends AbstractDomainEntity<OrderId> {
 		if (index == -1) {
 			positions.add(pos);
 		} else {
+			positions.remove(index);
 			positions.add(index, pos);
 		}
 	}
