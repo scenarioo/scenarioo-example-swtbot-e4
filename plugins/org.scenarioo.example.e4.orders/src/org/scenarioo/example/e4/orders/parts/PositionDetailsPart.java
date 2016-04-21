@@ -30,6 +30,7 @@
 package org.scenarioo.example.e4.orders.parts;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -48,6 +49,7 @@ import org.scenarioo.example.e4.domain.Position;
 import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
+import org.scenarioo.example.e4.orders.handlers.PositionMPartFactory;
 import org.scenarioo.example.e4.orders.positions.PositionDetailView;
 import org.scenarioo.example.e4.services.ArticleService;
 import org.scenarioo.example.e4.services.OrderService;
@@ -65,9 +67,13 @@ public class PositionDetailsPart {
 
 	@PostConstruct
 	public void createControls(final Composite parent, final ArticleService articleService,
-			final ESelectionService selectionService) {
+			final ESelectionService selectionService, @Optional PositionWithOrderAndArticleInfoDTO positionViewDTO) {
 
-		this.positionViewDTO = (PositionWithOrderAndArticleInfoDTO) selectionService.getSelection();
+		if (positionViewDTO == null) {
+			positionViewDTO = (PositionWithOrderAndArticleInfoDTO) selectionService.getSelection();
+		}
+
+		this.positionViewDTO = positionViewDTO;
 		this.positionDetailPanel = new PositionDetailView(parent, articleService);
 		this.positionDetailPanel.setOrder(positionViewDTO.getOrder());
 		this.positionDetailPanel.setPosition(positionViewDTO.getPosition());
@@ -87,7 +93,7 @@ public class PositionDetailsPart {
 	@Inject
 	@Optional
 	public void subscribeToPositionDeleteTopic(
-			@UIEventTopic(OrderServiceEvents.TOPIC_POSITION_DELETE) final PositionWithArticleInfo deletedPosition,
+			@UIEventTopic(OrderServiceEvents.TOPIC_POSITION_DETAIL_DELETE) final PositionWithArticleInfo deletedPosition,
 			final MPart mpart) {
 		updatePositionInView(deletedPosition, mpart);
 	}
@@ -95,7 +101,7 @@ public class PositionDetailsPart {
 	@Inject
 	@Optional
 	public void subscribeToPositionUpdateTopic(
-			@UIEventTopic(OrderServiceEvents.TOPIC_POSITION_UPDATE) final PositionWithArticleInfo updatedPosition,
+			@UIEventTopic(OrderServiceEvents.TOPIC_POSITION_DETAIL_UPDATE) final PositionWithArticleInfo updatedPosition,
 			final MPart mpart) {
 		updatePositionInView(updatedPosition, mpart);
 	}
@@ -149,6 +155,12 @@ public class PositionDetailsPart {
 		Position editedPosition = positionDetailPanel.getPositionForUpdate();
 		Position updatedPosition = orderService.savePosition(this.positionViewDTO.getOrderId(), editedPosition);
 		positionDetailPanel.setPosition(updatedPosition);
+	}
+
+	@PreDestroy
+	public void cleanUp() {
+		PositionMPartFactory.removeFromCache(positionViewDTO.getPositionId());
+		dirtyable.setDirty(false); // Otherwise we get the save Dialog for Panels which are not open.
 	}
 
 	private class AmountKeyListner extends KeyAdapter {

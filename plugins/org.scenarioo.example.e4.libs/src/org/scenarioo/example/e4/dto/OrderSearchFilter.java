@@ -117,4 +117,12 @@ public class OrderSearchFilter {
 		this.creationDate = creationDate;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "OrderSearchFilter [orderNumber=" + orderNumber + ", state=" + state + ", creationDate=" + creationDate
+				+ ", deliveryDate=" + deliveryDate + ", articleId=" + articleId + "]";
+	}
 }

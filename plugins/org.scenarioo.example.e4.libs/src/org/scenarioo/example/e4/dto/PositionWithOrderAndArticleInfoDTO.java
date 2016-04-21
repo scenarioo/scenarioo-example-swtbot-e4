@@ -89,7 +89,13 @@ public class PositionWithOrderAndArticleInfoDTO {
 	}
 
 	public String getPositionDetailPartLabel() {
-		return order.getOrderNumber() + " - " + posWithArticleInfo.getArticle().getArticleNumber() + " - "
+		String articleNumber;
+		if (posWithArticleInfo.getArticle() != null) {
+			articleNumber = posWithArticleInfo.getArticle().getArticleNumber();
+		} else {
+			articleNumber = "choose Article";
+		}
+		return order.getOrderNumber() + " - " + articleNumber + " - "
 				+ posWithArticleInfo.getPosition().getState().getCaption();
 	}
 

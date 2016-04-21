@@ -31,11 +31,15 @@ package org.scenarioo.example.e4.orders.handlers;
 
 import javax.inject.Named;
 
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.scenarioo.example.e4.domain.Order;
+import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
+import org.scenarioo.example.e4.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +50,13 @@ public class PositionAddHandler {
 	private Order activeOrder;
 
 	@Execute
-	public void execute() {
+	public void execute(final OrderService orderService, final IEclipseContext context) {
 		LOGGER.info(this.getClass().getSimpleName() + " called. Active Order is: " + activeOrder);
+		PositionWithOrderAndArticleInfoDTO newPosition = orderService.addNewPosition(activeOrder.getId());
+
+		PositionMPartFactory positionMPartFactory = ContextInjectionFactory.make(PositionMPartFactory.class, context);
+		positionMPartFactory.showMPartForPosition(newPosition);
+
 	}
 
 	@CanExecute

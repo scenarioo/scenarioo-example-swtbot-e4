@@ -38,7 +38,7 @@ public class OrderServiceEvents {
 	public static final String TOPIC_POSITION_TREE_REMOVE = "TOPIC_POSITION_TREE/REMOVE";
 	public static final String TOPIC_ORDER_UPDATE = "TOPIC_ORDER/UPDATE";
 	public static final String TOPIC_ORDER_DELETE = "TOPIC_ORDER/DELETE";
-	public static final String TOPIC_POSITION_UPDATE = "TOPIC_POSITION/UPDATE";
-	public static final String TOPIC_POSITION_DELETE = "TOPIC_POSITION/DELETE";
+	public static final String TOPIC_POSITION_DETAIL_UPDATE = "TOPIC_POSITION/UPDATE";
+	public static final String TOPIC_POSITION_DETAIL_DELETE = "TOPIC_POSITION/DELETE";
 
 }

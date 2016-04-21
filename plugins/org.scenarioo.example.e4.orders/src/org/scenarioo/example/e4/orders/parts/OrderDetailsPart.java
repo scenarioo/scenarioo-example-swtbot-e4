@@ -30,6 +30,7 @@
 package org.scenarioo.example.e4.orders.parts;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.scenarioo.example.e4.domain.Order;
 import org.scenarioo.example.e4.events.OrderServiceEvents;
 import org.scenarioo.example.e4.orders.OrderDetailView;
+import org.scenarioo.example.e4.orders.handlers.OrderMPartFactory;
 import org.scenarioo.example.e4.services.OrderService;
 
 public class OrderDetailsPart {
@@ -103,6 +105,12 @@ public class OrderDetailsPart {
 			}
 
 		});
+	}
+
+	@PreDestroy
+	public void cleanUp() {
+		OrderMPartFactory.removeFromCache(order.getId());
+		dirtyable.setDirty(false); // Otherwise we get the save Dialog for Panels which are not open.
 	}
 
 	private boolean orderNumberHasChanged() {

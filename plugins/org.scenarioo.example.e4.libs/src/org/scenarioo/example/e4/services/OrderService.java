@@ -39,6 +39,7 @@ import org.scenarioo.example.e4.dto.CreateOrderDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
 import org.scenarioo.example.e4.dto.OrderSearchFilter;
+import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
 
 public interface OrderService {
 
@@ -51,6 +52,8 @@ public interface OrderService {
 	Order getOrder(OrderId orderId);
 
 	Position addPosition(OrderId orderId, Position position);
+
+	PositionWithOrderAndArticleInfoDTO addNewPosition(OrderId orderId);
 
 	Boolean deletePosition(OrderId orderId, PositionId posId);
 

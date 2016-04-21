@@ -153,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
 		postEvent(OrderServiceEvents.TOPIC_ORDER_DELETE, order);
 		for (Position pos : orderPositions.getPositions()) {
 			pos.setState(PositionState.DELETED);
-			postEvent(OrderServiceEvents.TOPIC_POSITION_DELETE, pos);
+			postEvent(OrderServiceEvents.TOPIC_POSITION_DETAIL_DELETE, pos);
 		}
 		return order != null;
 	}
@@ -218,6 +218,8 @@ public class OrderServiceImpl implements OrderService {
 				result.add(order);
 			}
 		}
+
+		LOGGER.info(result.size() + " Orders returned from call searchForOrders(" + orderSearchFilter.toString() + ")");
 
 		return result;
 	}
@@ -292,6 +294,29 @@ public class OrderServiceImpl implements OrderService {
 		return position;
 	}
 
+	@Override
+	public PositionWithOrderAndArticleInfoDTO addNewPosition(final OrderId orderId) {
+
+		SimulateServiceCall.start();
+
+		// Update Position
+		Position position = new Position();
+		position.setVersion(new Integer(1));
+		position.generateAndSetId(counter);
+
+		// Store position under OrderPositions
+		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
+		orderPositions.addOrUpdatePosition(position);
+
+		LOGGER.info("addPosition.. " + orderId + " added new " + position);
+
+		PositionWithOrderAndArticleInfoDTO addedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
+		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_ADD, addedPosition);
+
+		return addedPosition;
+
+	}
+
 	private PositionWithOrderAndArticleInfoDTO getPositionWithOrderAndArticleInfoDTO(final OrderId orderId,
 			final Position position) {
 
@@ -319,11 +344,11 @@ public class OrderServiceImpl implements OrderService {
 
 		PositionWithOrderAndArticleInfoDTO removedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, removedPos);
 		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_REMOVE, removedPosition);
-		postEvent(OrderServiceEvents.TOPIC_POSITION_DELETE, removedPosition.getPositionWithArticleInfo());
+		postEvent(OrderServiceEvents.TOPIC_POSITION_DETAIL_DELETE, removedPosition.getPositionWithArticleInfo());
 		// Because of PositionNr. All others Position also needs to be updated as well!
 		for (Position pos : orderPos.getPositions()) {
 			PositionWithOrderAndArticleInfoDTO otherPos = getPositionWithOrderAndArticleInfoDTO(orderId, pos);
-			postEvent(OrderServiceEvents.TOPIC_POSITION_UPDATE, otherPos.getPositionWithArticleInfo());
+			postEvent(OrderServiceEvents.TOPIC_POSITION_DETAIL_UPDATE, otherPos.getPositionWithArticleInfo());
 		}
 		return removedPos != null;
 	}
@@ -338,6 +363,7 @@ public class OrderServiceImpl implements OrderService {
 		SimulateServiceCall.start();
 
 		incrementVersion(position);
+
 		OrderPositions orderPos = this.positionsIdStore.get(orderId);
 		orderPos.addOrUpdatePosition(position);
 
@@ -345,7 +371,7 @@ public class OrderServiceImpl implements OrderService {
 
 		PositionWithOrderAndArticleInfoDTO updatedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
 		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_UPDATE, updatedPosition);
-		postEvent(OrderServiceEvents.TOPIC_POSITION_UPDATE, updatedPosition.getPositionWithArticleInfo());
+		postEvent(OrderServiceEvents.TOPIC_POSITION_DETAIL_UPDATE, updatedPosition.getPositionWithArticleInfo());
 
 		return position;
 	}

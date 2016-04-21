@@ -249,6 +249,9 @@ public class PositionDetailView {
 	}
 
 	private void setArticle(final ArticleId articleId) {
+		if (articleId == null) {
+			return;
+		}
 		Article article = articleComboHelper.getArticleForId(articleId);
 		this.articleCombo.select(articleComboHelper.getIndexForArticleId(articleId));
 		this.articleImageLabel.setImage(article.getImageDescriptor().createImage());
@@ -276,7 +279,7 @@ public class PositionDetailView {
 	 */
 	public boolean hasPositionChanged() {
 
-		if (!this.position.getArticleId().equals(getSelectedArticleId())) {
+		if (!getSelectedArticleId().equals(this.position.getArticleId())) {
 			return true;
 		}
 		if (!this.position.getState().equals(PositionState.getSelectedState(positionStateCombo.getSelectionIndex()))) {

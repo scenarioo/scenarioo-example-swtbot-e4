@@ -80,7 +80,9 @@ public class OrderPositionsTreeviewDTO {
 	public void addOrUpdatePosition(final PositionWithOrderAndArticleInfoDTO addedPosition) {
 		orderPositions.addOrUpdatePosition(addedPosition.getPosition());
 		Article article = addedPosition.getArticle();
-		articleInfoFromPositions.put(article.getId(), article);
+		if (article != null) {
+			articleInfoFromPositions.put(article.getId(), article);
+		}
 	}
 
 	/**
