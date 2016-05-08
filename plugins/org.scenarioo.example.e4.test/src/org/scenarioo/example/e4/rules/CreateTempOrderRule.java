@@ -73,7 +73,6 @@ public class CreateTempOrderRule implements TestRule {
 
 			// add new Order, As we don't want to interfere with other test cases
 			bot.toolbarButtonWithTooltip("Create Order").click();
-			bot.sleep(100);
 			SWTBotText text = bot.textWithLabel("&Order Number");
 			text.typeText(ORDER_NUMBER_TEMP);
 			bot.button("Next >").click();
