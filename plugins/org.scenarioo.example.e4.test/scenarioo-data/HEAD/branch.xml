@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <branch>
-    <name>TRUNK</name>
+    <name>HEAD</name>
     <description>Example documentation of the eclipse e4 rcp application. The content is generated from dummy data for testing and demonstration purposes.</description>
     <details/>
 </branch>
