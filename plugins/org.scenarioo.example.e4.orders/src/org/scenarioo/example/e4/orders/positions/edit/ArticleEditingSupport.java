@@ -58,7 +58,7 @@ public class ArticleEditingSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(final Object element) {
-		articleComboHelper.init(articleService.getArticle(new ArticleSearchFilterDTO()));
+		articleComboHelper.init(articleService.getAllMatchingArticles(new ArticleSearchFilterDTO()));
 		return new ComboBoxCellEditor(viewer.getTable(), articleComboHelper.getArticlesForCB(), SWT.READ_ONLY);
 	}
 

@@ -69,10 +69,10 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	/**
-	 * @see org.scenarioo.example.e4.services.ArticleService#getArticle(org.scenarioo.example.e4.dto.ArticleSearchFilterDTO)
+	 * @see org.scenarioo.example.e4.services.ArticleService#getAllMatchingArticles(org.scenarioo.example.e4.dto.ArticleSearchFilterDTO)
 	 */
 	@Override
-	public Set<Article> getArticle(final ArticleSearchFilterDTO articleSearchFilterDTO) {
+	public Set<Article> getAllMatchingArticles(final ArticleSearchFilterDTO articleSearchFilterDTO) {
 
 		SimulateServiceCall.start();
 
@@ -81,7 +81,7 @@ public class ArticleServiceImpl implements ArticleService {
 			articles.add(article);
 		}
 
-		LOGGER.info(articles.size() + " Articles has been returned!");
+		LOGGER.info("getAllMatchingArticles.. returns " + articles.size() + " Articles");
 
 		return articles;
 	}

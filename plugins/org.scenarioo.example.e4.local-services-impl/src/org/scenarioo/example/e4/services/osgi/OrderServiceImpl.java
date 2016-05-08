@@ -308,7 +308,7 @@ public class OrderServiceImpl implements OrderService {
 		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
 		orderPositions.addOrUpdatePosition(position);
 
-		LOGGER.info("addPosition.. " + orderId + " added new " + position);
+		LOGGER.info("addNewPosition.. " + orderId + " added new " + position);
 
 		PositionWithOrderAndArticleInfoDTO addedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
 		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_ADD, addedPosition);

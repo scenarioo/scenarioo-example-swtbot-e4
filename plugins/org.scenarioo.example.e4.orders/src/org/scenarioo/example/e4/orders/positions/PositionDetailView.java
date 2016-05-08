@@ -70,7 +70,7 @@ public class PositionDetailView {
 	private Position position;
 
 	public PositionDetailView(final Composite parent, final ArticleService articleService) {
-		this.articleComboHelper.init(articleService.getArticle(new ArticleSearchFilterDTO()));
+		this.articleComboHelper.init(articleService.getAllMatchingArticles(new ArticleSearchFilterDTO()));
 
 		Composite container = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
@@ -133,7 +133,9 @@ public class PositionDetailView {
 
 			@Override
 			public void modifyText(final ModifyEvent e) {
-				setArticle(getSelectedArticleId());
+				ArticleId selectedArticleId = getSelectedArticleId();
+				System.out.println("selectedArticleId: " + selectedArticleId);
+				setArticle(selectedArticleId);
 				hasErrorForInputData();
 			}
 		});
@@ -279,6 +281,13 @@ public class PositionDetailView {
 	 */
 	public boolean hasPositionChanged() {
 
+		if (getSelectedArticleId() == null) {
+			if (this.position.getArticleId() == null) {
+				return false;
+			} else {
+				return true;
+			}
+		}
 		if (!getSelectedArticleId().equals(this.position.getArticleId())) {
 			return true;
 		}

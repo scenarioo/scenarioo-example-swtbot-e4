@@ -89,7 +89,7 @@ public class OrdersSearchDialog extends TitleAreaDialog {
 	public OrdersSearchDialog(final Shell parentShell, final ArticleService articleService,
 			final OrderService orderService) {
 		super(parentShell);
-		this.articleComboHelper.init(articleService.getArticle(new ArticleSearchFilterDTO()));
+		this.articleComboHelper.init(articleService.getAllMatchingArticles(new ArticleSearchFilterDTO()));
 		this.orderService = orderService;
 	}
 

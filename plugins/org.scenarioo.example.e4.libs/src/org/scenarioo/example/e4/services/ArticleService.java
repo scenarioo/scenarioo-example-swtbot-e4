@@ -42,5 +42,5 @@ public interface ArticleService {
 
 	Map<ArticleId, Article> getArticle(ArticleId... articleIds);
 
-	Set<Article> getArticle(ArticleSearchFilterDTO articleSearchFilterDTO);
+	Set<Article> getAllMatchingArticles(ArticleSearchFilterDTO articleSearchFilterDTO);
 }
