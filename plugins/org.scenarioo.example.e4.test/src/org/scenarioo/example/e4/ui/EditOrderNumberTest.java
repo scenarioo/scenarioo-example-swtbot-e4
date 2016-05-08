@@ -50,8 +50,7 @@ public class EditOrderNumberTest extends ScenariooTestWrapper {
 
 	private static final String TARGET_ORDER_NUMBER = "New Order Number";
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EditOrderNumberTest.class);
 
 	private static final String ORDER_STATE = "New";
 
