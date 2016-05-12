@@ -101,11 +101,16 @@ public class OrderServiceImpl implements OrderService {
 		orderIdStore.add(order);
 
 		// Store positions part
-		OrderPositions pos = orderWithPos.getOrderPositions();
-		pos.setOrderReference(order);
-		positionsIdStore.add(pos);
+		OrderPositions orderPositions = orderWithPos.getOrderPositions();
+		orderPositions.setVersion(new Integer(1));
+		orderPositions.setOrderReference(order);
+		for (Position pos : orderPositions.getPositions()) {
+			pos.generateAndSetId(counter);
+			pos.setVersion(new Integer(1));
+		}
+		positionsIdStore.add(orderPositions);
 
-		LOGGER.info(order + " with " + pos + " has been created");
+		LOGGER.info(order + " with " + orderPositions + " has been created");
 		postEvent(OrderServiceEvents.TOPIC_ORDER_TREE_ADD, order);
 
 		return order;
