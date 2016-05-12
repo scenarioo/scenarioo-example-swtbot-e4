@@ -151,25 +151,44 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 	}
 
 	/**
+	 * 
 	 * @param tree
+	 * @param orderNumber
+	 * @param actionName
 	 * @return SWTBotMenu
 	 */
 	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
 
-		SWTBotMenu contextMenu = getContextMenuAndSetItVisible(tree, orderNumber, actionName);
+		final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);
+		return getContextMenuAndGenerateDocu(tree, treeItem, actionName);
+	}
+
+	/**
+	 * 
+	 * @param tree
+	 * @param treeItem
+	 * @param actionName
+	 * @return SWTBotMenu
+	 */
+	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final SWTBotTreeItem treeItem,
+			final String actionName) {
+
+		SWTBotMenu contextMenu = getContextMenuAndSetItVisible(tree, treeItem, actionName);
 		scenariooWriterHelper.writeStep("context_menu_opened", PageName.ORDER_OVERVIEW, screenshot());
 		return contextMenu;
 	}
 
 	/**
+	 * 
 	 * @param tree
+	 * @param treeItem
+	 * @param actionName
 	 * @return SWTBotMenu
 	 */
-	private SWTBotMenu getContextMenuAndSetItVisible(final SWTBotTree tree, final String orderNumber,
+	private SWTBotMenu getContextMenuAndSetItVisible(final SWTBotTree tree, final SWTBotTreeItem treeItem,
 			final String actionName) {
 
-		final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);
 		final SWTBotMenu menuAction = treeItem.contextMenu(actionName);
 
 		Display.getDefault().syncExec(new Runnable() {
