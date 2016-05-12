@@ -46,11 +46,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class EditOrderNumberTest extends ScenariooTestWrapper {
+public class EditOrderNumberUpdatesOrderOverviewTest extends ScenariooTestWrapper {
 
 	private static final String TARGET_ORDER_NUMBER = "New Order Number";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EditOrderNumberTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EditOrderNumberUpdatesOrderOverviewTest.class);
 
 	private static final String ORDER_STATE = "New";
 
