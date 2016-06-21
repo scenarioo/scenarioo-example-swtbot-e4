@@ -105,8 +105,8 @@ public class OrderPositionsTableview {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				List<PositionWithArticleInfo> inputData = getInputData();
-				Integer porNr = inputData.size() + 1;
-				inputData.add(new PositionWithArticleInfo(porNr));
+				Integer positionNr = inputData.size() + 1;
+				inputData.add(new PositionWithArticleInfo(positionNr));
 				viewer.setInput(inputData);
 			}
 		});

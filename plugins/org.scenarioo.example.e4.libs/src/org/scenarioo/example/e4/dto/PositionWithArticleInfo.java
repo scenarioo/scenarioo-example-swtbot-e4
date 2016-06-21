@@ -35,7 +35,7 @@ import org.scenarioo.example.e4.domain.PositionId;
 
 public class PositionWithArticleInfo {
 
-	private Integer posNr;
+	private Integer posNr; // starts with zero
 	private Position position;
 	private Article article; // Immutable in Context of OrderPosition
 

@@ -136,7 +136,7 @@ public class PositionDetailView {
 				ArticleId selectedArticleId = getSelectedArticleId();
 				System.out.println("selectedArticleId: " + selectedArticleId);
 				setArticle(selectedArticleId);
-				hasErrorForInputData();
+				validateInputData();
 			}
 		});
 		return articleCombo;
@@ -173,7 +173,7 @@ public class PositionDetailView {
 
 			@Override
 			public void keyReleased(final KeyEvent e) {
-				hasErrorForInputData();
+				validateInputData();
 			}
 		});
 		return amountText;
@@ -205,7 +205,7 @@ public class PositionDetailView {
 		return null;
 	}
 
-	public boolean hasErrorForInputData() {
+	public boolean validateInputData() {
 
 		int index = articleCombo.getSelectionIndex();
 		if (index == -1) {
@@ -227,7 +227,11 @@ public class PositionDetailView {
 	}
 
 	public void setPositionNumber(final Integer positionNumber) {
-		positionNumberText.setText(positionNumber.toString());
+		if (positionNumber == -1) {
+			positionNumberText.setText("not yet created");
+		} else {
+			positionNumberText.setText(positionNumber.toString());
+		}
 	}
 
 	/**

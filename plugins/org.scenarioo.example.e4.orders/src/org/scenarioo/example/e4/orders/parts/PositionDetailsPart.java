@@ -145,16 +145,19 @@ public class PositionDetailsPart {
 
 	@Persist
 	public void save(final MPart mpart) {
-		if (positionDetailPanel.hasErrorForInputData()) {
-			sendUpdate();
-			dirtyable.setDirty(false);
+		if (positionDetailPanel.validateInputData()) {
+			sendUpdate(mpart);
 		}
 	}
 
-	private void sendUpdate() {
+	private void sendUpdate(final MPart mpart) {
 		Position editedPosition = positionDetailPanel.getPositionForUpdate();
-		Position updatedPosition = orderService.savePosition(this.positionViewDTO.getOrderId(), editedPosition);
-		positionDetailPanel.setPosition(updatedPosition);
+		PositionWithArticleInfo posWithArticleInfo = orderService.createOrUpdatePosition(
+				this.positionViewDTO.getOrderId(), editedPosition);
+		dirtyable.setDirty(false);
+		PositionMPartFactory.addToCache(editedPosition.getId(), mpart);
+		positionViewDTO.setPositionWithArticleInfo(posWithArticleInfo);
+		updatePositionInView(posWithArticleInfo, mpart);
 	}
 
 	@PreDestroy

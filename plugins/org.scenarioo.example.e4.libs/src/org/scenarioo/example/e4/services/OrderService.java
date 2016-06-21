@@ -39,7 +39,7 @@ import org.scenarioo.example.e4.dto.CreateOrderDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTableviewDTO;
 import org.scenarioo.example.e4.dto.OrderPositionsTreeviewDTO;
 import org.scenarioo.example.e4.dto.OrderSearchFilter;
-import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
+import org.scenarioo.example.e4.dto.PositionWithArticleInfo;
 
 public interface OrderService {
 
@@ -51,13 +51,16 @@ public interface OrderService {
 
 	Order getOrder(OrderId orderId);
 
-	Position addPosition(OrderId orderId, Position position);
-
-	PositionWithOrderAndArticleInfoDTO addNewPosition(OrderId orderId);
-
 	Boolean deletePosition(OrderId orderId, PositionId posId);
 
-	Position savePosition(OrderId orderId, Position position);
+	/**
+	 * It's also possible that there was a change to the order Domain object so we transfer the order data as well.
+	 * 
+	 * @param orderId
+	 * @param position
+	 * @return PositionWithOrderAndArticleInfoDTO
+	 */
+	PositionWithArticleInfo createOrUpdatePosition(OrderId orderId, Position position);
 
 	OrderPositionsTableviewDTO getOrderPositionsTableviewDTO(OrderId orderId);
 

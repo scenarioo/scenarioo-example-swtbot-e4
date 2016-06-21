@@ -50,6 +50,11 @@ import org.osgi.service.event.EventHandler;
 import org.scenarioo.example.e4.domain.PositionId;
 import org.scenarioo.example.e4.dto.PositionWithOrderAndArticleInfoDTO;
 
+/**
+ * Opens and caches the created parts. If the user tries to reopen a position it reuses existing opened mparts. Newly
+ * added positions are not cached as long they are not saved the first time.
+ * 
+ */
 public class PositionMPartFactory {
 
 	private static final String MODEL_PARTSTACKS_EDITOR_ID = "org.scenarioo.example.e4.orders.partstack.editor";
@@ -71,14 +76,16 @@ public class PositionMPartFactory {
 	public void showMPartForPosition(final PositionWithOrderAndArticleInfoDTO positionViewDTO) {
 
 		// if already exist we show the part
-		if (!positionIdToMPartMap.containsKey(positionViewDTO.getPositionId())) {
+		MPart mpart = null;
+		if (positionIdToMPartMap.containsKey(positionViewDTO.getPositionId())) {
+			mpart = positionIdToMPartMap.get(positionViewDTO.getPositionId());
+		} else {
 			MPartStack partstack = filterOutOrdersPartStack();
-			MPart newPart = createAndMapNewPart(positionViewDTO);
-			partstack.getChildren().add(newPart);
+			mpart = createAndMapNewPart(positionViewDTO);
+			partstack.getChildren().add(mpart);
 		}
-		MPart part = positionIdToMPartMap.get(positionViewDTO.getPositionId());
-		passDataToMPart(positionViewDTO, part);
-		partService.showPart(part, PartState.ACTIVATE);
+		passDataToMPart(positionViewDTO, mpart);
+		partService.showPart(mpart, PartState.ACTIVATE);
 	}
 
 	private MPartStack filterOutOrdersPartStack() {
@@ -102,7 +109,10 @@ public class PositionMPartFactory {
 		newPart.setContributionURI(PART_CLASS_URI);
 		newPart.setIconURI(ORDER_ICON_URI);
 		newPart.setCloseable(true);
-		positionIdToMPartMap.put(positionViewDTO.getPositionId(), newPart);
+		// For newly created editors there is no reason to cache existing MPart
+		if (positionViewDTO.getPositionId() != null) {
+			positionIdToMPartMap.put(positionViewDTO.getPositionId(), newPart);
+		}
 		// IEclipseContext newContext = EclipseContextFactory.create();
 		// newContext.setParent(context);
 		// newPart.setContext(newContext);
@@ -124,6 +134,10 @@ public class PositionMPartFactory {
 				}
 			}
 		});
+	}
+
+	public static void addToCache(final PositionId posId, final MPart mpart) {
+		positionIdToMPartMap.put(posId, mpart);
 	}
 
 	public static void removeFromCache(final PositionId posId) {

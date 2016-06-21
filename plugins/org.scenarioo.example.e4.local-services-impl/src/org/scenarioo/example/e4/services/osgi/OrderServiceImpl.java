@@ -66,6 +66,9 @@ import org.scenarioo.example.e4.services.internal.idstores.IdStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Sends the newly loaded objects back to the application.
+ */
 public class OrderServiceImpl implements OrderService {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
@@ -275,65 +278,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * @see org.scenarioo.example.e4.services.OrderService#addPosition(org.scenarioo.example.e4.domain.OrderId,
-	 *      org.scenarioo.example.e4.domain.PositionId)
-	 */
-	@Override
-	public Position addPosition(final OrderId orderId, final Position position) {
-
-		SimulateServiceCall.start();
-
-		// Update Position
-		position.setVersion(new Integer(1));
-		position.generateAndSetId(counter);
-
-		// Store position under OrderPositions
-		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
-		orderPositions.addOrUpdatePosition(position);
-
-		LOGGER.info("addPosition.. " + orderId + " added new " + position);
-
-		PositionWithOrderAndArticleInfoDTO addedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
-		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_ADD, addedPosition);
-
-		return position;
-	}
-
-	@Override
-	public PositionWithOrderAndArticleInfoDTO addNewPosition(final OrderId orderId) {
-
-		SimulateServiceCall.start();
-
-		// Update Position
-		Position position = new Position();
-		position.setVersion(new Integer(1));
-		position.generateAndSetId(counter);
-
-		// Store position under OrderPositions
-		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
-		orderPositions.addOrUpdatePosition(position);
-
-		LOGGER.info("addNewPosition.. " + orderId + " added new " + position);
-
-		PositionWithOrderAndArticleInfoDTO addedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
-		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_ADD, addedPosition);
-
-		return addedPosition;
-
-	}
-
-	private PositionWithOrderAndArticleInfoDTO getPositionWithOrderAndArticleInfoDTO(final OrderId orderId,
-			final Position position) {
-
-		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
-		Integer posNr = orderPositions.getPositionNumber(position);
-		PositionWithArticleInfo posWithArticleInfo = new PositionWithArticleInfo(posNr, position,
-				this.articleIdStore.get(position.getArticleId()));
-		return new PositionWithOrderAndArticleInfoDTO(posWithArticleInfo,
-				this.orderIdStore.get(orderId));
-	}
-
-	/**
 	 * @see org.scenarioo.example.e4.services.OrderService#deletePosition(org.scenarioo.example.e4.domain.OrderId,
 	 *      org.scenarioo.example.e4.domain.PositionId)
 	 */
@@ -363,11 +307,15 @@ public class OrderServiceImpl implements OrderService {
 	 *      org.scenarioo.example.e4.domain.Position)
 	 */
 	@Override
-	public Position savePosition(final OrderId orderId, final Position position) {
+	public PositionWithArticleInfo createOrUpdatePosition(final OrderId orderId, final Position position) {
 
 		SimulateServiceCall.start();
-
-		incrementVersion(position);
+		
+		if (position.getId() == null) {
+			createPosition(position);
+		} else {
+			incrementVersion(position);
+		}
 
 		OrderPositions orderPos = this.positionsIdStore.get(orderId);
 		orderPos.addOrUpdatePosition(position);
@@ -376,14 +324,32 @@ public class OrderServiceImpl implements OrderService {
 
 		PositionWithOrderAndArticleInfoDTO updatedPosition = getPositionWithOrderAndArticleInfoDTO(orderId, position);
 		postEvent(OrderServiceEvents.TOPIC_POSITION_TREE_UPDATE, updatedPosition);
-		postEvent(OrderServiceEvents.TOPIC_POSITION_DETAIL_UPDATE, updatedPosition.getPositionWithArticleInfo());
+		// it doesn't make sense to update itself, because in case of create the data will anyway not get to the panel
+		// and in case of an Update we would get the fired update twice in the position detail panel
+		// postEvent(OrderServiceEvents.TOPIC_POSITION_DETAIL_UPDATE, updatedPosition);
 
-		return position;
+		return updatedPosition.getPositionWithArticleInfo();
 	}
 
+	private void createPosition(final Position position) {
+		position.setVersion(1);
+		position.generateAndSetId(counter);
+	}
+	
 	private void incrementVersion(final Position position) {
 		Integer newVersion = position.getVersion() + 1;
 		position.setVersion(newVersion);
+	}
+
+	private PositionWithOrderAndArticleInfoDTO getPositionWithOrderAndArticleInfoDTO(final OrderId orderId,
+			final Position position) {
+
+		OrderPositions orderPositions = this.positionsIdStore.get(orderId);
+		Integer posNr = orderPositions.getPositionNumber(position);
+		PositionWithArticleInfo posWithArticleInfo = new PositionWithArticleInfo(posNr, position,
+				this.articleIdStore.get(position.getArticleId()));
+		return new PositionWithOrderAndArticleInfoDTO(posWithArticleInfo,
+				this.orderIdStore.get(orderId));
 	}
 
 	/**
@@ -406,4 +372,5 @@ public class OrderServiceImpl implements OrderService {
 	void unregisterEventAdmin(final EventAdmin admin) {
 		this.eventAdmin = null;
 	}
+
 }
