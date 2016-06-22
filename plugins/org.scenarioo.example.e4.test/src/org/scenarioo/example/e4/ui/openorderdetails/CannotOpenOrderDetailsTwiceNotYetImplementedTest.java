@@ -27,65 +27,73 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.openorderdetails;
 
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
-import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
+import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
+import org.scenarioo.example.e4.ui.showallorderitems.ShowAllOrderItemsInOrderOverviewTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ImportOrderTest extends ScenariooTestWrapper {
+@Ignore
+public class CannotOpenOrderDetailsTwiceNotYetImplementedTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImportOrderTest.class);
+	private static final String ORDER_NUMBER = "Order 2";
+	private static final String ORDER_STATE = "New";
 
-	private final SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
-			scenariooWriterHelper);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShowAllOrderItemsInOrderOverviewTest.class);
+
+	@Rule
+	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.IMPORT_ORDER;
+		return UseCaseName.OPEN_ORDER_DETAILS;
+	}
+
+	/**
+	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getScenariooDescription()
+	 */
+	@Override
+	protected String getScenarioDescription() {
+		return "If the order details are already opened and the user tries to open the "
+				+ "same order order twice, the tab which represents the order gets focused.";
 	}
 
 	@Test
 	public void execute() {
 
-		generateDocuForOrderOverview();
+		generateInitialViewDocuForOrderOverview();
 
-		searchOrdersDialog.open();
-
-		searchOrdersDialog.enterOrderNumber("Order");
-
-		searchOrdersDialog.startSearch();
-
-		// Select Item in Table
-		searchOrdersDialog.selectOrderAndGenerateDocu(0);
-
-		searchOrdersDialog.selectOrderAndGenerateDocu(1);
-
-		searchOrdersDialog.selectOrderAndGenerateDocu(3);
-
-		searchOrdersDialog.selectOrderAndGenerateDocu(5);
-
-		// click Finish
-		searchOrdersDialog.ok();
-
-		// Assert 4 Orders available in OrderOverview
 		SWTBotTree tree = bot.tree();
-		Assert.assertEquals(4, tree.rowCount());
+		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, ORDER_NUMBER, "Edit Order");
+		LOGGER.info(menu.toString());
 
-		bot.sleep(1000);
+		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_DETAIL);
+
+		SWTBotView partByTitle = wbBot.partByTitle(ORDER_NUMBER + " - " + ORDER_STATE);
+
+		Assert.assertNotNull(partByTitle);
+
+		// close order details view
+		partByTitle.close();
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
-
 	}
+
 }

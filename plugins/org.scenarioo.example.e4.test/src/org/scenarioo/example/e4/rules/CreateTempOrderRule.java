@@ -35,8 +35,12 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CreateTempOrderRule implements TestRule {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CreateTempOrderRule.class);
 
 	public static final String ORDER_NUMBER_TEMP = "Temp";
 
@@ -97,6 +101,8 @@ public class CreateTempOrderRule implements TestRule {
 
 			// click Finish
 			bot.button("Finish").click();
+
+			bot.sleep(5000);
 		}
 	}
 

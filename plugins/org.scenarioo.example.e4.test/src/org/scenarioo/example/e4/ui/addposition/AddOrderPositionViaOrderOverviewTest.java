@@ -27,14 +27,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.addposition;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Assert;
@@ -52,9 +51,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class AddNewOrderPositionTest extends ScenariooTestWrapper {
+public class AddOrderPositionViaOrderOverviewTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AddNewOrderPositionTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AddOrderPositionViaOrderOverviewTest.class);
 
 	private static final String POSITION_STATE = "New";
 
@@ -79,8 +78,9 @@ public class AddNewOrderPositionTest extends ScenariooTestWrapper {
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Adds a Position to an existing Order. In the Position details view an Article is assigned by mouse. "
-				+ "It shows what happens in the order overview when a new item is added.";
+		return "Starts with an expanded order node. Adds a Position via context menu in the order overview page. "
+				+ "The position detail view is automatically opened with an empty Article CB. It shows that the "
+				+ "order node in the overview is updated with the new position after the new position is saved.";
 	}
 
 	@Test
@@ -90,12 +90,15 @@ public class AddNewOrderPositionTest extends ScenariooTestWrapper {
 		final SWTBotTreeItem treeItem = tree.getTreeItem(CreateTempOrderRule.ORDER_NUMBER_TEMP);
 		expandTreeItem(treeItem);
 
-		generateDocuForOrderOverview();
+		generateDocu("order_tree_node_expanded", PageName.ORDER_OVERVIEW);
 
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Add Position");
-		LOGGER.info(menu.toString());
+		openContextMenuForOrderTreeNode(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP);
 
-		clickMenuEntryAndGenerateDocu(menu, PageName.POSITION_DETAIL);
+		generateDocu("context_menu_opened", PageName.ORDER_OVERVIEW);
+
+		clickContextMenuActionForOrderTreeNode(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Add Position");
+
+		generateDocu("context_menu_item_add_position_clicked", PageName.POSITION_DETAIL);
 
 		SWTBotView partByTitle = wbBot.partByTitle(CreateTempOrderRule.ORDER_NUMBER_TEMP + " - " + "choose Article"
 				+ " - " + POSITION_STATE);
@@ -130,7 +133,7 @@ public class AddNewOrderPositionTest extends ScenariooTestWrapper {
 			@Override
 			public void run() {
 				combo.widget.setListVisible(false);
-				bot.waitUntil(new PopUpDisappearedCondition(combo));
+				bot.waitUntil(new ComboListClosedCondition(combo));
 			}
 		});
 		bot.sleep(100);
@@ -138,7 +141,8 @@ public class AddNewOrderPositionTest extends ScenariooTestWrapper {
 	}
 
 	private void saveAllAndGenerateDocu() {
-		bot.toolbarButtonWithTooltip("Save All").click();
+		bot.toolbarButtonWithTooltip("Save All (Shift+Ctrl+S)").click();
+		// bot.toolbarButtonWithTooltip("Save All").click();
 		bot.sleep(100);
 		scenariooWriterHelper.writeStep("save_all_clicked", PageName.ORDER_DETAIL, screenshot());
 	}
@@ -154,11 +158,11 @@ public class AddNewOrderPositionTest extends ScenariooTestWrapper {
 		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(null);
 	}
 
-	private static class PopUpDisappearedCondition extends DefaultCondition {
+	private static class ComboListClosedCondition extends DefaultCondition {
 
 		final SWTBotCombo combo;
 
-		private PopUpDisappearedCondition(final SWTBotCombo combo) {
+		private ComboListClosedCondition(final SWTBotCombo combo) {
 			this.combo = combo;
 		}
 

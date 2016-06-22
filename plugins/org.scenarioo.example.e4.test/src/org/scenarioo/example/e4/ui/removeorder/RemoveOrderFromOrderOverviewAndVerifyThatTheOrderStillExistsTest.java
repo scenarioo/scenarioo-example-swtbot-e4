@@ -27,11 +27,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.removeorder;
 
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -40,28 +41,26 @@ import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
 import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
-import org.scenarioo.example.e4.rules.CreateTempOrderRule;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends ScenariooTestWrapper {
+public class RemoveOrderFromOrderOverviewAndVerifyThatTheOrderStillExistsTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest.class);
+	private static final String REMOVED_ORDER_NUMBER = "Order 2";
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOrderFromOrderOverviewAndVerifyThatTheOrderStillExistsTest.class);
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
-
-	@Rule
-	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.DELETE_ORDER;
+		return UseCaseName.REMOVE_ORDER;
 	}
 
 	/**
@@ -69,46 +68,48 @@ public class DeleteOrderAndVerifyOrderIsNotAnymoreAvailableTest extends Scenario
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "This scenario deletes an Order via Context menu in the order overview. "
-				+ "Then it verfies at the end that the deleted order is not anymore available in the repository.";
+		return "Removes an order from the order overview via Context menu. Then it showes that "
+				+ "the removed order is still available in the repository.";
 	}
 
 	@Test
 	public void execute() {
 
-		generateDocuForOrderOverview();
+		generateInitialViewDocuForOrderOverview();
 
 		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Delete Order");
+
+		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, REMOVED_ORDER_NUMBER, "Remove Order");
 		LOGGER.info(menu.toString());
 
 		clickMenuEntryAndGenerateDocu(menu);
 
-		// Assert 5 Orders available in OrderOverview
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), tree.rowCount());
+		// Assert 3 Orders available in OrderOverview
+		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview() - 1, tree.rowCount());
 
-		// Verify Order has been deleted
-		verifyTempOrderHasBeenDeleted();
+		verifyRemovedOrderHasNotBeenDeleted();
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
-	private void verifyTempOrderHasBeenDeleted() {
+	private void verifyRemovedOrderHasNotBeenDeleted() {
 
 		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
 				scenariooWriterHelper);
 
 		searchOrdersDialog.open();
 
-		searchOrdersDialog.enterOrderNumber(CreateTempOrderRule.ORDER_NUMBER_TEMP);
+		searchOrdersDialog.enterOrderNumber("Order");
 
 		searchOrdersDialog.startSearch();
 
 		SWTBotTable table = bot.table();
-		int rowCountAfterDelete = table.rowCount();
+		SWTBotTableItem item = table.getTableItem(REMOVED_ORDER_NUMBER);
 
-		Assert.assertEquals(0, rowCountAfterDelete);
+		LOGGER.info(item.toString());
+		Assert.assertNotNull(item);
 
 		bot.button("Cancel").click();
 	}
+
 }

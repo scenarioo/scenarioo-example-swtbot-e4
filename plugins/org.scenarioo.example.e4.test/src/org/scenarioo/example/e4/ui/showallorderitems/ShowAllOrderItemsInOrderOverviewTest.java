@@ -27,47 +27,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.showallorderitems;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
-import org.scenarioo.example.e4.rules.CreateTempOrderRule;
-import org.scenarioo.example.e4.rules.DeleteOrderRule;
+import org.scenarioo.example.e4.orders.parts.OrdersOverviewPart;
+import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class EditOrderNumberUpdatesOrderOverviewTest extends ScenariooTestWrapper {
+public class ShowAllOrderItemsInOrderOverviewTest extends ScenariooTestWrapper {
 
-	private static final String TARGET_ORDER_NUMBER = "New Order Number";
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EditOrderNumberUpdatesOrderOverviewTest.class);
-
-	private static final String ORDER_STATE = "New";
-
-	@Override
-	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
-		return outerRuleChain.around(new DeleteOrderRule(TARGET_ORDER_NUMBER));
-	}
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShowAllOrderItemsInOrderOverviewTest.class);
 
 	@Rule
-	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
+	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.EDIT_ORDER;
+		return UseCaseName.SHOW_ALL_ORDER_ITEMS;
 	}
 
 	/**
@@ -75,42 +65,54 @@ public class EditOrderNumberUpdatesOrderOverviewTest extends ScenariooTestWrappe
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Changes an Order number in the order details view. "
-				+ "The corresponding node in order overview will also be updated.";
+		return "Expands and collapse the positions tree in the order detail overview. "
+				+ "The number in brackets represents the positions count. The position "
+				+ "count is only available after the order was the first time loaded.";
 	}
 
 	@Test
 	public void execute() {
 
-		findTreeItemAndClickContextMenuEntry(bot.tree(), CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
+		generateInitialViewDocuForOrderOverview();
 
-		generateDocuForInitialView(PageName.ORDER_DETAIL);
+		SWTBotTree tree = bot.tree();
+		final SWTBotTreeItem treeItem = tree.getTreeItem("Order 2");
 
-		SWTBotView partByTitle = wbBot.partByTitle(CreateTempOrderRule.ORDER_NUMBER_TEMP + " - " + ORDER_STATE);
-		Assert.assertNotNull(partByTitle);
+		expandTreeItemAndGenerateDocu(treeItem);
 
-		enterOrderNumberAndGenerateDocu();
+		Assert.assertTrue(treeItem.isExpanded());
 
-		saveAllAndGenerateDocu();
+		collapseTreeItemAndGenerateDocu(treeItem);
 
-		// close order details
-		partByTitle.close();
+		Assert.assertFalse(treeItem.isExpanded());
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
-	private void enterOrderNumberAndGenerateDocu() {
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.setText("");
-		text.typeText(TARGET_ORDER_NUMBER);
+	/**
+	 * @param treeItem
+	 */
+	private void collapseTreeItemAndGenerateDocu(final SWTBotTreeItem treeItem) {
+		OrdersOverviewPart ordersOverviewPart = (OrdersOverviewPart) wbBot.partByTitle("Orders Overview").getPart()
+				.getObject();
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(Boolean.FALSE);
+		treeItem.collapse();
 		bot.sleep(100);
-		scenariooWriterHelper.writeStep("order_number_entered", PageName.ORDER_DETAIL, screenshot());
+		scenariooWriterHelper.writeStep("order_number_2_collapsed", PageName.ORDER_OVERVIEW, screenshot());
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(null);
 	}
 
-	private void saveAllAndGenerateDocu() {
-		bot.toolbarButtonWithTooltip("Save All").click();
+	/**
+	 * @param treeItem
+	 */
+	private void expandTreeItemAndGenerateDocu(final SWTBotTreeItem treeItem) {
+		OrdersOverviewPart ordersOverviewPart = (OrdersOverviewPart) wbBot.partByTitle("Orders Overview").getPart()
+				.getObject();
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(Boolean.TRUE);
+		treeItem.expand();
 		bot.sleep(100);
-		scenariooWriterHelper.writeStep("save_all_clicked", PageName.ORDER_DETAIL, screenshot());
+		scenariooWriterHelper.writeStep("order_number_2_expanded", PageName.ORDER_OVERVIEW, screenshot());
+		ordersOverviewPart.setOverSteerNodeItemExpandedForTest(null);
 	}
 
 }

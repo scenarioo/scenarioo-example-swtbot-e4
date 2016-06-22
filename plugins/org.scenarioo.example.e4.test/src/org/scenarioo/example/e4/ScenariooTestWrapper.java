@@ -105,13 +105,12 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		return screenShooter.capture();
 	}
 
-	protected void generateDocuForOrderOverview() {
-		generateDocuForInitialView(PageName.ORDER_OVERVIEW);
+	protected void generateInitialViewDocuForOrderOverview() {
+		generateDocu("initial_view", PageName.ORDER_OVERVIEW);
 	}
 
 	protected void generateDocuForInitialView(final PageName pageName) {
-		bot.sleep(100);
-		scenariooWriterHelper.writeStep("initial_view", pageName, screenshot());
+		generateDocu("initial_view", pageName);
 	}
 
 	/**
@@ -123,23 +122,27 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_OVERVIEW);
 	}
 
-	protected void findTreeItemAndClickContextMenuEntry(final SWTBotTree tree, final String orderNumber,
+	protected void clickContextMenuActionForOrderTreeNode(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
-		SWTBotMenu contextMenu = tree.getTreeItem(orderNumber).contextMenu(actionName);
-		bot.sleep(100);
-		contextMenu.click();
+		SWTBotMenu contextMenuAction = tree.getTreeItem(orderNumber).contextMenu(actionName);
+		contextMenuAction.click();
+		closeContextMenu(contextMenuAction);
 		bot.sleep(500);
 	}
 
-	/**
-	 * @param menu
-	 */
+	protected void generateDocu(final String title, final PageName pageName) {
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep(title, pageName, screenshot());
+	}
+
+	@Deprecated
 	protected void clickMenuEntryAndGenerateDocu(final SWTBotMenu menu, final PageName pageName) {
 		menu.click();
 		closeContextMenu(menu);
 		bot.sleep(500);
 		scenariooWriterHelper.writeStep(menu.getText() + "_menu_entry_clicked", pageName, screenshot());
 	}
+
 
 	private void closeContextMenu(final SWTBotMenu menu) {
 		Display.getDefault().syncExec(new Runnable() {
@@ -157,6 +160,7 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 	 * @param actionName
 	 * @return SWTBotMenu
 	 */
+	@Deprecated
 	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
 
@@ -174,22 +178,20 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 	protected SWTBotMenu getContextMenuAndGenerateDocu(final SWTBotTree tree, final SWTBotTreeItem treeItem,
 			final String actionName) {
 
-		SWTBotMenu contextMenu = getContextMenuAndSetItVisible(tree, treeItem, actionName);
+		openContextMenuForTreeItem(tree, treeItem);
+		final SWTBotMenu menuAction = treeItem.contextMenu(actionName);
+
 		scenariooWriterHelper.writeStep("context_menu_opened", PageName.ORDER_OVERVIEW, screenshot());
-		return contextMenu;
+		return menuAction;
 	}
 
-	/**
-	 * 
-	 * @param tree
-	 * @param treeItem
-	 * @param actionName
-	 * @return SWTBotMenu
-	 */
-	private SWTBotMenu getContextMenuAndSetItVisible(final SWTBotTree tree, final SWTBotTreeItem treeItem,
-			final String actionName) {
+	protected void openContextMenuForOrderTreeNode(final SWTBotTree tree, final String orderNumber) {
 
-		final SWTBotMenu menuAction = treeItem.contextMenu(actionName);
+		final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);
+		openContextMenuForTreeItem(tree, treeItem);
+	}
+
+	protected void openContextMenuForTreeItem(final SWTBotTree tree, final SWTBotTreeItem treeItem) {
 
 		Display.getDefault().syncExec(new Runnable() {
 
@@ -202,7 +204,7 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 			}
 		});
 		bot.sleep(100);
-		return menuAction;
+
 	}
 
 	private Point getMenuItemLocation(final SWTBotTreeItem treeItem) {

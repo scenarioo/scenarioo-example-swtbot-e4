@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.editposition;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
@@ -52,9 +52,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ChangeArticleInOrderPositionUpdatesOrderOverviewTest extends ScenariooTestWrapper {
+public class ChangeArticleUpdatesTheOrderOverviewTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeArticleInOrderPositionUpdatesOrderOverviewTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeArticleUpdatesTheOrderOverviewTest.class);
 
 	private static final String POSITION_STATE = "New";
 
@@ -79,8 +79,8 @@ public class ChangeArticleInOrderPositionUpdatesOrderOverviewTest extends Scenar
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Adds a Position to an existing Order. In the Position details view an Article is assigned by mouse. "
-				+ "It shows what happens in the order overview when a new item is added.";
+		return "Changes the article of an existing Position in the position detail view and shows that the "
+				+ " name of the corresponding position in the order overview get's updated as well.";
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class ChangeArticleInOrderPositionUpdatesOrderOverviewTest extends Scenar
 		final SWTBotTreeItem orderTreeItem = tree.getTreeItem(CreateTempOrderRule.ORDER_NUMBER_TEMP);
 		expandTreeItem(orderTreeItem);
 
-		generateDocuForOrderOverview();
+		generateInitialViewDocuForOrderOverview();
 
 		SWTBotTreeItem firstPositionNode = orderTreeItem.getItems()[0];
 		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, firstPositionNode, "Edit Position");

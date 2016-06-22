@@ -27,40 +27,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.importOrder;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
-import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
+import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class OpenOrderDetailsTest extends ScenariooTestWrapper {
+public class ImportMultipleOrdersTest extends ScenariooTestWrapper {
 
-	private static final String ORDER_NUMBER = "Order 2";
-	private static final String ORDER_STATE = "New";
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImportMultipleOrdersTest.class);
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExpandAndCollapsOrderInOrderOverviewTest.class);
-
-	@Rule
-	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
+	private final SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
+			scenariooWriterHelper);
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.OPEN_ORDER_DETAILS;
+		return UseCaseName.IMPORT_ORDER;
 	}
 
 	/**
@@ -68,28 +61,40 @@ public class OpenOrderDetailsTest extends ScenariooTestWrapper {
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Opens an Order in the order detail view to show all properties of the order.";
+		return "Opens multiple orders via import order dialog to an empty workspace. "
+				+ "Then it searches orders with order number and selects some of the found orders.";
 	}
 
 	@Test
 	public void execute() {
 
-		generateDocuForOrderOverview();
+		generateInitialViewDocuForOrderOverview();
 
+		searchOrdersDialog.open();
+
+		searchOrdersDialog.enterOrderNumber("Order");
+
+		searchOrdersDialog.startSearch();
+
+		// Select Item in Table
+		searchOrdersDialog.selectOrderAndGenerateDocu(0);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(1);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(3);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(5);
+
+		// click Finish
+		searchOrdersDialog.ok();
+
+		// Assert 4 Orders available in OrderOverview
 		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, ORDER_NUMBER, "Edit Order");
-		LOGGER.info(menu.toString());
+		Assert.assertEquals(4, tree.rowCount());
 
-		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_DETAIL);
-
-		SWTBotView partByTitle = wbBot.partByTitle(ORDER_NUMBER + " - " + ORDER_STATE);
-
-		Assert.assertNotNull(partByTitle);
-
-		// close order details view
-		partByTitle.close();
+		bot.sleep(1000);
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
-	}
 
+	}
 }

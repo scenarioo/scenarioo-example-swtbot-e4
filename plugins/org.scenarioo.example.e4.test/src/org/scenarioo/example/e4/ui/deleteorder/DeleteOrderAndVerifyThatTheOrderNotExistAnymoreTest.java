@@ -27,9 +27,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.deleteorder;
 
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,56 +40,28 @@ import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
 import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
+import org.scenarioo.example.e4.rules.CreateTempOrderRule;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CannotImportTheSameOrderTwiceTest extends ScenariooTestWrapper {
+public class DeleteOrderAndVerifyThatTheOrderNotExistAnymoreTest extends ScenariooTestWrapper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CannotImportTheSameOrderTwiceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderAndVerifyThatTheOrderNotExistAnymoreTest.class);
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
 
-	@Test
-	public void execute() {
-
-		LOGGER.info(getClass().getSimpleName() + " started.");
-
-		generateDocuForOrderOverview();
-
-		readdTheSameOrdersAgain();
-
-		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), bot.tree().rowCount());
-
-		LOGGER.info(getClass().getSimpleName() + " successful!");
-	}
-
-	private void readdTheSameOrdersAgain() {
-
-		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
-				scenariooWriterHelper);
-
-		searchOrdersDialog.open();
-
-		searchOrdersDialog.enterOrderNumber("Order");
-
-		searchOrdersDialog.startSearch();
-
-		searchOrdersDialog.selectOrderAndGenerateDocu(0);
-
-		searchOrdersDialog.selectOrderAndGenerateDocu(1);
-
-		searchOrdersDialog.ok();
-	}
+	@Rule
+	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.IMPORT_ORDER;
+		return UseCaseName.DELETE_ORDER;
 	}
 
 	/**
@@ -94,9 +69,46 @@ public class CannotImportTheSameOrderTwiceTest extends ScenariooTestWrapper {
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "This scenario shows that order duplicates cannot be imported into the the workspace. "
-				+ "It starts with 4 orders (1,2,4 and 6) already available. Then it tries to reimport again the order numbers 1 and 2.";
+		return "Deletes an Order via Context menu in the order overview. Then it verfies "
+				+ "that the deleted order is not anymore available in the repository.";
 	}
 
-	
+	@Test
+	public void execute() {
+
+		generateInitialViewDocuForOrderOverview();
+
+		SWTBotTree tree = bot.tree();
+		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, CreateTempOrderRule.ORDER_NUMBER_TEMP, "Delete Order");
+		LOGGER.info(menu.toString());
+
+		clickMenuEntryAndGenerateDocu(menu);
+
+		// Assert 5 Orders available in OrderOverview
+		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview(), tree.rowCount());
+
+		// Verify Order has been deleted
+		verifyTempOrderHasBeenDeleted();
+
+		LOGGER.info(getClass().getSimpleName() + " successful!");
+	}
+
+	private void verifyTempOrderHasBeenDeleted() {
+
+		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
+				scenariooWriterHelper);
+
+		searchOrdersDialog.open();
+
+		searchOrdersDialog.enterOrderNumber(CreateTempOrderRule.ORDER_NUMBER_TEMP);
+
+		searchOrdersDialog.startSearch();
+
+		SWTBotTable table = bot.table();
+		int rowCountAfterDelete = table.rowCount();
+
+		Assert.assertEquals(0, rowCountAfterDelete);
+
+		bot.button("Cancel").click();
+	}
 }

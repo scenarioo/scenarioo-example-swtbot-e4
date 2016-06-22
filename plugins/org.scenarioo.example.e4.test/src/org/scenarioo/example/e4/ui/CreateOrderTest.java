@@ -43,7 +43,7 @@ import org.scenarioo.example.e4.UseCaseName;
 import org.scenarioo.example.e4.rules.DeleteOrderRule;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewOrderTest extends ScenariooTestWrapper {
+public class CreateOrderTest extends ScenariooTestWrapper {
 
 	private static final String ORDER_NUMBER = "Huhu";
 
@@ -54,7 +54,18 @@ public class CreateNewOrderTest extends ScenariooTestWrapper {
 	protected UseCaseName getUseCaseName() {
 		return UseCaseName.CREATE_ORDER;
 	}
-	
+
+	/**
+	 * 
+	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getScenarioDescription()
+	 */
+	@Override
+	protected String getScenarioDescription() {
+		return "Steps through a wizard to create a new order with one order position. "
+				+ "On the first page the order details are entered. On the second page "
+				+ "the user create a new entry in the orderposition table.";
+	}
+
 	@Override
 	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
 		return outerRuleChain.around(new DeleteOrderRule(ORDER_NUMBER));
@@ -63,7 +74,7 @@ public class CreateNewOrderTest extends ScenariooTestWrapper {
 	@Test
 	public void execute() {
 
-		generateDocuForOrderOverview();
+		generateInitialViewDocuForOrderOverview();
 
 		startNewOrderDialogAndGenerateDocu();
 

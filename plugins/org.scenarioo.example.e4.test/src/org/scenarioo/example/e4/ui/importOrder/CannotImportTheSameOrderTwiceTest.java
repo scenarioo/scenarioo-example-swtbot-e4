@@ -27,42 +27,66 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.importOrder;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
+import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-@Ignore
-public class OpenOrderSetFocusOnExistingTabIfAlreadyOpenedTest extends ScenariooTestWrapper {
+public class CannotImportTheSameOrderTwiceTest extends ScenariooTestWrapper {
 
-	private static final String ORDER_NUMBER = "Order 2";
-	private static final String ORDER_STATE = "New";
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExpandAndCollapsOrderInOrderOverviewTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CannotImportTheSameOrderTwiceTest.class);
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
+
+	@Test
+	public void execute() {
+
+		LOGGER.info(getClass().getSimpleName() + " started.");
+
+		generateInitialViewDocuForOrderOverview();
+
+		importOrders();
+
+		Assert.assertEquals(initOrderOverview.getInitializedOrdersInOrderOverview() + 1, bot.tree().rowCount());
+
+		LOGGER.info(getClass().getSimpleName() + " successful!");
+	}
+
+	private void importOrders() {
+
+		SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
+				scenariooWriterHelper);
+
+		searchOrdersDialog.open();
+
+		searchOrdersDialog.enterOrderNumber("Order");
+
+		searchOrdersDialog.startSearch();
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(1);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(2);
+
+		searchOrdersDialog.ok();
+	}
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.OPEN_ORDER_DETAILS;
+		return UseCaseName.IMPORT_ORDER;
 	}
 
 	/**
@@ -70,28 +94,10 @@ public class OpenOrderSetFocusOnExistingTabIfAlreadyOpenedTest extends Scenarioo
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Opens an Order in the order detail view to show all properties of the order.";
+		return "Shows what happens if an order, which already available in the order overview, is imported again. "
+				+ "It starts with the four orders (1,2,4 and 6) in the order overview. Then it imports "
+				+ "the order numbers 2 and 3 what leads to tatally five imported order in the order overview.";
 	}
 
-	@Test
-	public void execute() {
-
-		generateDocuForOrderOverview();
-
-		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, ORDER_NUMBER, "Edit Order");
-		LOGGER.info(menu.toString());
-
-		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_DETAIL);
-
-		SWTBotView partByTitle = wbBot.partByTitle(ORDER_NUMBER + " - " + ORDER_STATE);
-
-		Assert.assertNotNull(partByTitle);
-
-		// close order details view
-		partByTitle.close();
-
-		LOGGER.info(getClass().getSimpleName() + " successful!");
-	}
-
+	
 }

@@ -27,13 +27,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui;
+package org.scenarioo.example.e4.ui.editorder;
 
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -47,12 +46,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-@Ignore
-public class EditOrderNumberUpdatesPositionDetailViewsTest extends ScenariooTestWrapper {
+public class EditOrderNumberUpdatesOrderOverviewTest extends ScenariooTestWrapper {
 
 	private static final String TARGET_ORDER_NUMBER = "New Order Number";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EditOrderNumberUpdatesPositionDetailViewsTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EditOrderNumberUpdatesOrderOverviewTest.class);
 
 	private static final String ORDER_STATE = "New";
 
@@ -77,14 +75,14 @@ public class EditOrderNumberUpdatesPositionDetailViewsTest extends ScenariooTest
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Changes an Order number in the order details view. "
-				+ "Shows that Position Detail Views with references to the changed order are updated as well.";
+		return "A change of the order number in the order detail view updates the "
+				+ "corresponding order in the order overview.";
 	}
 
 	@Test
 	public void execute() {
 
-		findTreeItemAndClickContextMenuEntry(bot.tree(), CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
+		clickContextMenuActionForOrderTreeNode(bot.tree(), CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
 
 		generateDocuForInitialView(PageName.ORDER_DETAIL);
 
