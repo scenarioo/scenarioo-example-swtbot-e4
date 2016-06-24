@@ -82,7 +82,7 @@ public class EditOrderNumberUpdatesOrderOverviewTest extends ScenariooTestWrappe
 	@Test
 	public void execute() {
 
-		clickContextMenuActionForOrderTreeNode(bot.tree(), CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
+		clickContextMenuActionForOrder(bot.tree(), CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
 
 		generateDocuForInitialView(PageName.ORDER_DETAIL);
 

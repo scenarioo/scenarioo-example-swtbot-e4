@@ -27,49 +27,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4.ui.editorder;
+package org.scenarioo.example.e4.ui.importOrder;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Assert;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
-import org.scenarioo.example.e4.rules.CreateTempOrderRule;
-import org.scenarioo.example.e4.rules.DeleteOrderRule;
+import org.scenarioo.example.e4.pages.SearchOrdersDialogPageObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 @Ignore
-public class EditOrderNumberUpdatesOpenedPositionsNotYetImplementedTest extends ScenariooTestWrapper {
+public class SelectsAllFoundOrdersWithOneClickNotYetImplementedTest extends ScenariooTestWrapper {
 
-	private static final String TARGET_ORDER_NUMBER = "New Order Number";
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImportMultipleOrdersTest.class);
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EditOrderNumberUpdatesOpenedPositionsNotYetImplementedTest.class);
-
-	private static final String ORDER_STATE = "New";
-
-	@Override
-	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
-		return outerRuleChain.around(new DeleteOrderRule(TARGET_ORDER_NUMBER));
-	}
-
-	@Rule
-	public CreateTempOrderRule createTempOrderRule = new CreateTempOrderRule();
+	private final SearchOrdersDialogPageObject searchOrdersDialog = new SearchOrdersDialogPageObject(
+			scenariooWriterHelper);
 
 	/**
 	 * @see org.scenarioo.example.e4.ScenariooTestWrapper#getUseCaseName()
 	 */
 	@Override
 	protected UseCaseName getUseCaseName() {
-		return UseCaseName.EDIT_ORDER;
+		return UseCaseName.IMPORT_ORDER;
 	}
 
 	/**
@@ -77,42 +63,40 @@ public class EditOrderNumberUpdatesOpenedPositionsNotYetImplementedTest extends 
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Changes an Order number in the order details view. Shows that opened Positions "
-				+ "which have references to the changed order are updated as well.";
+		return "Shows a fast way how the user can import a bunch of orders with enabling "
+				+ "the checkbox of all found orders with one click.";
 	}
 
 	@Test
 	public void execute() {
 
-		clickContextMenuActionForOrder(bot.tree(), CreateTempOrderRule.ORDER_NUMBER_TEMP, "Edit Order");
+		generateInitialViewDocuForOrderOverview();
 
-		generateDocuForInitialView(PageName.ORDER_DETAIL);
+		searchOrdersDialog.open();
 
-		SWTBotView partByTitle = wbBot.partByTitle(CreateTempOrderRule.ORDER_NUMBER_TEMP + " - " + ORDER_STATE);
-		Assert.assertNotNull(partByTitle);
+		searchOrdersDialog.enterOrderNumber("Order");
 
-		enterOrderNumberAndGenerateDocu();
+		searchOrdersDialog.startSearch();
 
-		saveAllAndGenerateDocu();
+		// Select Item in Table
+		searchOrdersDialog.selectOrderAndGenerateDocu(0);
 
-		// close order details
-		partByTitle.close();
+		searchOrdersDialog.selectOrderAndGenerateDocu(1);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(3);
+
+		searchOrdersDialog.selectOrderAndGenerateDocu(5);
+
+		// click Finish
+		searchOrdersDialog.ok();
+
+		// Assert 4 Orders available in OrderOverview
+		SWTBotTree tree = bot.tree();
+		Assert.assertEquals(4, tree.rowCount());
+
+		bot.sleep(1000);
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
-	}
 
-	private void enterOrderNumberAndGenerateDocu() {
-		SWTBotText text = bot.textWithLabel("&Order Number");
-		text.setText("");
-		text.typeText(TARGET_ORDER_NUMBER);
-		bot.sleep(100);
-		scenariooWriterHelper.writeStep("order_number_entered", PageName.ORDER_DETAIL, screenshot());
 	}
-
-	private void saveAllAndGenerateDocu() {
-		bot.toolbarButtonWithTooltip("Save All").click();
-		bot.sleep(100);
-		scenariooWriterHelper.writeStep("save_all_clicked", PageName.ORDER_DETAIL, screenshot());
-	}
-
 }
