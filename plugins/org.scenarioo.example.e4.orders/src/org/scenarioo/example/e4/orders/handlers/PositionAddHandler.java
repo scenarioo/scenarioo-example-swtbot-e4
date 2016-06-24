@@ -60,12 +60,12 @@ public class PositionAddHandler {
 		
 		PositionMPartFactory positionMPartFactory = ContextInjectionFactory.make(PositionMPartFactory.class, context);
 		positionMPartFactory.showMPartForPosition(newPosition);
-
 	}
 
 	@CanExecute
 	public boolean canExecute(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional final Order activeOrder) {
 		this.activeOrder = activeOrder;
+		// LOGGER.info("Active Order is: " + activeOrder);
 		return activeOrder != null;
 	}
 

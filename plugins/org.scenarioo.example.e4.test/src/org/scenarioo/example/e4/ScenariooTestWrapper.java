@@ -36,17 +36,20 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.scenarioo.example.e4.rules.ScenarioNameRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScenariooTestWrapper.class);
 	private static final ScreenShooter screenShooter = new ScreenShooter();
-
 	private static final Date scenariooBuildDate = new Date();
 
 	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
@@ -122,9 +125,14 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_OVERVIEW);
 	}
 
-	protected void clickContextMenuActionForOrderTreeNode(final SWTBotTree tree, final String orderNumber,
+	protected void clickContextMenuActionForOrder(final SWTBotTree tree, final String orderNumber,
 			final String actionName) {
-		SWTBotMenu contextMenuAction = tree.getTreeItem(orderNumber).contextMenu(actionName);
+		clickContextMenuActionForTreeItem(tree, tree.getTreeItem(orderNumber), actionName);
+	}
+
+	protected void clickContextMenuActionForTreeItem(final SWTBotTree tree, final SWTBotTreeItem treeItem,
+			final String actionName) {
+		SWTBotMenu contextMenuAction = treeItem.contextMenu(actionName);
 		contextMenuAction.click();
 		closeContextMenu(contextMenuAction);
 		bot.sleep(500);
@@ -142,7 +150,6 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		bot.sleep(500);
 		scenariooWriterHelper.writeStep(menu.getText() + "_menu_entry_clicked", pageName, screenshot());
 	}
-
 
 	private void closeContextMenu(final SWTBotMenu menu) {
 		Display.getDefault().syncExec(new Runnable() {
@@ -185,7 +192,7 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		return menuAction;
 	}
 
-	protected void openContextMenuForOrderTreeNode(final SWTBotTree tree, final String orderNumber) {
+	protected void openContextMenuForOrder(final SWTBotTree tree, final String orderNumber) {
 
 		final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);
 		openContextMenuForTreeItem(tree, treeItem);
@@ -204,7 +211,6 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 			}
 		});
 		bot.sleep(100);
-
 	}
 
 	private Point getMenuItemLocation(final SWTBotTreeItem treeItem) {
@@ -213,5 +219,23 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 		System.out.println("Relative Bounds: " + bounds.toString());
 		return new Point(absolutLocation.x + bounds.x + bounds.width, absolutLocation.y
 				+ bounds.y + bounds.height / 2);
+	}
+
+	protected void clickSaveAllAndGenerateDocu() {
+		SWTBotToolbarButton toolbarButtonWithTooltip = null;
+		try {
+			toolbarButtonWithTooltip = bot.toolbarButtonWithTooltip("Save All (Shift+Ctrl+S)");
+		} catch (Exception ex) {
+			LOGGER.info("error when retrieving \"Save All (Shift+Ctrl+S)\" toolbar."
+					+ "Try \"Save All\":");
+			try {
+				toolbarButtonWithTooltip = bot.toolbarButtonWithTooltip("Save All");
+			} catch (Exception ex2) {
+				LOGGER.error("error when retrieving \"Save All\" toolbar:", ex2);
+			}
+		}
+		toolbarButtonWithTooltip.click();
+		// bot.toolbarButtonWithTooltip("Save All").click();
+		generateDocu("save_all_clicked", PageName.ALL_PAGES);
 	}
 }

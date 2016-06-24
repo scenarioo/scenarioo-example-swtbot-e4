@@ -27,14 +27,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.scenarioo.example.e4;
+package org.scenarioo.example.e4.ui.addposition;
 
-public enum PageName {
-	ORDER_NEW_1,
-	ORDER_NEW_2,
-	ORDER_OVERVIEW,
-	ORDER_DETAIL,
-	POSITION_DETAIL,
-	SEARCH_DIALOG,
-	ALL_PAGES,
+import org.junit.Ignore;
+
+/**
+ * This Functionality is not yet implemented in the product.
+ * 
+ */
+@Ignore
+public class AddPositionUpdatesPositionCountTest {
+
 }

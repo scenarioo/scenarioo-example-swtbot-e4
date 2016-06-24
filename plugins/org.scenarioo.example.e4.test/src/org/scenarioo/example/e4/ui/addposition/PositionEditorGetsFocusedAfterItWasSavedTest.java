@@ -46,18 +46,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class AddOrderPositionViaOrderOverviewTest extends ScenariooTestWrapper {
+public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestWrapper {
 
 	private static final String TEST_ORDER_NUMBER = CreateTempOrderRule.ORDER_NUMBER_TEMP;
-	private static final Logger LOGGER = LoggerFactory.getLogger(AddOrderPositionViaOrderOverviewTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PositionEditorGetsFocusedAfterItWasSavedTest.class);
 	private static final String POSITION_STATE = "New";
 
 	private OrderOverviewPageObject orderOverviewPage;
 	private PositionDetailPageObject addedPositionDetailPage;
+	private PositionDetailPageObject existingPositionDetailPage;
 
 	@Override
 	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
-		return outerRuleChain.around(new DeleteOrderRule(CreateTempOrderRule.ORDER_NUMBER_TEMP));
+		return outerRuleChain.around(new DeleteOrderRule(TEST_ORDER_NUMBER));
 	}
 
 	@Rule
@@ -76,45 +77,75 @@ public class AddOrderPositionViaOrderOverviewTest extends ScenariooTestWrapper {
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Starts with an expanded order node in the order overview. Then it adds a new Position via context "
-				+ "menu in the order overview page. The position detail view is automatically opened with an empty "
-				+ "Article CB. The save button becomes available after the article is chosen. In the order overview "
-				+ "the new position gets added to the order after the new position is saved the first time.";
+		return "The form of the added position is filled out and saved. Then another position is opened "
+				+ "and get's the focus. The added position is reopened again but only gain's back the "
+				+ "focus from the other panel.";
 	}
 
 	@Before
 	public void init() {
+
 		this.orderOverviewPage = new OrderOverviewPageObject(scenariooWriterHelper);
+
 		orderOverviewPage.expandTreeForOrder(TEST_ORDER_NUMBER, false);
-		orderOverviewPage.generateDocu("initial_view");
+
+		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER);
+
+		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
+		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper,
+				viewTitle);
+
+		addedPositionDetailPage.generateDocu("add_position_page_opened");
 	}
 
 	@Test
 	public void execute() {
 
-		openAddPositionEditor();
+		fillOutPositionDetailPanelOfAddedPosition();
 
-		selectArticle();
+		saveAddedPosition();
 
-		clickSaveAllAndGenerateDocu();
+		openSecondEditorLoosesFocusOnAddedPositionEditor();
+
+		reopenAddedPosition();
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
 	@After
 	public void tearDown() {
+		closeAllViews();
+	}
+
+	private void fillOutPositionDetailPanelOfAddedPosition() {
+		addedPositionDetailPage.selectArticleAndGenerateDocu();
+	}
+
+	private void saveAddedPosition() {
+		clickSaveAllAndGenerateDocu();
+	}
+
+	private void reopenAddedPosition() {
+		orderOverviewPage.openPositionDetailsOfLastExistingPosition(TEST_ORDER_NUMBER, true);
+	}
+
+	/**
+	 * @param orderOverviewPage
+	 * @return
+	 */
+	private void openSecondEditorLoosesFocusOnAddedPositionEditor() {
+		String articleNameOfFirstExistingPosition = orderOverviewPage
+				.getArticleNameOfFirstExistingPosition(TEST_ORDER_NUMBER);
+		orderOverviewPage.openPositionDetailsOfFirstExistingPosition(TEST_ORDER_NUMBER, true);
+		// orderOverviewPage.generateDocu("focus_from_added_position_removed");
+		String editorTitle = CreateTempOrderRule.ORDER_NUMBER_TEMP + " - " + articleNameOfFirstExistingPosition + " - "
+				+ POSITION_STATE;
+		this.existingPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, editorTitle);
+	}
+
+
+	private void closeAllViews() {
 		addedPositionDetailPage.close();
+		existingPositionDetailPage.close();
 	}
-
-	private void openAddPositionEditor() {
-		orderOverviewPage.addPositionForOrderViaContextMenuAndGenerateDocu(TEST_ORDER_NUMBER);
-		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
-		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, viewTitle);
-	}
-
-	private void selectArticle() {
-		addedPositionDetailPage.activate();
-		addedPositionDetailPage.selectArticleAndGenerateDocu(11);
-	}
-
 }

@@ -30,7 +30,6 @@
 package org.scenarioo.example.e4.ui.addposition;
 
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,10 +45,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class AddOrderPositionViaOrderOverviewTest extends ScenariooTestWrapper {
+public class CancelAddingPositionAndVerifyNoPositionWasAddedTest extends ScenariooTestWrapper {
 
 	private static final String TEST_ORDER_NUMBER = CreateTempOrderRule.ORDER_NUMBER_TEMP;
-	private static final Logger LOGGER = LoggerFactory.getLogger(AddOrderPositionViaOrderOverviewTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CancelAddingPositionAndVerifyNoPositionWasAddedTest.class);
 	private static final String POSITION_STATE = "New";
 
 	private OrderOverviewPageObject orderOverviewPage;
@@ -76,45 +75,42 @@ public class AddOrderPositionViaOrderOverviewTest extends ScenariooTestWrapper {
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Starts with an expanded order node in the order overview. Then it adds a new Position via context "
-				+ "menu in the order overview page. The position detail view is automatically opened with an empty "
-				+ "Article CB. The save button becomes available after the article is chosen. In the order overview "
-				+ "the new position gets added to the order after the new position is saved the first time.";
+		return "Adds a new Position via context menu in the order overview page. The new opened add position view "
+				+ "is just closed without saving. At the end of this scenario the order in the order overview is "
+				+ "expanded to proof that no new position is assigned.";
 	}
 
 	@Before
 	public void init() {
 		this.orderOverviewPage = new OrderOverviewPageObject(scenariooWriterHelper);
-		orderOverviewPage.expandTreeForOrder(TEST_ORDER_NUMBER, false);
 		orderOverviewPage.generateDocu("initial_view");
 	}
 
 	@Test
 	public void execute() {
 
-		openAddPositionEditor();
+		openAddPositionEditorViaContextMenu();
 
-		selectArticle();
+		closeAddPositionEditor();
 
-		clickSaveAllAndGenerateDocu();
+		verifyPositionIsNotAdded();
 
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
-	@After
-	public void tearDown() {
-		addedPositionDetailPage.close();
-	}
-
-	private void openAddPositionEditor() {
+	private void openAddPositionEditorViaContextMenu() {
 		orderOverviewPage.addPositionForOrderViaContextMenuAndGenerateDocu(TEST_ORDER_NUMBER);
 		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
 		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, viewTitle);
 	}
 
-	private void selectArticle() {
-		addedPositionDetailPage.activate();
-		addedPositionDetailPage.selectArticleAndGenerateDocu(11);
+	private void closeAddPositionEditor() {
+		addedPositionDetailPage.close();
+		addedPositionDetailPage.generateDocu("add_position_view_closed");
+	}
+
+	private void verifyPositionIsNotAdded() {
+		orderOverviewPage.expandTreeForOrder(TEST_ORDER_NUMBER, true);
 	}
 
 }
