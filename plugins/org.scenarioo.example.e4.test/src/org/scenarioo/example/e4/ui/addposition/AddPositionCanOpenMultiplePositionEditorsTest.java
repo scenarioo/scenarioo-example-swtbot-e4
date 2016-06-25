@@ -66,7 +66,7 @@ public class AddPositionCanOpenMultiplePositionEditorsTest extends ScenariooTest
 	private PositionDetailPageObject thirdAddedPositionDetailPage;
 
 	@Override
-	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
+	protected RuleChain appendInnerMostRules(final RuleChain outerRuleChain) {
 		return outerRuleChain.around(new DeleteOrderRule(TEST_ORDER_NUMBER));
 	}
 

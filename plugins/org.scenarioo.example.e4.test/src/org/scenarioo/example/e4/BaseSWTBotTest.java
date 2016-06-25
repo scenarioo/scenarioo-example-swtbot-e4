@@ -35,11 +35,16 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 import org.scenarioo.example.e4.rules.OrderOverviewCleanUpRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BaseSWTBotTest {
 
 	public static final String PART_ID_ORDER_OVERVIEW = "org.scenarioo.example.e4.orders.part.ordersoverview";
+	private static final Logger LOGGER = LoggerFactory.getLogger(BaseSWTBotTest.class);
 	protected static SWTBot bot;
 	protected static SWTWorkbenchBot wbBot;
 
@@ -47,11 +52,15 @@ public class BaseSWTBotTest {
 	public final RuleChain ruleChain = createRuleChain();
 
 	private RuleChain createRuleChain() {
-		return appendInnerRules(RuleChain.outerRule(createOuterRule()));
+		RuleChain ruleChain = RuleChain.outerRule(new LogTestStartedAndFinishedTestRule());
+		ruleChain = ruleChain.around(new OrderOverviewCleanUpRule());
+		ruleChain = appendInnerRules(ruleChain);
+		ruleChain = appendInnerMostRules(ruleChain);
+		return ruleChain;
 	}
 
-	protected TestRule createOuterRule() {
-		return new OrderOverviewCleanUpRule();
+	protected RuleChain appendInnerMostRules(final RuleChain ruleChain) {
+		return ruleChain;
 	}
 
 	protected RuleChain appendInnerRules(final RuleChain ruleChain) {
@@ -63,5 +72,30 @@ public class BaseSWTBotTest {
 		// don't use SWTWorkbenchBot here which relies on Platform 3.x
 		bot = new SWTBot();
 		wbBot = new SWTWorkbenchBot(EclipseContextHelper.getEclipseContext());
+	}
+
+	private static class LogTestStartedAndFinishedTestRule implements TestRule {
+
+		/**
+		 * @see org.junit.rules.TestRule#apply(org.junit.runners.model.Statement, org.junit.runner.Description)
+		 */
+		@Override
+		public Statement apply(final Statement base, final Description description) {
+			return new Statement() {
+
+				@Override
+				public void evaluate() throws Throwable {
+					LOGGER.info("\n"
+							+ "-----------------------------------------------------------------\n"
+							+ "Test class " + description.getClassName() + " started..\n"
+							+ "-----------------------------------------------------------------\n\n");
+					base.evaluate();
+					LOGGER.info("\n"
+							+ "-----------------------------------------------------------------\n"
+							+ "Test class " + description.getClassName() + " finished..\n"
+							+ "-----------------------------------------------------------------\n\n");
+				}
+			};
+		}
 	}
 }

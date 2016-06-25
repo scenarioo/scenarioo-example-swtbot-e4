@@ -57,7 +57,7 @@ public class EditOrderNumberUpdatesOpenedPositionsNotYetImplementedTest extends 
 	private static final String ORDER_STATE = "New";
 
 	@Override
-	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
+	protected RuleChain appendInnerMostRules(final RuleChain outerRuleChain) {
 		return outerRuleChain.around(new DeleteOrderRule(TARGET_ORDER_NUMBER));
 	}
 

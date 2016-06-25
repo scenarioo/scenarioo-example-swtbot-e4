@@ -40,6 +40,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Rule;
+import org.junit.rules.RuleChain;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.scenarioo.example.e4.rules.ScenarioNameRule;
@@ -55,37 +56,39 @@ public abstract class ScenariooTestWrapper extends BaseSWTBotTest {
 	protected final ScenariooWriterHelper scenariooWriterHelper = new ScenariooWriterHelper(scenariooBuildDate);
 	private final EntityStateManager entityStateHelper;
 
-	@Rule
-	public final TestWatcher buildFileWriter = new TestWatcher() {
+	@Override
+	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
+		return outerRuleChain.around(new TestWatcher() {
 
-		@Override
-		protected void failed(final Throwable e, final Description description) {
-			if (entityStateHelper.changeBuildStateTo(EntityState.FAILED)) {
-				scenariooWriterHelper.writeBuildFileWithFailedState();
-			}
-			if (entityStateHelper.changeUseCaseStateTo(EntityState.FAILED)) {
-				scenariooWriterHelper.saveFailedUseCase();
-			}
-			if (entityStateHelper.changeScenarioStateTo(EntityState.FAILED)) {
-				scenariooWriterHelper.saveFailedScenarioo();
-			}
-		}
-
-		@Override
-		protected void finished(final Description description) {
-			if (entityStateHelper.changeBuildStateTo(EntityState.SUCCESS)) {
-				scenariooWriterHelper.writeBuildFileWithSuccessState();
-			}
-			if (entityStateHelper.changeUseCaseStateTo(EntityState.SUCCESS)) {
-				scenariooWriterHelper.saveSuccessfulUseCase();
-			}
-			if (entityStateHelper.changeScenarioStateTo(EntityState.SUCCESS)) {
-				scenariooWriterHelper.saveSuccessfulScenario();
+			@Override
+			protected void failed(final Throwable e, final Description description) {
+				if (entityStateHelper.changeBuildStateTo(EntityState.FAILED)) {
+					scenariooWriterHelper.writeBuildFileWithFailedState();
+				}
+				if (entityStateHelper.changeUseCaseStateTo(EntityState.FAILED)) {
+					scenariooWriterHelper.saveFailedUseCase();
+				}
+				if (entityStateHelper.changeScenarioStateTo(EntityState.FAILED)) {
+					scenariooWriterHelper.saveFailedScenarioo();
+				}
 			}
 
-			scenariooWriterHelper.flush();
-		}
-	};
+			@Override
+			protected void finished(final Description description) {
+				if (entityStateHelper.changeBuildStateTo(EntityState.SUCCESS)) {
+					scenariooWriterHelper.writeBuildFileWithSuccessState();
+				}
+				if (entityStateHelper.changeUseCaseStateTo(EntityState.SUCCESS)) {
+					scenariooWriterHelper.saveSuccessfulUseCase();
+				}
+				if (entityStateHelper.changeScenarioStateTo(EntityState.SUCCESS)) {
+					scenariooWriterHelper.saveSuccessfulScenario();
+				}
+
+				scenariooWriterHelper.flush();
+			}
+		});
+	}
 
 	@Rule
 	public final ScenarioNameRule scenarioNameRule;

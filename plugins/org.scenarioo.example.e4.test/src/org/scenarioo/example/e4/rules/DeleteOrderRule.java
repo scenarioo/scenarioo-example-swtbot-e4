@@ -34,8 +34,12 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DeleteOrderRule implements TestRule {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOrderRule.class);
 
 	public final String orderNumber;
 
@@ -66,15 +70,20 @@ public class DeleteOrderRule implements TestRule {
 		 */
 		@Override
 		public void evaluate() throws Throwable {
+			LOGGER.info("Delete order rule befor test execution.");
 			base.evaluate();
 			// Delete must be executed after the Test execution
 			deleteOrderWithGivenNumber();
 		}
 		
 		private void deleteOrderWithGivenNumber() {
+			LOGGER.info("\n\nDelete order rule started.\n\n");
 			SWTBotMenu deleteOrder = bot.tree().getTreeItem(orderNumber).contextMenu("Delete Order");
-			System.out.println(deleteOrder);
 			deleteOrder.click();
+			LOGGER.info("\n"
+					+ "-----------------------------------------------------------------\n"
+					+ "Delete order rule finished: order " + orderNumber + " deleted.\n"
+					+ "-----------------------------------------------------------------\n\n");
 		}
 	}
 

@@ -44,9 +44,6 @@ import org.slf4j.LoggerFactory;
 
 public class OrderOverviewPageObject extends PageObject {
 
-	/**
-	 * 
-	 */
 	private static final String CONTEXT_MENU_OPENED_DEFAULT_DOCU_TITLE = "context_menu_opened";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderOverviewPageObject.class);

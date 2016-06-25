@@ -55,8 +55,8 @@ public class CancelAddingPositionAndVerifyNoPositionWasAddedTest extends Scenari
 	private PositionDetailPageObject addedPositionDetailPage;
 
 	@Override
-	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
-		return outerRuleChain.around(new DeleteOrderRule(CreateTempOrderRule.ORDER_NUMBER_TEMP));
+	protected RuleChain appendInnerMostRules(final RuleChain outerRuleChain) {
+		return outerRuleChain.around(new DeleteOrderRule(TEST_ORDER_NUMBER));
 	}
 
 	@Rule

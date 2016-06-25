@@ -59,7 +59,7 @@ public class ChangeArticleUpdatesTheOrderOverviewTest extends ScenariooTestWrapp
 	private static final String POSITION_STATE = "New";
 
 	@Override
-	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
+	protected RuleChain appendInnerMostRules(final RuleChain outerRuleChain) {
 		return outerRuleChain.around(new DeleteOrderRule(CreateTempOrderRule.ORDER_NUMBER_TEMP));
 	}
 

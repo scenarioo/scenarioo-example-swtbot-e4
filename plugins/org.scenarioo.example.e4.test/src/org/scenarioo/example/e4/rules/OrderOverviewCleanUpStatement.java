@@ -32,8 +32,12 @@ package org.scenarioo.example.e4.rules;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OrderOverviewCleanUpStatement extends Statement {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderOverviewCleanUpStatement.class);
 
 	private final Statement base;
 	private final SWTBot bot;
@@ -58,15 +62,20 @@ public class OrderOverviewCleanUpStatement extends Statement {
 
 	private void removeAllOrdersFromOrderOverview() {
 
+		LOGGER.info("\n\nRemove all orders from order overview started \n\n");
 		// We Remove all Orders from OrderOverview
 		SWTBotTree tree = bot.tree();
 		int ordersCount = tree.rowCount();
 		for (int i = 0; i < ordersCount; i++) {
-			bot.sleep(1000);
+			// bot.sleep(1000);
 			tree.select(0).contextMenu("Remove Order").click();
 		}
 
-		bot.sleep(1000);
+		LOGGER.info("\n----------------------------------------------------------"
+				+ "\nOrder overview clean up statement executed after the test\n"
+				+ "------------------------------------------------------------\n");
+
+		// bot.sleep(1000);
 
 	}
 }

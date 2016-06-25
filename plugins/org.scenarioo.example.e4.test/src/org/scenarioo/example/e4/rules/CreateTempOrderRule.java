@@ -87,22 +87,27 @@ public class CreateTempOrderRule implements TestRule {
 
 			// Position Amount
 			table.click(0, 4);
-			bot.sleep(1000);
+			bot.sleep(100);
 			bot.text(1).setText("2");
 
 			// Select Item
 			bot.table().click(0, 2);
-			bot.sleep(1000);
+			bot.sleep(100);
 			bot.ccomboBox(0).setSelection(13);
 
 			// loose Focus
 			table.click(0, 3);
-			bot.sleep(1000);
+			bot.sleep(100);
 
 			// click Finish
 			bot.button("Finish").click();
 
-			bot.sleep(5000);
+			bot.sleep(500);
+
+			LOGGER.info("\n"
+					+ "-----------------------------------------------------------------\n"
+					+ "create temp order rule : order " + ORDER_NUMBER_TEMP + " created.\n"
+					+ "-----------------------------------------------------------------\n\n");
 		}
 	}
 

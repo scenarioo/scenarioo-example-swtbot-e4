@@ -57,7 +57,7 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 	private PositionDetailPageObject existingPositionDetailPage;
 
 	@Override
-	protected RuleChain appendInnerRules(final RuleChain outerRuleChain) {
+	protected RuleChain appendInnerMostRules(final RuleChain outerRuleChain) {
 		return outerRuleChain.around(new DeleteOrderRule(TEST_ORDER_NUMBER));
 	}
 
@@ -147,5 +147,6 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 	private void closeAllViews() {
 		addedPositionDetailPage.close();
 		existingPositionDetailPage.close();
+		orderOverviewPage.generateDocu("check_if_is not closed");
 	}
 }
