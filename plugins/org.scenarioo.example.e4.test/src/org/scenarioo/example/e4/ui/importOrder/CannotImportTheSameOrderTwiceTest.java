@@ -96,7 +96,7 @@ public class CannotImportTheSameOrderTwiceTest extends ScenariooTestWrapper {
 	protected String getScenarioDescription() {
 		return "Shows what happens if an order, which already available in the order overview, is imported again. "
 				+ "It starts with the four orders (1,2,4 and 6) in the order overview. Then it imports "
-				+ "the order numbers 2 and 3 what leads to tatally five imported order in the order overview.";
+				+ "the order numbers 2 and 3 what leads to totally five imported orders in the order overview.";
 	}
 
 	

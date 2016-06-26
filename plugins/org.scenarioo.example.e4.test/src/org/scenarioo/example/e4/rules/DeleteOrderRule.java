@@ -70,7 +70,7 @@ public class DeleteOrderRule implements TestRule {
 		 */
 		@Override
 		public void evaluate() throws Throwable {
-			LOGGER.info("Delete order rule befor test execution.");
+			LOGGER.info("Delete order rule is executed after test.");
 			base.evaluate();
 			// Delete must be executed after the Test execution
 			deleteOrderWithGivenNumber();
