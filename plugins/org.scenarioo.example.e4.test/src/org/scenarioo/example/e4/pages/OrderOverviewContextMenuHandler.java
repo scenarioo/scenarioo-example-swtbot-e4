@@ -91,7 +91,7 @@ public class OrderOverviewContextMenuHandler extends PageObject {
 				menu.setVisible(true);
 			}
 		});
-		bot.sleep(100);
+		bot.sleep(200); // remove this sleep with waitUntil context menu is open
 		LOGGER.info("popup is opened: " + treeItem.getText());
 	}
 

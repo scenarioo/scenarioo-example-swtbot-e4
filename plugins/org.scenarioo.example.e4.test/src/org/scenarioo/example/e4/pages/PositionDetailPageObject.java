@@ -144,6 +144,7 @@ public class PositionDetailPageObject extends PageObject {
 	}
 
 	public void activate() {
+		errorIfWidgetNotAvailable();
 		positionDetailPart.show();
 	}
 
@@ -166,7 +167,7 @@ public class PositionDetailPageObject extends PageObject {
 			LOGGER.info("title: " + title);
 			LOGGER.info("\n"
 					+ "-------------------------------------------------\n\n");
-			throw new IllegalArgumentException("could not close \"" + title + "\" due to no widget available");
+			throw new IllegalStateException("could not close \"" + title + "\" due to no widget available");
 		}
 	}
 }
