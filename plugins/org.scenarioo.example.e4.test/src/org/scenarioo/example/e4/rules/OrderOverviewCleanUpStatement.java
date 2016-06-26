@@ -29,8 +29,13 @@
 
 package org.scenarioo.example.e4.rules;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +58,7 @@ public class OrderOverviewCleanUpStatement extends Statement {
 	@Override
 	public void evaluate() throws Throwable {
 		try {
+			LOGGER.info("\n\nThe order overview clean up statement is executed after the test.\n\n");
 			base.evaluate();
 		} finally {
 			// We execute after the test
@@ -62,20 +68,46 @@ public class OrderOverviewCleanUpStatement extends Statement {
 
 	private void removeAllOrdersFromOrderOverview() {
 
-		LOGGER.info("\n\nRemove all orders from order overview started \n\n");
-		// We Remove all Orders from OrderOverview
+		LOGGER.info("\n-----------------------------------------------------------------"
+				+ "\nThe order overview clean up is executed..\n"
+				+ "-----------------------------------------------------------------");
 		SWTBotTree tree = bot.tree();
-		int ordersCount = tree.rowCount();
-		for (int i = 0; i < ordersCount; i++) {
-			// bot.sleep(1000);
-			tree.select(0).contextMenu("Remove Order").click();
+		int ordersCount = tree.getAllItems().length;
+		for (int i = ordersCount - 1; i >= 0; i--) {
+			SWTBotTreeItem treeItem = tree.getAllItems()[i];
+			List<SWTBotTreeItem> allItems = Arrays.asList(tree.getAllItems());
+			LOGGER.info("remove order: " + treeItem.getText() + ", size=" + tree.getAllItems().length + ", allItems="
+					+ allItems.toString());
+			treeItem.contextMenu("Remove Order").click();
+			bot.waitUntil(new OrderRemovedCondition(treeItem));
+		}
+		LOGGER.info("The order overview clean up statement is finished.\n\n");
+	}
+
+	private static class OrderRemovedCondition extends DefaultCondition {
+
+		final SWTBotTreeItem treeItem;
+
+		private OrderRemovedCondition(final SWTBotTreeItem treeItem) {
+			this.treeItem = treeItem;
 		}
 
-		LOGGER.info("\n----------------------------------------------------------"
-				+ "\nOrder overview clean up statement executed after the test\n"
-				+ "------------------------------------------------------------\n");
+		/**
+		 * @see org.eclipse.swtbot.swt.finder.waits.ICondition#test()
+		 */
+		@Override
+		public boolean test() throws Exception {
+			List<SWTBotTreeItem> allItems = Arrays.asList(bot.tree().getAllItems());
+			return !allItems.contains(treeItem);
+		}
 
-		// bot.sleep(1000);
-
+		/**
+		 * @see org.eclipse.swtbot.swt.finder.waits.ICondition#getFailureMessage()
+		 */
+		@Override
+		public String getFailureMessage() {
+			return "Could not remove treeItem: " + treeItem;
+		}
 	}
+
 }
