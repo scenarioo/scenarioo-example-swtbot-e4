@@ -41,6 +41,7 @@ import org.scenarioo.model.docu.entities.Status;
 import org.scenarioo.model.docu.entities.Step;
 import org.scenarioo.model.docu.entities.StepDescription;
 import org.scenarioo.model.docu.entities.UseCase;
+import org.scenarioo.model.docu.entities.generic.Details;
 
 public class ScenariooWriterHelper {
 
@@ -84,10 +85,19 @@ public class ScenariooWriterHelper {
 	}
 
 	public void writeStep(final String title, final PageName pageName, final byte[] screenshot) {
+		writeStep(title, null, pageName, screenshot);
+	}
+
+	public void writeStep(final String title, final String description, final PageName pageName, final byte[] screenshot) {
 		Step step = new Step();
 
 		StepDescription stepDescription = new StepDescription();
 		stepDescription.setTitle(title);
+		if (description != null) {
+			Details details = new Details();
+			details.addDetail("description", description);
+			stepDescription.setDetails(details);
+		}
 		stepDescription.setIndex(currentIndex);
 		step.setStepDescription(stepDescription);
 

@@ -29,40 +29,19 @@
 
 package org.scenarioo.example.e4.pages;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
 import org.scenarioo.example.e4.orders.parts.OrdersOverviewPart;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class OrderOverviewPageObject extends PageObject {
 
-	private static final String CONTEXT_MENU_OPENED_DEFAULT_DOCU_TITLE = "context_menu_opened";
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderOverviewPageObject.class);
-
-	public enum ContextMenuActionRef {
-		ADD_POSITION("Add Position"),
-		EDIT_POSITION("Edit Position"),
-		DELETE_POSITION("Delete Position");
-
-		private String actionName;
-
-		private ContextMenuActionRef(final String actionName) {
-			this.actionName = actionName;
-		}
-	}
+	// private static final Logger LOGGER = LoggerFactory.getLogger(OrderOverviewPageObject.class);
 
 	private final SWTBotTree tree;
-
-	private final OrdersOverviewPart ordersOverviewPart;
+	private final SWTBotView swtBotView;
 
 	/**
 	 * @param scenariooWriterHelper
@@ -70,68 +49,62 @@ public class OrderOverviewPageObject extends PageObject {
 	public OrderOverviewPageObject(final ScenariooWriterHelper scenariooWriterHelper) {
 		super(scenariooWriterHelper);
 		this.tree = bot.tree();
-		this.ordersOverviewPart = (OrdersOverviewPart) wbBot.partByTitle("Orders Overview")
-				.getPart().getObject();
+		this.swtBotView = wbBot.partByTitle("Orders Overview");
 	}
 
 	public String getArticleNameOfFirstExistingPosition(final String orderNumber) {
-		SWTBotTreeItem orderTreeItem = tree.getTreeItem(orderNumber);
-		SWTBotTreeItem firstPositionNode = orderTreeItem.getItems()[0];
-		return firstPositionNode.getText();
+		return getFirstTreeItemForOrder(orderNumber).getText();
 	}
 
-	/**
-	 * @param tree
-	 * @param orderTreeItem
-	 */
-	public void openPositionDetailsOfFirstExistingPosition(final String orderNumber, final boolean generateDocu) {
-		SWTBotTreeItem orderTreeItem = tree.getTreeItem(orderNumber);
-		SWTBotTreeItem firstPositionNode = orderTreeItem.getItems()[0];
-		openContextMenuAndClickAction(firstPositionNode, ContextMenuActionRef.EDIT_POSITION, generateDocu,
-				"context_menu_action_edit_position_clicked");
+	public String getArticleNameOfLastExistingPosition(final String orderNumber) {
+		return getLastTreeItemForOrder(orderNumber).getText();
 	}
 
-	public void openPositionDetailsOfLastExistingPosition(final String orderNumber, final boolean generateDocu) {
+	public void openOrderDetails(final String orderNumber) {
+		SWTBotTreeItem orderNode = tree.getTreeItem(orderNumber);
+		createOrderDetailsMenuHandler().openContextMenuAndClickAction(orderNode);
+	}
+
+	public void openPositionDetailsOfFirstExistingPosition(final String orderNumber, final String docuEndDescription) {
+		SWTBotTreeItem firstPositionNode = getFirstTreeItemForOrder(orderNumber);
+		OrderOverviewContextMenuHandler positionDetailsMenuHandler = createPositionDetailsMenuHandler();
+		positionDetailsMenuHandler.setDocuEndDescription(docuEndDescription);
+		positionDetailsMenuHandler.openContextMenuAndClickAction(firstPositionNode);
+	}
+
+	private SWTBotTreeItem getFirstTreeItemForOrder(final String orderNumber) {
+		SWTBotTreeItem orderTreeItem = tree.getTreeItem(orderNumber);
+		return orderTreeItem.getItems()[0];
+	}
+
+	public void openPositionDetailsOfLastExistingPosition(final String orderNumber) {
+		SWTBotTreeItem lastOrderPositionNode = getLastTreeItemForOrder(orderNumber);
+		createPositionDetailsMenuHandler().openContextMenuAndClickAction(lastOrderPositionNode);
+	}
+
+	private SWTBotTreeItem getLastTreeItemForOrder(final String orderNumber) {
 		SWTBotTreeItem orderTreeItem = tree.getTreeItem(orderNumber);
 		int length = orderTreeItem.getItems().length;
-		SWTBotTreeItem lastOrderPositionNode = orderTreeItem.getItems()[length - 1];
-		openContextMenuAndClickAction(lastOrderPositionNode, ContextMenuActionRef.EDIT_POSITION, generateDocu,
-				"context_menu_action_edit_position_clicked");
+		return orderTreeItem.getItems()[length - 1];
 	}
 
 	public void addPositionForOrderViaContextMenuAndGenerateDocu(final String orderNumber) {
-		addPositionForOrderViaContextMenu(orderNumber, "context_menu_action_add_position_clicked");
-	}
-
-	public void addPositionForOrderViaContextMenu(final String orderNumber, final String secondDocuTitle) {
 		SWTBotTreeItem orderTreeItem = tree.getTreeItem(orderNumber);
-		openContextMenuAndClickAction(orderTreeItem, ContextMenuActionRef.ADD_POSITION, true, secondDocuTitle);
+		createAddPositionMenuHandler().openContextMenuAndClickAction(orderTreeItem);
 	}
 
-	/**
-	 * Without Docu generation
-	 * 
-	 * @param orderNumber
-	 */
-	public void addPositionForOrderViaContextMenu(final String orderNumber) {
+	public void addPositionForOrderViaContextMenu(final String orderNumber, final String docuEndDescription) {
+		OrderOverviewContextMenuHandler addPositionMenuHandler = createAddPositionMenuHandler();
+		addPositionMenuHandler.setDocuEndDescription(docuEndDescription);
 		SWTBotTreeItem orderTreeItem = tree.getTreeItem(orderNumber);
-		openContextMenuAndClickAction(orderTreeItem, ContextMenuActionRef.ADD_POSITION, false, null);
+		addPositionMenuHandler.openContextMenuAndClickAction(orderTreeItem);
 	}
 
-	/**
-	 * @param lastOrderPositionNode
-	 */
-	private void openContextMenuAndClickAction(final SWTBotTreeItem treeItemNode,
-			final ContextMenuActionRef contextMenuAction, final boolean generateDocu,
-			final String clickedMenuActionDocuTitle) {
-		openContextMenuForTreeItem(treeItemNode);
-		if (generateDocu) {
-			generateDocu(CONTEXT_MENU_OPENED_DEFAULT_DOCU_TITLE);
-		}
-		clickContextMenuActionForTreeItem(treeItemNode, contextMenuAction);
-		if (generateDocu) {
-			generateDocu(clickedMenuActionDocuTitle);
-		}
+	public void addPositionViaContextMenuWithoutDocuGeneration(final String orderNumber) {
+		OrderOverviewContextMenuHandler addPositionMenuHandler = createAddPositionMenuHandler();
+		addPositionMenuHandler.supressDocuGeneration();
+		SWTBotTreeItem orderTreeItem = tree.getTreeItem(orderNumber);
+		addPositionMenuHandler.openContextMenuAndClickAction(orderTreeItem);
 	}
 
 	public void expandTreeForOrder(final String orderNumber, final boolean generateDocu) {
@@ -153,58 +126,16 @@ public class OrderOverviewPageObject extends PageObject {
 		}
 	}
 
-	// public void openContextMenuForOrder(final String orderNumber) {
-	//
-	// final SWTBotTreeItem treeItem = tree.getTreeItem(orderNumber);
-	// openContextMenuForTreeItem(treeItem);
-	// }
-
-	private void openContextMenuForTreeItem(final SWTBotTreeItem treeItem) {
-
-		treeItem.select();
-		Display.getDefault().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				Menu menu = tree.widget.getMenu();
-				Point menuItemLocation = getMenuItemLocation(treeItem);
-				menu.setLocation(menuItemLocation.x, menuItemLocation.y);
-				menu.setVisible(true);
-			}
-		});
-		bot.sleep(100);
-		LOGGER.info("popup is opened: " + treeItem.getText());
+	private OrderOverviewContextMenuHandler createOrderDetailsMenuHandler() {
+		return new OrderOverviewContextMenuHandler(this, ContextMenuAction.OPEN_ORDER_DETAILS);
 	}
 
-	private Point getMenuItemLocation(final SWTBotTreeItem treeItem) {
-		Point absolutLocation = treeItem.widget.getParent().toDisplay(0, 0);
-		Rectangle bounds = treeItem.widget.getBounds();
-		System.out.println("Relative Bounds: " + bounds.toString());
-		return new Point(absolutLocation.x + bounds.x + bounds.width, absolutLocation.y
-				+ bounds.y + bounds.height / 2);
+	private OrderOverviewContextMenuHandler createPositionDetailsMenuHandler() {
+		return new OrderOverviewContextMenuHandler(this, ContextMenuAction.OPEN_POSITION_DETAILS);
 	}
 
-	// public void clickContextMenuActionForOrder(final String orderNumber,
-	// final ContextMenuActionRef contextMenuActionRef) {
-	// clickContextMenuActionForTreeItem(tree.getTreeItem(orderNumber), contextMenuActionRef);
-	// }
-
-	private void clickContextMenuActionForTreeItem(final SWTBotTreeItem treeItem,
-			final ContextMenuActionRef contextMenuActionRef) {
-		SWTBotMenu contextMenuAction = treeItem.contextMenu(contextMenuActionRef.actionName);
-		contextMenuAction.click();
-		closeContextMenu(contextMenuAction);
-		bot.sleep(500);
-		LOGGER.info("menu action clicked and context menu closed for: " + treeItem.getText());
-	}
-
-	private void closeContextMenu(final SWTBotMenu menu) {
-		Display.getDefault().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				menu.widget.getParent().setVisible(false);
-			}
-		});
+	private OrderOverviewContextMenuHandler createAddPositionMenuHandler() {
+		return new OrderOverviewContextMenuHandler(this, ContextMenuAction.ADD_POSITION);
 	}
 
 	public void generateDocu(final String title) {
@@ -212,4 +143,16 @@ public class OrderOverviewPageObject extends PageObject {
 		scenariooWriterHelper.writeStep(title, PageName.ORDER_OVERVIEW, screenshot());
 	}
 
+	public void generateDocu(final String title, final String description) {
+		bot.sleep(100);
+		scenariooWriterHelper.writeStep(title, description, PageName.ORDER_OVERVIEW, screenshot());
+	}
+
+	public void close() {
+		swtBotView.close();
+	}
+
+	SWTBotTree getTree() {
+		return tree;
+	}
 }

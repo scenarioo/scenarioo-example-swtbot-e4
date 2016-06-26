@@ -54,10 +54,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class AddPositionCanOpenMultiplePositionEditorsTest extends ScenariooTestWrapper {
+public class AddPositionCanOpenMultipleEditorsTest extends ScenariooTestWrapper {
 
 	private static final String TEST_ORDER_NUMBER = CreateTempOrderRule.ORDER_NUMBER_TEMP;
-	private static final Logger LOGGER = LoggerFactory.getLogger(AddPositionCanOpenMultiplePositionEditorsTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AddPositionCanOpenMultipleEditorsTest.class);
 	private static final String POSITION_STATE = "New";
 
 	private OrderOverviewPageObject orderOverviewPage;
@@ -128,7 +128,7 @@ public class AddPositionCanOpenMultiplePositionEditorsTest extends ScenariooTest
 
 	private void openFirstAddPositionEditor() {
 
-		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "first_position_added");
+		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "first add position editor opened");
 		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
 
 		SWTBotView swtBotView = findpart(viewTitle, 0);
@@ -139,7 +139,7 @@ public class AddPositionCanOpenMultiplePositionEditorsTest extends ScenariooTest
 
 	private void openSecondAddPositionEditor() {
 
-		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "second_position_added");
+		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "second add position editor opened");
 		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
 
 		SWTBotView swtBotView = findpart(viewTitle, 1);
@@ -150,7 +150,7 @@ public class AddPositionCanOpenMultiplePositionEditorsTest extends ScenariooTest
 
 	private void openThirdAddPositionEditor() {
 
-		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "third_position_added");
+		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "third add position editor opened");
 		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
 		SWTBotView swtBotView = findpart(viewTitle, 2);
 

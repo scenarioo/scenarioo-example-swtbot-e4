@@ -28,6 +28,10 @@
 					<useUIThread>false</useUIThread>
 					<product>org.scenarioo.example.e4.orders.product</product>
 					<application>org.eclipse.e4.ui.workbench.swt.E4Application</application>
+					<!-- includes>
+						<include>**/CancelAddingPositionAndVerifyNoPositionWasAddedTest.java</include>
+						<include>**/PositionEditorGetsFocusedAfterItWasSavedTest.java</include>
+					</includes-->
 				</configuration>
 			</plugin>
 			<plugin>

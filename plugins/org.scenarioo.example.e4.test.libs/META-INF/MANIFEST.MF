@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.scenarioo.example.e4.test.libs
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.scenarioo.api,
- org.scenarioo.model.docu.entities
+ org.scenarioo.model.docu.entities,
+ org.scenarioo.model.docu.entities.generic
 Bundle-ClassPath: lib/scenarioo-java-2.0.1-20141208.170959-1.jar,
  lib/commons-io-2.4.jar,
  .
