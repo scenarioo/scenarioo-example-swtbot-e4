@@ -80,13 +80,13 @@ public class InitOrderOverviewStatement extends Statement {
 		SWTBotTable table = bot.table();
 		totalPersistedOrders = table.rowCount();
 		table.click(0, 5);
-		bot.sleep(1000);
+		bot.sleep(100);
 		table.click(1, 5);
-		bot.sleep(1000);
+		bot.sleep(100);
 		table.click(3, 5);
-		bot.sleep(1000);
+		bot.sleep(100);
 		table.click(5, 5);
-		bot.sleep(1000);
+		bot.sleep(100);
 
 		// click Finish
 		bot.button("OK").click();

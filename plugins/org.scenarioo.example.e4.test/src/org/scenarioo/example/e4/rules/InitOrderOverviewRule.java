@@ -29,24 +29,14 @@
 
 package org.scenarioo.example.e4.rules;
 
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-public class InitOrderOverviewRule implements MethodRule {
+public class InitOrderOverviewRule implements TestRule {
 
 	private InitOrderOverviewStatement statement;
 	
-	/**
-	 * @see org.junit.rules.MethodRule#apply(org.junit.runners.model.Statement, org.junit.runners.model.FrameworkMethod,
-	 *      java.lang.Object)
-	 */
-	@Override
-	public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
-		this.statement = new InitOrderOverviewStatement(base);
-		return statement;
-	}
-
 	public int getTotalPersistedOrders() {
 		return statement.totalPersistedOrders;
 	}
@@ -55,4 +45,12 @@ public class InitOrderOverviewRule implements MethodRule {
 		return statement.initializedOrdersInOrderOverview;
 	}
 
+	/**
+	 * @see org.junit.rules.TestRule#apply(org.junit.runners.model.Statement, org.junit.runner.Description)
+	 */
+	@Override
+	public Statement apply(final Statement base, final Description description) {
+		statement = new InitOrderOverviewStatement(base);
+		return statement;
+	}
 }
