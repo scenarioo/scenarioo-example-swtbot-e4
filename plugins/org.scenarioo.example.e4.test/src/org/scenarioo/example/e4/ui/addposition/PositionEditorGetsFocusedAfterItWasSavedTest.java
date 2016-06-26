@@ -89,15 +89,13 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 
 		orderOverviewPage.expandTreeForOrder(TEST_ORDER_NUMBER, false);
 
-		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER);
+		orderOverviewPage.addPositionViaContextMenuWithoutDocuGeneration(TEST_ORDER_NUMBER);
 
-		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
-		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper,
-				viewTitle);
+		initAddPositionDetailPage("choose Article");
 
 		addedPositionDetailPage.generateDocu("add_position_page_opened");
 	}
-
+	
 	@Test
 	public void execute() {
 
@@ -109,12 +107,23 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 
 		reopenAddedPosition();
 
-		LOGGER.info(getClass().getSimpleName() + " successful!");
+		LOGGER.info(getClass().getSimpleName() + " successful!\n\n");
 	}
 
 	@After
 	public void tearDown() {
+		LOGGER.info("\n\n\n"
+				+ "-------------------------------------------------\n"
+				+ "tearDown for test " + getClass().getSimpleName()
+				+ "\n-------------------------------------------------\n\n");
+
 		closeAllViews();
+	}
+
+	private void initAddPositionDetailPage(final String articleName) {
+		String viewTitle = getPositionDetailEditorTitle(articleName);
+		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper,
+				viewTitle);
 	}
 
 	private void fillOutPositionDetailPanelOfAddedPosition() {
@@ -123,30 +132,29 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 
 	private void saveAddedPosition() {
 		clickSaveAllAndGenerateDocu();
+		String articleNameOfLastPosition = orderOverviewPage.getArticleNameOfLastExistingPosition(TEST_ORDER_NUMBER);
+		initAddPositionDetailPage(articleNameOfLastPosition);
 	}
 
 	private void reopenAddedPosition() {
-		orderOverviewPage.openPositionDetailsOfLastExistingPosition(TEST_ORDER_NUMBER, true);
+		orderOverviewPage.openPositionDetailsOfLastExistingPosition(TEST_ORDER_NUMBER);
 	}
 
-	/**
-	 * @param orderOverviewPage
-	 * @return
-	 */
 	private void openSecondEditorLoosesFocusOnAddedPositionEditor() {
 		String articleNameOfFirstExistingPosition = orderOverviewPage
 				.getArticleNameOfFirstExistingPosition(TEST_ORDER_NUMBER);
-		orderOverviewPage.openPositionDetailsOfFirstExistingPosition(TEST_ORDER_NUMBER, true);
-		// orderOverviewPage.generateDocu("focus_from_added_position_removed");
-		String editorTitle = CreateTempOrderRule.ORDER_NUMBER_TEMP + " - " + articleNameOfFirstExistingPosition + " - "
-				+ POSITION_STATE;
-		this.existingPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, editorTitle);
+		orderOverviewPage.openPositionDetailsOfFirstExistingPosition(TEST_ORDER_NUMBER,
+				"focus from added position editor removed");
+		String positionDetailEditorTitle = getPositionDetailEditorTitle(articleNameOfFirstExistingPosition);
+		this.existingPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, positionDetailEditorTitle);
 	}
 
+	private String getPositionDetailEditorTitle(final String articleName) {
+		return TEST_ORDER_NUMBER + " - " + articleName + " - " + POSITION_STATE;
+	}
 
 	private void closeAllViews() {
 		addedPositionDetailPage.close();
 		existingPositionDetailPage.close();
-		orderOverviewPage.generateDocu("check_if_is not closed");
 	}
 }

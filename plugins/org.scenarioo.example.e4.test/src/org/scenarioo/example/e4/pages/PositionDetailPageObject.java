@@ -36,9 +36,12 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.junit.Assert;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PositionDetailPageObject extends PageObject {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PositionDetailPageObject.class);
 	private final SWTBotView positionDetailPart;
 
 	/**
@@ -145,6 +148,25 @@ public class PositionDetailPageObject extends PageObject {
 	}
 
 	public void close() {
+		errorIfWidgetNotAvailable();
 		positionDetailPart.close();
+	}
+
+	private void errorIfWidgetNotAvailable() {
+		Object widget = positionDetailPart.getPart().getWidget();
+		Object renderer = positionDetailPart.getPart().getRenderer();
+		if (widget == null && renderer == null) {
+			LOGGER.error("widget and renderer is null there is nothing to close!");
+			String text = positionDetailPart.getPart() == null ? "part is null" : positionDetailPart.getPart()
+					.toString();
+			LOGGER.info("\n\n"
+					+ "-------------------------------------------------\n"
+					+ "part: " + text);
+			String title = positionDetailPart.getTitle();
+			LOGGER.info("title: " + title);
+			LOGGER.info("\n"
+					+ "-------------------------------------------------\n\n");
+			throw new IllegalArgumentException("could not close \"" + title + "\" due to no widget available");
+		}
 	}
 }
