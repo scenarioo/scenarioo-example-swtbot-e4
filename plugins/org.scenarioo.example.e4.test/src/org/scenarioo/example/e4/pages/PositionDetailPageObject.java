@@ -49,16 +49,19 @@ public class PositionDetailPageObject extends PageObject {
 	 */
 	public PositionDetailPageObject(final ScenariooWriterHelper scenariooWriterHelper, final String title) {
 		super(scenariooWriterHelper);
-		this.positionDetailPart = wbBot.partByTitle(title);
-		Assert.assertNotNull(positionDetailPart);
+		this.positionDetailPart = checkPositionDetailPart(wbBot.partByTitle(title));
 	}
 
 	public PositionDetailPageObject(final ScenariooWriterHelper scenariooWriterHelper,
 			final SWTBotView positionDetailPart) {
 		super(scenariooWriterHelper);
+		this.positionDetailPart = checkPositionDetailPart(positionDetailPart);
+	}
+
+	private SWTBotView checkPositionDetailPart(final SWTBotView positionDetailPart) {
 		Assert.assertNotNull(positionDetailPart);
-		bot.waitUntil(new WidgetAppearedCondition(positionDetailPart));
-		this.positionDetailPart = positionDetailPart;
+		bot.waitUntil(new WidgetAppearedCondition(positionDetailPart), 20000);
+		return positionDetailPart;
 	}
 
 	public void generateDocu(final String title) {
@@ -144,7 +147,7 @@ public class PositionDetailPageObject extends PageObject {
 		}
 	}
 
-	private static class WidgetAppearedCondition extends DefaultCondition {
+	private class WidgetAppearedCondition extends DefaultCondition {
 
 		private final SWTBotView positionDetailPart;
 
@@ -166,6 +169,7 @@ public class PositionDetailPageObject extends PageObject {
 		 */
 		@Override
 		public String getFailureMessage() {
+			generateDocu("error_position_detail_part_not_available");
 			return "Could not find positionDetailPart with label: " + positionDetailPart.getPart().getLabel();
 		}
 	}
