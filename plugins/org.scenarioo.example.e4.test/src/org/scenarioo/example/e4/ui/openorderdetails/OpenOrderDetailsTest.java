@@ -29,29 +29,29 @@
 
 package org.scenarioo.example.e4.ui.openorderdetails;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
+import org.scenarioo.example.e4.pages.OrderDetailPageObject;
+import org.scenarioo.example.e4.pages.OrderOverviewPageObject;
 import org.scenarioo.example.e4.rules.InitOrderOverviewRule;
-import org.scenarioo.example.e4.ui.showallorderitems.ShowAllOrderItemsInOrderOverviewTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class OpenOrderDetailsTest extends ScenariooTestWrapper {
 
-	private static final String ORDER_NUMBER = "Order 2";
+	private static final String TEST_ORDER_NUMBER = "Order 2";
 	private static final String ORDER_STATE = "New";
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenOrderDetailsTest.class);
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShowAllOrderItemsInOrderOverviewTest.class);
+	private OrderOverviewPageObject orderOverviewPage;
+	private OrderDetailPageObject orderDetailPage;
 
 	@Rule
 	public InitOrderOverviewRule initOrderOverview = new InitOrderOverviewRule();
@@ -72,25 +72,30 @@ public class OpenOrderDetailsTest extends ScenariooTestWrapper {
 		return "Opens an Order in the order detail view to show all properties of the order.";
 	}
 
+	@Before
+	public void init() {
+		this.orderOverviewPage = new OrderOverviewPageObject(scenariooWriterHelper);
+		orderOverviewPage.generateDocu("initial_view", "application_started");
+	}
+
 	@Test
 	public void execute() {
-
-		generateInitialViewDocuForOrderOverview();
-
-		SWTBotTree tree = bot.tree();
-		SWTBotMenu menu = getContextMenuAndGenerateDocu(tree, ORDER_NUMBER, "Edit Order");
-		LOGGER.info(menu.toString());
-
-		clickMenuEntryAndGenerateDocu(menu, PageName.ORDER_DETAIL);
-
-		SWTBotView partByTitle = wbBot.partByTitle(ORDER_NUMBER + " - " + ORDER_STATE);
-
-		Assert.assertNotNull(partByTitle);
-
-		// close order details view
-		partByTitle.close();
-
+		openOrderDetailsView();
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
+	@After
+	public void tearDown() {
+		orderDetailPage.close();
+	}
+
+	private void openOrderDetailsView() {
+		orderOverviewPage.openOrderDetails(TEST_ORDER_NUMBER);
+		String orderDetailEditorTitle = getOrderDetailEditorTitle();
+		this.orderDetailPage = new OrderDetailPageObject(scenariooWriterHelper, orderDetailEditorTitle);
+	}
+
+	private String getOrderDetailEditorTitle() {
+		return TEST_ORDER_NUMBER + " - " + ORDER_STATE;
+	}
 }
