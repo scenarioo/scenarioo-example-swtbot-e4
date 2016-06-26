@@ -57,6 +57,7 @@ public class PositionDetailPageObject extends PageObject {
 			final SWTBotView positionDetailPart) {
 		super(scenariooWriterHelper);
 		Assert.assertNotNull(positionDetailPart);
+		bot.waitUntil(new WidgetAppearedCondition(positionDetailPart));
 		this.positionDetailPart = positionDetailPart;
 	}
 
@@ -95,7 +96,7 @@ public class PositionDetailPageObject extends PageObject {
 
 	private static class ComboListClosedCondition extends DefaultCondition {
 
-		final SWTBotCombo combo;
+		private final SWTBotCombo combo;
 
 		private ComboListClosedCondition(final SWTBotCombo combo) {
 			this.combo = combo;
@@ -120,7 +121,7 @@ public class PositionDetailPageObject extends PageObject {
 
 	private static class PopUpOpenedCondition extends DefaultCondition {
 
-		final SWTBotCombo combo;
+		private final SWTBotCombo combo;
 
 		private PopUpOpenedCondition(final SWTBotCombo combo) {
 			this.combo = combo;
@@ -140,6 +141,32 @@ public class PositionDetailPageObject extends PageObject {
 		@Override
 		public String getFailureMessage() {
 			return "Could not open popup of combo: " + combo;
+		}
+	}
+
+	private static class WidgetAppearedCondition extends DefaultCondition {
+
+		private final SWTBotView positionDetailPart;
+
+		private WidgetAppearedCondition(final SWTBotView positionDetailPart) {
+			this.positionDetailPart = positionDetailPart;
+		}
+
+		/**
+		 * @see org.eclipse.swtbot.swt.finder.waits.ICondition#test()
+		 */
+		@Override
+		public boolean test() throws Exception {
+			return positionDetailPart.getPart().getWidget() != null
+					&& positionDetailPart.getPart().getRenderer() != null;
+		}
+
+		/**
+		 * @see org.eclipse.swtbot.swt.finder.waits.ICondition#getFailureMessage()
+		 */
+		@Override
+		public String getFailureMessage() {
+			return "Could not find positionDetailPart with label: " + positionDetailPart.getPart().getLabel();
 		}
 	}
 

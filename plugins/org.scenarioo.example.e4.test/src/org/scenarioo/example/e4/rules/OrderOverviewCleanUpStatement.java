@@ -47,6 +47,8 @@ public class OrderOverviewCleanUpStatement extends Statement {
 	private final Statement base;
 	private final SWTBot bot;
 
+	private SWTBotTree tree;
+
 	public OrderOverviewCleanUpStatement(final Statement base) {
 		this.base = base;
 		this.bot = new SWTBot();
@@ -59,6 +61,7 @@ public class OrderOverviewCleanUpStatement extends Statement {
 	public void evaluate() throws Throwable {
 		try {
 			LOGGER.info("\n\nThe order overview clean up statement is executed after the test.\n\n");
+			tree = bot.tree();
 			base.evaluate();
 		} finally {
 			// We execute after the test
@@ -71,7 +74,6 @@ public class OrderOverviewCleanUpStatement extends Statement {
 		LOGGER.info("\n-----------------------------------------------------------------"
 				+ "\nThe order overview clean up is executed..\n"
 				+ "-----------------------------------------------------------------");
-		SWTBotTree tree = bot.tree();
 		int ordersCount = tree.getAllItems().length;
 		for (int i = ordersCount - 1; i >= 0; i--) {
 			SWTBotTreeItem treeItem = tree.getAllItems()[i];

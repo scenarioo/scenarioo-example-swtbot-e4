@@ -112,9 +112,6 @@ public class OrderOverviewPageObject extends PageObject {
 		expandTreeItem(orderTreeItem, generateDocu);
 	}
 
-	/**
-	 * @param treeItem
-	 */
 	private void expandTreeItem(final SWTBotTreeItem treeItem, final boolean generateDocu) {
 		OrdersOverviewPart ordersOverviewPart = (OrdersOverviewPart) wbBot.partByTitle("Orders Overview").getPart()
 				.getObject();
