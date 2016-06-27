@@ -29,7 +29,9 @@
 					<product>org.scenarioo.example.e4.orders.product</product>
 					<application>org.eclipse.e4.ui.workbench.swt.E4Application</application>
 					<includes>
-						<include>**/addposition/*.java</include>
+						<include>**/AddOrderPositionViaOrderOverviewTest.java</include>
+						<include>**/AddPositionCanOpenMultipleEditorsTest.java</include>
+						<include>**/PositionEditorGetsFocusedAfterItWasSavedTest.java</include>
 						<include>**/ChangeArticleUpdatesTheOrderOverviewTest.java</include>
 					</includes>
 				</configuration>
