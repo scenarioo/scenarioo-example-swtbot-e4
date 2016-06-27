@@ -29,7 +29,7 @@
 					<product>org.scenarioo.example.e4.orders.product</product>
 					<application>org.eclipse.e4.ui.workbench.swt.E4Application</application>
 					<includes>
-						<include>**/AddPositionCanOpenMultipleEditorsTest.java</include>
+						<include>**/addposition/*.java</include>
 						<include>**/ChangeArticleUpdatesTheOrderOverviewTest.java</include>
 					</includes>
 				</configuration>
