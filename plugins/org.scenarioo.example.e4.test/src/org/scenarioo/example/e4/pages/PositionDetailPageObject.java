@@ -50,17 +50,19 @@ public class PositionDetailPageObject extends PageObject {
 	public PositionDetailPageObject(final ScenariooWriterHelper scenariooWriterHelper, final String title) {
 		super(scenariooWriterHelper);
 		this.positionDetailPart = checkPositionDetailPart(wbBot.partByTitle(title));
+		logPartInfos();
 	}
 
 	public PositionDetailPageObject(final ScenariooWriterHelper scenariooWriterHelper,
 			final SWTBotView positionDetailPart) {
 		super(scenariooWriterHelper);
 		this.positionDetailPart = checkPositionDetailPart(positionDetailPart);
+		logPartInfos();
 	}
 
 	private SWTBotView checkPositionDetailPart(final SWTBotView positionDetailPart) {
 		Assert.assertNotNull(positionDetailPart);
-		bot.waitUntil(new WidgetAppearedCondition(positionDetailPart), 20000);
+		// bot.waitUntil(new WidgetAppearedCondition(positionDetailPart), 20000);
 		return positionDetailPart;
 	}
 
@@ -189,16 +191,19 @@ public class PositionDetailPageObject extends PageObject {
 		Object renderer = positionDetailPart.getPart().getRenderer();
 		if (widget == null && renderer == null) {
 			LOGGER.error("widget and renderer is null there is nothing to close!");
-			String text = positionDetailPart.getPart() == null ? "part is null" : positionDetailPart.getPart()
-					.toString();
-			LOGGER.info("\n\n"
-					+ "-------------------------------------------------\n"
-					+ "part: " + text);
-			String title = positionDetailPart.getTitle();
-			LOGGER.info("title: " + title);
-			LOGGER.info("\n"
-					+ "-------------------------------------------------\n\n");
-			throw new IllegalStateException("could not close \"" + title + "\" due to no widget available");
+			logPartInfos();
+			// throw new IllegalStateException("could not close \"" + title + "\" due to no widget available");
 		}
+	}
+
+	private void logPartInfos() {
+		LOGGER.info("\n"
+				+ "------------------PARTINFO-----------------------\n"
+				+ "part: " + positionDetailPart.getPart().toString());
+		String title = positionDetailPart.getTitle();
+		LOGGER.info("title: " + title);
+		LOGGER.info("\n"
+				+ "-------------------------------------------------\n");
+
 	}
 }

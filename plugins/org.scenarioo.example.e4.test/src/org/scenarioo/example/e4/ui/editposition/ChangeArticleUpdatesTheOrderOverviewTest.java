@@ -104,6 +104,7 @@ public class ChangeArticleUpdatesTheOrderOverviewTest extends ScenariooTestWrapp
 		SWTBotView partByTitle = wbBot.partByTitle(editorTitle);
 		Assert.assertNotNull(partByTitle);
 
+		LOGGER.info("part: " + partByTitle.getPart().toString());
 		selectArticleAndGenerateDocu(articleName);
 
 		saveAllAndGenerateDocu();
@@ -111,6 +112,7 @@ public class ChangeArticleUpdatesTheOrderOverviewTest extends ScenariooTestWrapp
 		// close order details
 		partByTitle.close();
 
+		generateDocu("check if part was closed", PageName.POSITION_DETAIL);
 		LOGGER.info(getClass().getSimpleName() + " successful!");
 	}
 
@@ -141,9 +143,7 @@ public class ChangeArticleUpdatesTheOrderOverviewTest extends ScenariooTestWrapp
 	}
 
 	private void saveAllAndGenerateDocu() {
-		bot.toolbarButtonWithTooltip("Save All").click();
-		bot.sleep(100);
-		scenariooWriterHelper.writeStep("save_all_clicked", PageName.ORDER_DETAIL, screenshot());
+		clickSaveAllAndGenerateDocu();
 	}
 
 	/**
