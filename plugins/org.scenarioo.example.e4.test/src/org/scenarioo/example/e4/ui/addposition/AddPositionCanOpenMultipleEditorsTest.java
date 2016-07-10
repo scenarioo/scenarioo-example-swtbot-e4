@@ -29,23 +29,16 @@
 
 package org.scenarioo.example.e4.ui.addposition;
 
-import static org.eclipse.swtbot.e4.finder.waits.Conditions.*;
-
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.swtbot.e4.finder.matchers.WidgetMatcherFactory;
-import org.eclipse.swtbot.e4.finder.waits.WaitForPart;
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
-import org.scenarioo.example.e4.EclipseContextHelper;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
+import org.scenarioo.example.e4.pages.CreateAddPositionEditor;
 import org.scenarioo.example.e4.pages.OrderOverviewPageObject;
 import org.scenarioo.example.e4.pages.PositionDetailPageObject;
 import org.scenarioo.example.e4.rules.CreateTempOrderRule;
@@ -58,7 +51,6 @@ public class AddPositionCanOpenMultipleEditorsTest extends ScenariooTestWrapper 
 
 	private static final String TEST_ORDER_NUMBER = CreateTempOrderRule.ORDER_NUMBER_TEMP;
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddPositionCanOpenMultipleEditorsTest.class);
-	private static final String POSITION_STATE = "New";
 
 	private OrderOverviewPageObject orderOverviewPage;
 	private PositionDetailPageObject firstAddedPositionDetailPage;
@@ -119,43 +111,30 @@ public class AddPositionCanOpenMultipleEditorsTest extends ScenariooTestWrapper 
 		closeAllViews();
 	}
 
-	private SWTBotView findpart(final String name, final int index) {
-		Matcher<MPart> withPartName = WidgetMatcherFactory.withPartName(name);
-		final WaitForPart waitForPart = waitForPart(EclipseContextHelper.getEclipseContext(), withPartName);
-		bot.waitUntilWidgetAppears(waitForPart);
-		return new SWTBotView(waitForPart.get(index), wbBot);
-	}
-
 	private void openFirstAddPositionEditor() {
 
 		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "first add position editor opened");
-		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
 
-		SWTBotView swtBotView = findpart(viewTitle, 0);
-
-		this.firstAddedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper,
-				swtBotView);
+		this.firstAddedPositionDetailPage = createAddPositionEditor(0);
 	}
 
 	private void openSecondAddPositionEditor() {
 
 		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "second add position editor opened");
-		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
 
-		SWTBotView swtBotView = findpart(viewTitle, 1);
-
-		this.secondAddedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper,
-				swtBotView);
+		this.secondAddedPositionDetailPage = createAddPositionEditor(1);
 	}
 
 	private void openThirdAddPositionEditor() {
 
 		orderOverviewPage.addPositionForOrderViaContextMenu(TEST_ORDER_NUMBER, "third add position editor opened");
-		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
-		SWTBotView swtBotView = findpart(viewTitle, 2);
 
-		this.thirdAddedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper,
-				swtBotView);
+		this.thirdAddedPositionDetailPage = createAddPositionEditor(2);
+	}
+
+	private PositionDetailPageObject createAddPositionEditor(final int index) {
+		CreateAddPositionEditor createAddPositionEditor = new CreateAddPositionEditor(index, TEST_ORDER_NUMBER);
+		return PositionDetailPageObject.createAddPositionEditor(scenariooWriterHelper, createAddPositionEditor);
 	}
 
 	private void fillOutFirstAddedPosition() {
@@ -182,5 +161,4 @@ public class AddPositionCanOpenMultipleEditorsTest extends ScenariooTestWrapper 
 		secondAddedPositionDetailPage.close();
 		thirdAddedPositionDetailPage.close();
 	}
-
 }

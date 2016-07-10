@@ -28,12 +28,12 @@
 					<useUIThread>false</useUIThread>
 					<product>org.scenarioo.example.e4.orders.product</product>
 					<application>org.eclipse.e4.ui.workbench.swt.E4Application</application>
-					<includes>
+					<!-- includes>
 						<include>**/AddOrderPositionViaOrderOverviewTest.java</include>
 						<include>**/AddPositionCanOpenMultipleEditorsTest.java</include>
 						<include>**/PositionEditorGetsFocusedAfterItWasSavedTest.java</include>
 						<include>**/ChangeArticleUpdatesTheOrderOverviewTest.java</include>
-					</includes>
+					</includes-->
 				</configuration>
 			</plugin>
 			<plugin>

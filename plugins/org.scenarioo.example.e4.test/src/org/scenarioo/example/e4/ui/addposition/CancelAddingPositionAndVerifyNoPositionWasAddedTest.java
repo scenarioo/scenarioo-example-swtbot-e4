@@ -37,6 +37,7 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
+import org.scenarioo.example.e4.pages.CreateAddPositionEditor;
 import org.scenarioo.example.e4.pages.OrderOverviewPageObject;
 import org.scenarioo.example.e4.pages.PositionDetailPageObject;
 import org.scenarioo.example.e4.rules.CreateTempOrderRule;
@@ -100,8 +101,9 @@ public class CancelAddingPositionAndVerifyNoPositionWasAddedTest extends Scenari
 
 	private void openAddPositionEditorViaContextMenu() {
 		orderOverviewPage.addPositionForOrderViaContextMenuAndGenerateDocu(TEST_ORDER_NUMBER);
-		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
-		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, viewTitle);
+		CreateAddPositionEditor createAddPositionEditor = new CreateAddPositionEditor(0, TEST_ORDER_NUMBER);
+		this.addedPositionDetailPage = PositionDetailPageObject.createAddPositionEditor(scenariooWriterHelper,
+				createAddPositionEditor);
 	}
 
 	private void closeAddPositionEditor() {

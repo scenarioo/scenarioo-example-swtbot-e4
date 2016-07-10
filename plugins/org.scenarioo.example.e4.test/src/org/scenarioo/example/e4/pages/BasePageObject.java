@@ -29,51 +29,25 @@
 
 package org.scenarioo.example.e4.pages;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
-import org.junit.Assert;
+import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.scenarioo.example.e4.EclipseContextHelper;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.scenarioo.example.e4.ScreenShooter;
 
-/**
- * Represents an order detail view.
- */
-public class OrderDetailPageObject extends BasePageObject {
+public class BasePageObject {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderDetailPageObject.class);
-	private final SWTBotView orderDetailPart;
+	private static final ScreenShooter screenShooter = new ScreenShooter();
 
-	/**
-	 * 
-	 * @param scenariooWriterHelper
-	 * @param title
-	 */
-	public OrderDetailPageObject(final ScenariooWriterHelper scenariooWriterHelper, final String title) {
-		super(scenariooWriterHelper);
-		this.orderDetailPart = wbBot.partByTitle(title);
-		Assert.assertNotNull(orderDetailPart);
+	protected static byte[] screenshot() {
+		return screenShooter.capture();
 	}
 
-	public void close() {
-		errorIfWidgetNotAvailable();
-		orderDetailPart.close();
-	}
+	protected static final SWTBot bot = new SWTBot();
+	protected static final SWTWorkbenchBot wbBot = new SWTWorkbenchBot(EclipseContextHelper.getEclipseContext());
+	protected final ScenariooWriterHelper scenariooWriterHelper;
 
-	private void errorIfWidgetNotAvailable() {
-		Object widget = orderDetailPart.getPart().getWidget();
-		Object renderer = orderDetailPart.getPart().getRenderer();
-		if (widget == null && renderer == null) {
-			LOGGER.error("widget and renderer is null there is nothing to close!");
-			String text = orderDetailPart.getPart() == null ? "part is null" : orderDetailPart.getPart()
-					.toString();
-			LOGGER.info("\n\n"
-					+ "-------------------------------------------------\n"
-					+ "part: " + text);
-			String title = orderDetailPart.getTitle();
-			LOGGER.info("title: " + title);
-			LOGGER.info("\n"
-					+ "-------------------------------------------------\n\n");
-			throw new IllegalArgumentException("could not close \"" + title + "\" due to no widget available");
-		}
+	public BasePageObject(final ScenariooWriterHelper scenariooWriterHelper) {
+		this.scenariooWriterHelper = scenariooWriterHelper;
 	}
 }

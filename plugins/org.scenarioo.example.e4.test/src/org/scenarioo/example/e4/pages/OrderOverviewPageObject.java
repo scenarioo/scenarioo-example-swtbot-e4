@@ -36,7 +36,7 @@ import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
 import org.scenarioo.example.e4.orders.parts.OrdersOverviewPart;
 
-public class OrderOverviewPageObject extends PageObject {
+public class OrderOverviewPageObject extends BasePageObject {
 
 	// private static final Logger LOGGER = LoggerFactory.getLogger(OrderOverviewPageObject.class);
 

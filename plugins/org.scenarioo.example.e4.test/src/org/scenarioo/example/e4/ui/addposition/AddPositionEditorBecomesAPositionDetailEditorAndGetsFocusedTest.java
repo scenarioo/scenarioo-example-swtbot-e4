@@ -38,6 +38,7 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
+import org.scenarioo.example.e4.pages.CreateAddPositionEditor;
 import org.scenarioo.example.e4.pages.OrderOverviewPageObject;
 import org.scenarioo.example.e4.pages.PositionDetailPageObject;
 import org.scenarioo.example.e4.rules.CreateTempOrderRule;
@@ -46,10 +47,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestWrapper {
+public class AddPositionEditorBecomesAPositionDetailEditorAndGetsFocusedTest extends ScenariooTestWrapper {
 
 	private static final String TEST_ORDER_NUMBER = CreateTempOrderRule.ORDER_NUMBER_TEMP;
-	private static final Logger LOGGER = LoggerFactory.getLogger(PositionEditorGetsFocusedAfterItWasSavedTest.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AddPositionEditorBecomesAPositionDetailEditorAndGetsFocusedTest.class);
 	private static final String POSITION_STATE = "New";
 
 	private OrderOverviewPageObject orderOverviewPage;
@@ -78,8 +80,8 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 	@Override
 	protected String getScenarioDescription() {
 		return "The form of the added position is filled out and saved. Then another position is opened "
-				+ "and get's the focus. The added position is reopened again but only gain's back the "
-				+ "focus from the other panel.";
+				+ "and get's the focus. The added position is reopened again and get's back the "
+				+ "focus in the editor section.";
 	}
 
 	@Before
@@ -91,17 +93,17 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 
 		orderOverviewPage.addPositionViaContextMenuWithoutDocuGeneration(TEST_ORDER_NUMBER);
 
-		initAddPositionDetailPage("choose Article");
+		initAddPositionDetailPage();
 
 		addedPositionDetailPage.generateDocu("add_position_page_opened");
 	}
-	
+
 	@Test
 	public void execute() {
 
 		fillOutPositionDetailPanelOfAddedPosition();
 
-		saveAddedPosition();
+		saveAllAndReinitAddedPositionPage();
 
 		openSecondEditorLoosesFocusOnAddedPositionEditor();
 
@@ -115,25 +117,26 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 		LOGGER.info("\n\n\n"
 				+ "-------------------------------------------------\n"
 				+ "tearDown for test " + getClass().getSimpleName()
-				+ "\n-------------------------------------------------\n\n");
+				+ "\n-------------------------------------------------");
 
 		closeAllViews();
 	}
 
-	private void initAddPositionDetailPage(final String articleName) {
-		String viewTitle = getPositionDetailEditorTitle(articleName);
-		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper,
-				viewTitle);
+	private void initAddPositionDetailPage() {
+		CreateAddPositionEditor createAddPositionEditor = new CreateAddPositionEditor(0, TEST_ORDER_NUMBER);
+		this.addedPositionDetailPage = PositionDetailPageObject.createAddPositionEditor(scenariooWriterHelper,
+				createAddPositionEditor);
 	}
 
 	private void fillOutPositionDetailPanelOfAddedPosition() {
 		addedPositionDetailPage.selectArticleAndGenerateDocu();
 	}
 
-	private void saveAddedPosition() {
+	private void saveAllAndReinitAddedPositionPage() {
 		clickSaveAllAndGenerateDocu();
 		String articleNameOfLastPosition = orderOverviewPage.getArticleNameOfLastExistingPosition(TEST_ORDER_NUMBER);
-		initAddPositionDetailPage(articleNameOfLastPosition);
+		String viewTitle = TEST_ORDER_NUMBER + " - " + articleNameOfLastPosition + " - " + POSITION_STATE;
+		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, viewTitle);
 	}
 
 	private void reopenAddedPosition() {
@@ -145,12 +148,9 @@ public class PositionEditorGetsFocusedAfterItWasSavedTest extends ScenariooTestW
 				.getArticleNameOfFirstExistingPosition(TEST_ORDER_NUMBER);
 		orderOverviewPage.openPositionDetailsOfFirstExistingPosition(TEST_ORDER_NUMBER,
 				"focus from added position editor removed");
-		String positionDetailEditorTitle = getPositionDetailEditorTitle(articleNameOfFirstExistingPosition);
+		String positionDetailEditorTitle = TEST_ORDER_NUMBER + " - " + articleNameOfFirstExistingPosition + " - "
+				+ POSITION_STATE;
 		this.existingPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, positionDetailEditorTitle);
-	}
-
-	private String getPositionDetailEditorTitle(final String articleName) {
-		return TEST_ORDER_NUMBER + " - " + articleName + " - " + POSITION_STATE;
 	}
 
 	private void closeAllViews() {

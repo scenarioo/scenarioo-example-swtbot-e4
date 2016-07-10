@@ -29,28 +29,25 @@
 
 package org.scenarioo.example.e4.pages;
 
-import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.scenarioo.example.e4.EclipseContextHelper;
-import org.scenarioo.example.e4.ScenariooWriterHelper;
-import org.scenarioo.example.e4.ScreenShooter;
+import org.scenarioo.example.e4.domain.PositionState;
 
-public class PageObject {
+public class CreateAddPositionEditor {
 
-	private static final ScreenShooter screenShooter = new ScreenShooter();
+	private static final String POSITION_STATE = PositionState.NEW.getCaption();
 
-	protected static byte[] screenshot() {
-		return screenShooter.capture();
+	private final String orderNumber;
+	private final int index;
+
+	public CreateAddPositionEditor(final int index, final String orderNumber) {
+		this.index = index;
+		this.orderNumber = orderNumber;
 	}
 
-	protected SWTBot bot;
-	protected SWTWorkbenchBot wbBot;
-	protected final ScenariooWriterHelper scenariooWriterHelper;
-
-	public PageObject(final ScenariooWriterHelper scenariooWriterHelper) {
-		this.scenariooWriterHelper = scenariooWriterHelper;
-		this.bot = new SWTBot();
-		this.wbBot = new SWTWorkbenchBot(EclipseContextHelper.getEclipseContext());
+	public String getViewTitle(){
+		return orderNumber + " - " + "choose Article" + " - " + POSITION_STATE;
 	}
 
+	public int getIndex() {
+		return index;
+	}
 }

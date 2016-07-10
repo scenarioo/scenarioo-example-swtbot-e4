@@ -36,10 +36,11 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.junit.Assert;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
+import org.scenarioo.example.e4.ui.addposition.WaitForOnlyVisibleParts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PositionDetailPageObject extends PageObject {
+public class PositionDetailPageObject extends BasePageObject {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PositionDetailPageObject.class);
 	private final SWTBotView positionDetailPart;
@@ -205,5 +206,13 @@ public class PositionDetailPageObject extends PageObject {
 		LOGGER.info("\n"
 				+ "-------------------------------------------------\n");
 
+	}
+
+	public static PositionDetailPageObject createAddPositionEditor(final ScenariooWriterHelper scenariooWriterHelper,
+			final CreateAddPositionEditor createAddPositionEditor) {
+		WaitForOnlyVisibleParts waitForOnlyVisibleParts = new WaitForOnlyVisibleParts(createAddPositionEditor);
+		bot.waitUntilWidgetAppears(waitForOnlyVisibleParts);
+		return new PositionDetailPageObject(scenariooWriterHelper,
+				new SWTBotView(waitForOnlyVisibleParts.getPart(), wbBot));
 	}
 }

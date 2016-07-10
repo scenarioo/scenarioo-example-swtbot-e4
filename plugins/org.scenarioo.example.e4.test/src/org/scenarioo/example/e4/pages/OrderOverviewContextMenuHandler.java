@@ -40,7 +40,7 @@ import org.scenarioo.example.e4.PageName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OrderOverviewContextMenuHandler extends PageObject {
+public class OrderOverviewContextMenuHandler extends BasePageObject {
 
 	private static final String CONTEXT_MENU_STEP_ONE_DOCU_TITLE = "right_click_on_selected_tree_node";
 	private static final String CONTEXT_MENU_DOCU_DESCRIPTION = "context menu opened";

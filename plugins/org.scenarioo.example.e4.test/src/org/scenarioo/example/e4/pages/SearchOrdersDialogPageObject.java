@@ -36,7 +36,7 @@ import org.scenarioo.example.e4.BaseSWTBotTest;
 import org.scenarioo.example.e4.PageName;
 import org.scenarioo.example.e4.ScenariooWriterHelper;
 
-public class SearchOrdersDialogPageObject extends PageObject {
+public class SearchOrdersDialogPageObject extends BasePageObject {
 
 	public SearchOrdersDialogPageObject(final ScenariooWriterHelper scenariooWriterHelper) {
 		super(scenariooWriterHelper);

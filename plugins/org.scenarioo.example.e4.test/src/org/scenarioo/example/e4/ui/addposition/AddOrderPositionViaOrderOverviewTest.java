@@ -38,6 +38,7 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.scenarioo.example.e4.ScenariooTestWrapper;
 import org.scenarioo.example.e4.UseCaseName;
+import org.scenarioo.example.e4.pages.CreateAddPositionEditor;
 import org.scenarioo.example.e4.pages.OrderOverviewPageObject;
 import org.scenarioo.example.e4.pages.PositionDetailPageObject;
 import org.scenarioo.example.e4.rules.CreateTempOrderRule;
@@ -50,7 +51,6 @@ public class AddOrderPositionViaOrderOverviewTest extends ScenariooTestWrapper {
 
 	private static final String TEST_ORDER_NUMBER = CreateTempOrderRule.ORDER_NUMBER_TEMP;
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddOrderPositionViaOrderOverviewTest.class);
-	private static final String POSITION_STATE = "New";
 
 	private OrderOverviewPageObject orderOverviewPage;
 	private PositionDetailPageObject addedPositionDetailPage;
@@ -108,8 +108,10 @@ public class AddOrderPositionViaOrderOverviewTest extends ScenariooTestWrapper {
 
 	private void openAddPositionEditor() {
 		orderOverviewPage.addPositionForOrderViaContextMenuAndGenerateDocu(TEST_ORDER_NUMBER);
-		String viewTitle = TEST_ORDER_NUMBER + " - " + "choose Article" + " - " + POSITION_STATE;
-		this.addedPositionDetailPage = new PositionDetailPageObject(scenariooWriterHelper, viewTitle);
+
+		CreateAddPositionEditor createAddPositionEditor = new CreateAddPositionEditor(0, TEST_ORDER_NUMBER);
+		this.addedPositionDetailPage = PositionDetailPageObject.createAddPositionEditor(scenariooWriterHelper,
+				createAddPositionEditor);
 	}
 
 	private void selectArticle() {
