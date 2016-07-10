@@ -59,5 +59,4 @@ public class OrderRemoveHandler {
 		this.activeOrder = activeOrder;
 		return activeOrder != null;
 	}
-
 }

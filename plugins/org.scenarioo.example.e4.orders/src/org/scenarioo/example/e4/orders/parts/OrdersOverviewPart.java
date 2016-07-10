@@ -116,7 +116,7 @@ public class OrdersOverviewPart {
 		// prevent from duplicates!
 		if (!orders.contains(newOrder)) {
 			orders.add(newOrder);
-			viewer.setInput(orders);
+			viewer.add(viewer.getInput(), newOrder);
 			LOGGER.info("new " + newOrder + " added to orderOverview.");
 		}
 	}
@@ -128,10 +128,9 @@ public class OrdersOverviewPart {
 
 		cleanUpOrderOrder(removableOrder);
 		List<Order> orders = getTreeModel();
-		// prevent from duplicates!
 		if (orders.contains(removableOrder)) {
 			orders.remove(removableOrder);
-			viewer.setInput(orders);
+			viewer.remove(removableOrder);
 			LOGGER.info("order " + removableOrder + " has been removed from orderOverview.");
 		}
 	}
@@ -168,7 +167,7 @@ public class OrdersOverviewPart {
 			int index = orders.indexOf(order);
 			orders.remove(order);
 			orders.add(index, order);
-			viewer.setInput(orders);
+			viewer.refresh(order, true);
 			LOGGER.info("order " + order + " has been refreshed in Treeview.");
 		}
 	}
