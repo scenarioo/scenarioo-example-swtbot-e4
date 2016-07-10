@@ -50,7 +50,6 @@ public class CancelAddingPositionAndVerifyNoPositionWasAddedTest extends Scenari
 
 	private static final String TEST_ORDER_NUMBER = CreateTempOrderRule.ORDER_NUMBER_TEMP;
 	private static final Logger LOGGER = LoggerFactory.getLogger(CancelAddingPositionAndVerifyNoPositionWasAddedTest.class);
-	private static final String POSITION_STATE = "New";
 
 	private OrderOverviewPageObject orderOverviewPage;
 	private PositionDetailPageObject addedPositionDetailPage;
@@ -76,9 +75,10 @@ public class CancelAddingPositionAndVerifyNoPositionWasAddedTest extends Scenari
 	 */
 	@Override
 	protected String getScenarioDescription() {
-		return "Adds a new Position via context menu in the order overview page. The new opened add position view "
-				+ "is just closed without saving. At the end of this scenario the order in the order overview is "
-				+ "expanded to proof that no new position is assigned.";
+		return "There is the Temp order in the order overview which has just one position assigned. Then the user "
+				+ " clicks add position via context menu for the Temp order. Then the new opened add position view "
+				+ "gets closed without saving. At the end of this scenario the Temp order in the order overview is "
+				+ "expanded to proof that no new position is assigned it has still one position.";
 	}
 
 	@Before
